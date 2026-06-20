@@ -1,0 +1,18 @@
+[alias]
+	tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	cleanup = !git branch --merged | grep -vE "^\\*|main|master|develop" | xargs -n 1 git branch -d
+	pushf = push --force-with-lease
+[user]
+	name = hiz8
+	email = 7459529+hiz8@users.noreply.github.com
+[core]
+	editor = vim
+[push]
+	autoSetupRemote = true
+[fetch]
+	prune = true
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[pull]
+	rebase = true
