@@ -2,79 +2,80 @@
 
 Personal dotfiles for WSL2 / Linux.
 
-## Requirements
+## インストール
 
-GNU Stow:
+もし GNU Stow が未インストールであれば先にインストールする。
 
 ```sh
 sudo apt install stow
 ```
 
-## Install
+GNU Stow がインストール済みであれば `install.sh` で dotfiles パッケージをインストールする。
 
 ```sh
 cd /path/to/dotfiles
-./install.sh            # stow every package
-./install.sh bash git   # or only the packages you name
+./install.sh            # すべてのパッケージを stow する
+./install.sh bash git   # 特定のパッケージを指定することも可能
 ```
 
-This repo does not have to live directly in `$HOME`, so `install.sh` always
-passes `--target="$HOME"` to Stow.
+このリポジトリは `$HOME` 直下に置く必要はないため、`install.sh` は常に
+`--target="$HOME"` を Stow に渡す。
 
-## Packages
+## パッケージ
 
-| Package  | Links into                                  |
-| -------- | ------------------------------------------- |
-| `bash`   | `~/.bashrc`, `~/.profile`                   |
-| `git`    | `~/.gitconfig`                              |
-| `vim`    | `~/.vimrc`                                  |
-| `claude` | Claude Code config under `~/.claude/`       |
+| パッケージ | リンク先                             |
+| ---------- | ------------------------------------ |
+| `bash`     | `~/.bashrc`, `~/.profile`            |
+| `git`      | `~/.gitconfig`                       |
+| `vim`      | `~/.vimrc`                           |
+| `claude`   | `~/.claude/` 配下の Claude Code 設定 |
 
-The `claude` package only tracks editable configuration — `CLAUDE.md`,
-`settings.json`, `commands/`, `hooks/`, and selected `skills/` — and leaves
-runtime state and secrets (`history.jsonl`, `projects/`, `sessions/`,
-`.credentials.json`, …) untouched in `~/.claude/`.
+`claude` パッケージが追跡するのは編集可能な設定 (`CLAUDE.md`、`settings.json`、
+`commands/`、`hooks/`、`skills/`) のみであり、ランタイム状態や秘密情報（`history.jsonl`、
+`projects/`、`sessions/`、`.credentials.json` など）は管理の対象外とし、
+`~/.claude/` 内に残す。
 
-> **Migrating an existing `~/.claude`:** because Claude Code already keeps real
-> files there, a plain `./install.sh claude` will conflict. Adopt the existing
-> files into the package instead (contents are identical, so the diff stays
-> clean):
+> **既存の `~/.claude` を移行する場合:** Claude Code は既にそこに実ファイルを
+> 保持しているため、単純な `./install.sh claude` は競合する。そのため代わりに既存の
+> ファイルをパッケージへ取り込む（内容は同一なので diff はクリーンなままとなる）。
 >
 > ```sh
 > stow --target="$HOME" --adopt claude
-> git diff   # confirm nothing changed
+> git diff   # 何も変わっていないことを確認する
 > ```
 
-### Existing files in `$HOME`
+### `$HOME` にある既存ファイル
 
-Stow refuses to overwrite a _real_ file that already exists in `$HOME`. If you
-already have e.g. a real `~/.bashrc`, either back it up first:
+Stow は `$HOME` に既に存在する実ファイルを上書きしない。例えば実ファイルの `~/.bashrc`
+が既にある場合は、下記のように先にバックアップを取る。
 
 ```sh
 mv ~/.bashrc ~/.bashrc.bak
 ```
 
-…or let Stow **adopt** it — this moves the existing file into the package and
-replaces it with a symlink, so review the diff afterwards:
+もしくは Stow に **adopt** させる。これは既存ファイルをパッケージへ移動し、
+シンボリックリンクに置き換えるので、実行後に diff を確認する。
 
 ```sh
 stow --target="$HOME" --adopt bash
-git diff   # confirm the adopted content matches what you expect
+git diff   # 取り込んだ内容が期待どおりか確認する
 ```
 
-## Uninstall
+## アンインストール
 
 ```sh
 stow --target="$HOME" -D bash git vim
 ```
 
-## Add a new dotfile
+## 新しい dotfile の追加
 
-Each top-level directory is a Stow _package_ whose contents mirror the layout of
-`$HOME`; stowing it symlinks those files into place (e.g. `bash/.bashrc` →
-`~/.bashrc`). To add a new one:
+各トップレベルディレクトリは `$HOME` のレイアウトを反映した Stow の _パッケージ_
+であり、stow するとそれらのファイルが所定の場所にシンボリックリンクされる。  
+（例: `bash/.bashrc` → `~/.bashrc`）
 
-1. Create the package directory mirroring its location under `$HOME`,
-   e.g. `tmux/.tmux.conf`.
-2. Move your config into it.
-3. Run `./install.sh tmux`.
+新しく追加する場合は下記を実行する。
+
+1. `$HOME` 配下の配置場所を反映したパッケージディレクトリを作成する
+   例: `tmux/.tmux.conf`。
+2. 設定ファイルをそこへ移動する
+3. `./install.sh tmux` を実行する
