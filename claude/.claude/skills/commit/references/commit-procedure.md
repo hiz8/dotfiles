@@ -7,7 +7,8 @@
 関連ファイル（いずれも絶対パスで参照する。`~` は `$HOME` に展開する）:
 
 - 規約本文: `~/.claude/skills/commit/references/commit-rules.md`
-- 機械チェック: `~/.claude/skills/commit/check-commit-message.mjs`
+- 機械チェック: `~/.claude/skills/commit/verify-commit-message.sh`
+  （commitlint + ローカル日本語プラグイン。初回実行時に `npm install` が一度走る）
 
 ## 手順
 
@@ -39,11 +40,15 @@
 5. 作成したメッセージを一時ファイルに書き出し、機械チェックを実行する。
 
    ```bash
-   node ~/.claude/skills/commit/check-commit-message.mjs <message-file>
+   ~/.claude/skills/commit/verify-commit-message.sh <message-file>
    ```
 
-   エラーが出たら文面を再調整して再実行し、エラーが無くなる（exit 0）まで繰り返す。
-   `--verbose` を付けると全行の表示幅一覧が出るので、桁数調整の参考にする。
+   commitlint が規約違反を検出する。エラーが出たら文面を再調整して再実行し、
+   エラーが無くなる（exit 0）まで繰り返す。種別・空 subject 等の標準ルールは英語、
+   表示幅・早すぎる改行・タイトル長・装飾・Co-Authored-By のローカルルールは日本語で
+   出力される。初回のみ commitlint の `npm install` が走る。
+   桁数調整に全行の表示幅一覧が必要なときは、補助ツール
+   `node ~/.claude/skills/commit/check-commit-message.mjs --verbose <message-file>` を使う。
 
    表示幅 70〜80 桁の目安と「早すぎる改行」の例外（文末で終わる行・次語を繰り上げると
    80 桁を超える行・URL/識別子を含む行）は、このチェックが判定する。70 桁未満の行が
@@ -65,9 +70,11 @@
 
 ## 機械チェックで検証できないルール
 
-`check-commit-message.mjs` は表示幅・タイトル長・種別プレフィックス・装飾記号のみを
-検証する。次のルールは自動検証できないため、`~/.claude/skills/commit/references/commit-rules.md`
-を必ず読み、コミット前に自己チェックすること。
+`verify-commit-message.sh`（commitlint）は表示幅・早すぎる改行・タイトル長・種別
+プレフィックス・許可種別・空 subject・subject 直後の空行・装飾記号・Co-Authored-By
+のみを検証する。次のルールは自動検証できないため、
+`~/.claude/skills/commit/references/commit-rules.md` を必ず読み、コミット前に自己チェック
+すること。
 
 - Why（技術的な原因・背景）を先に述べ、What を続ける。プロセス（「レビュー指摘の対応」
   など）を理由に書かない。

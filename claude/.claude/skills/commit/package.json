@@ -1,0 +1,15 @@
+{
+  "name": "commit-skill-commitlint",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "commit スキルのコミットメッセージ検証 (commitlint + ローカル日本語プラグイン)。dotfiles 本体は非 Node のため、ツールチェーンはこのスキル配下に閉じる。",
+  "scripts": {
+    "lint": "commitlint --config ./commitlint.config.mjs --edit",
+    "test": "node ./test/parity.mjs"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1"
+  }
+}

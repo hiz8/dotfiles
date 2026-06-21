@@ -5,3 +5,6 @@
 
 # Machine-local overrides (keep out of version control)
 *.local
+
+# Node deps for the commit skill's commitlint toolchain (lockfile is tracked)
+node_modules/
