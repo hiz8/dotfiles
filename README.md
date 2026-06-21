@@ -21,6 +21,30 @@ cd /path/to/dotfiles
 This repo does not have to live directly in `$HOME`, so `install.sh` always
 passes `--target="$HOME"` to Stow.
 
+## Packages
+
+| Package  | Links into                                  |
+| -------- | ------------------------------------------- |
+| `bash`   | `~/.bashrc`, `~/.profile`                   |
+| `git`    | `~/.gitconfig`                              |
+| `vim`    | `~/.vimrc`                                  |
+| `claude` | Claude Code config under `~/.claude/`       |
+
+The `claude` package only tracks editable configuration — `CLAUDE.md`,
+`settings.json`, `commands/`, `hooks/`, and selected `skills/` — and leaves
+runtime state and secrets (`history.jsonl`, `projects/`, `sessions/`,
+`.credentials.json`, …) untouched in `~/.claude/`.
+
+> **Migrating an existing `~/.claude`:** because Claude Code already keeps real
+> files there, a plain `./install.sh claude` will conflict. Adopt the existing
+> files into the package instead (contents are identical, so the diff stays
+> clean):
+>
+> ```sh
+> stow --target="$HOME" --adopt claude
+> git diff   # confirm nothing changed
+> ```
+
 ### Existing files in `$HOME`
 
 Stow refuses to overwrite a _real_ file that already exists in `$HOME`. If you
