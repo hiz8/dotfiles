@@ -1,6 +1,6 @@
 [alias]
 	tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	cleanup = !git branch --merged | grep -vE "^\\*|main|master|develop" | xargs -n 1 git branch -d
+	cleanup = !git branch --merged | grep -vE \"^\\*|main|master|develop\" | xargs -r -n 1 git branch -d
 	pushf = push --force-with-lease
 [user]
 	name = hiz8
