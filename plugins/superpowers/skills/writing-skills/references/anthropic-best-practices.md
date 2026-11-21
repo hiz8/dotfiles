@@ -1,33 +1,33 @@
-# Skill authoring best practices
+# スキル作成のベストプラクティス
 
-> Learn how to write effective Skills that agents can discover and use successfully.
+> エージェントが見つけて使いこなせる、効果的なスキルの書き方を学びます。
 
-Good Skills are concise, well-structured, and tested with real usage. This guide provides practical authoring decisions to help you write Skills that agents can discover and use effectively.
+優れたスキルは、簡潔で、よく構造化され、実際の利用でテストされています。このガイドは、エージェントが効果的に発見して使えるスキルを書くための、実践的な作成上の判断を示します。
 
-For conceptual background on how Skills work, see the [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview).
+スキルがどのように機能するかの概念的な背景は、[Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) を参照してください。
 
-## Core principles
+## 基本原則
 
-### Concise is key
+### 簡潔さが鍵
 
-The [context window](https://platform.claude.com/docs/en/build-with-claude/context-windows) is a public good. Your Skill shares the context window with everything else your agent needs to know, including:
+[コンテキストウィンドウ](https://platform.claude.com/docs/en/build-with-claude/context-windows) は公共財です。あなたのスキルは、エージェントが知っておく必要のあるほかのすべてとコンテキストウィンドウを共有します。それには次のものが含まれます。
 
-* The system prompt
-* Conversation history
-* Other Skills' metadata
-* Your actual request
+* システムプロンプト
+* 会話履歴
+* ほかのスキルのメタデータ
+* あなたの実際のリクエスト
 
-Not every token in your Skill has an immediate cost. At startup, only the metadata (name and description) from all Skills is pre-loaded. Agents read SKILL.md only when the Skill becomes relevant, and read additional files only as needed. However, being concise in SKILL.md still matters: once an agent loads it, every token competes with conversation history and other context.
+スキルのすべてのトークンに、即座にコストがかかるわけではありません。起動時には、すべてのスキルのメタデータ（name と description）だけが事前に読み込まれます。エージェントは、スキルが関連するものになったときにだけ SKILL.md を読み、追加のファイルは必要に応じてのみ読みます。それでも SKILL.md を簡潔にすることは重要です。エージェントが一度読み込んだら、すべてのトークンが会話履歴やほかのコンテキストと競合するからです。
 
-**Default assumption**: Agents are already very smart
+**既定の前提**: エージェントはすでに非常に賢い
 
-Only add context agents don't already have. Challenge each piece of information:
+エージェントがまだ持っていないコンテキストだけを追加してください。それぞれの情報を吟味します。
 
-* "Does the agent really need this explanation?"
-* "Can I assume the agent knows this?"
-* "Does this paragraph justify its token cost?"
+* 「エージェントは本当にこの説明を必要としているか?」
+* 「エージェントがこれを知っていると仮定してよいか?」
+* 「この段落は、そのトークンコストに見合うか?」
 
-**Good example: Concise** (approximately 50 tokens):
+**良い例: 簡潔**（約 50 トークン）:
 
 ````markdown  theme={null}
 ## Extract PDF text
@@ -42,7 +42,7 @@ with pdfplumber.open("file.pdf") as pdf:
 ```
 ````
 
-**Bad example: Too verbose** (approximately 150 tokens):
+**悪い例: 冗長すぎる**（約 150 トークン）:
 
 ```markdown  theme={null}
 ## Extract PDF text
@@ -54,21 +54,21 @@ recommend pdfplumber because it's easy to use and handles most cases well.
 First, you'll need to install it using pip. Then you can use the code below...
 ```
 
-The concise version assumes the agent knows what PDFs are and how libraries work.
+簡潔なバージョンは、エージェントが PDF とは何か、ライブラリがどう機能するかを知っていると仮定しています。
 
-### Set appropriate degrees of freedom
+### 適切な自由度を設定する
 
-Match the level of specificity to the task's fragility and variability.
+具体性の度合いを、タスクの壊れやすさと変動の大きさに合わせます。
 
-**High freedom** (text-based instructions):
+**高い自由度**（テキストベースの指示）:
 
-Use when:
+次の場合に使います。
 
-* Multiple approaches are valid
-* Decisions depend on context
-* Heuristics guide the approach
+* 複数のアプローチが妥当である
+* 判断がコンテキストに依存する
+* ヒューリスティクスがアプローチを導く
 
-Example:
+例:
 
 ```markdown  theme={null}
 ## Code review process
@@ -79,15 +79,15 @@ Example:
 4. Verify adherence to project conventions
 ```
 
-**Medium freedom** (pseudocode or scripts with parameters):
+**中程度の自由度**（疑似コード、またはパラメータ付きのスクリプト）:
 
-Use when:
+次の場合に使います。
 
-* A preferred pattern exists
-* Some variation is acceptable
-* Configuration affects behavior
+* 望ましいパターンがある
+* ある程度のばらつきが許容される
+* 設定が挙動に影響する
 
-Example:
+例:
 
 ````markdown  theme={null}
 ## Generate report
@@ -102,15 +102,15 @@ def generate_report(data, format="markdown", include_charts=True):
 ```
 ````
 
-**Low freedom** (specific scripts, few or no parameters):
+**低い自由度**（特定のスクリプト、パラメータが少ないか、まったくない）:
 
-Use when:
+次の場合に使います。
 
-* Operations are fragile and error-prone
-* Consistency is critical
-* A specific sequence must be followed
+* 操作が壊れやすく、エラーを起こしやすい
+* 一貫性が極めて重要である
+* 特定の順序に従わなければならない
 
-Example:
+例:
 
 ````markdown  theme={null}
 ## Database migration
@@ -124,101 +124,101 @@ python scripts/migrate.py --verify --backup
 Do not modify the command or add additional flags.
 ````
 
-**Analogy**: Think of the agent as a robot exploring a path:
+**たとえ話**: エージェントを、道を探索するロボットだと考えてください。
 
-* **Narrow bridge with cliffs on both sides**: There's only one safe way forward. Provide specific guardrails and exact instructions (low freedom). Example: database migrations that must run in exact sequence.
-* **Open field with no hazards**: Many paths lead to success. Give general direction and trust the agent to find the best route (high freedom). Example: code reviews where context determines the best approach.
+* **両側が崖になっている狭い橋**: 安全に進める道は 1 つしかありません。具体的なガードレールと正確な指示を与えます（低い自由度）。例: 正確な順序で実行しなければならないデータベースのマイグレーション。
+* **危険のない開けた野原**: 成功に至る道はたくさんあります。大まかな方向を示し、最適なルートを見つけることをエージェントに任せます（高い自由度）。例: コンテキストによって最適なアプローチが決まるコードレビュー。
 
-### Test with all models you plan to use
+### 使う予定のすべてのモデルでテストする
 
-Skills act as additions to models, so effectiveness depends on the underlying model. Test your Skill with all the models you plan to use it with.
+スキルはモデルへの追加要素として機能するため、有効性は基盤となるモデルに左右されます。スキルを使う予定のすべてのモデルでテストしてください。
 
-**Testing considerations by model**:
+**モデルごとのテストの観点**:
 
-* **Claude Haiku** (fast, economical): Does the Skill provide enough guidance?
-* **Claude Sonnet** (balanced): Is the Skill clear and efficient?
-* **Claude Opus** (powerful reasoning): Does the Skill avoid over-explaining?
+* **Claude Haiku**（高速、経済的）: スキルは十分なガイダンスを提供しているか
+* **Claude Sonnet**（バランス型）: スキルは明確で効率的か
+* **Claude Opus**（強力な推論）: スキルは説明しすぎを避けているか
 
-What works perfectly for Opus might need more detail for Haiku. If you plan to use your Skill across multiple models, aim for instructions that work well with all of them.
+Opus で完璧に機能するものが、Haiku ではより詳しい説明を必要とすることがあります。複数のモデルでスキルを使う予定なら、そのすべてでうまく機能する指示を目指してください。
 
-## Skill structure
+## スキルの構造
 
 <Note>
-  **YAML Frontmatter**: The SKILL.md frontmatter requires two fields:
+  **YAML frontmatter**: SKILL.md の frontmatter には 2 つのフィールドが必要です。
 
-  * `name` - Human-readable name of the Skill (64 characters maximum)
-  * `description` - One-line description of what the Skill does and when to use it (1024 characters maximum)
+  * `name` - スキルの人間が読める名前（最大 64 文字）
+  * `description` - スキルが何をするか、いつ使うかの 1 行の説明（最大 1024 文字）
 
-  For complete Skill structure details, see the [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#skill-structure).
+  スキルの構造の完全な詳細は、[Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#skill-structure) を参照してください。
 </Note>
 
-### Naming conventions
+### 命名規則
 
-Use consistent naming patterns to make Skills easier to reference and discuss. We recommend using **gerund form** (verb + -ing) for Skill names, as this clearly describes the activity or capability the Skill provides.
+一貫した命名パターンを使うと、スキルを参照したり議論したりしやすくなります。スキルの名前には**動名詞形**（動詞 + -ing）を使うことを推奨します。スキルが提供する活動や能力を明確に表すからです。
 
-**Good naming examples (gerund form)**:
+**良い命名の例（動名詞形）**:
 
-* "Processing PDFs"
-* "Analyzing spreadsheets"
-* "Managing databases"
-* "Testing code"
-* "Writing documentation"
+* 「Processing PDFs」
+* 「Analyzing spreadsheets」
+* 「Managing databases」
+* 「Testing code」
+* 「Writing documentation」
 
-**Acceptable alternatives**:
+**許容できる代替案**:
 
-* Noun phrases: "PDF Processing", "Spreadsheet Analysis"
-* Action-oriented: "Process PDFs", "Analyze Spreadsheets"
+* 名詞句: 「PDF Processing」、「Spreadsheet Analysis」
+* 動作指向: 「Process PDFs」、「Analyze Spreadsheets」
 
-**Avoid**:
+**避けるもの**:
 
-* Vague names: "Helper", "Utils", "Tools"
-* Overly generic: "Documents", "Data", "Files"
-* Inconsistent patterns within your skill collection
+* 曖昧な名前: 「Helper」、「Utils」、「Tools」
+* 一般的すぎる名前: 「Documents」、「Data」、「Files」
+* スキルのコレクション内で一貫しないパターン
 
-Consistent naming makes it easier to:
+一貫した命名には、次の利点があります。
 
-* Reference Skills in documentation and conversations
-* Understand what a Skill does at a glance
-* Organize and search through multiple Skills
-* Maintain a professional, cohesive skill library
+* ドキュメントや会話でスキルを参照しやすくなる
+* スキルが何をするかが、ひと目でわかる
+* 複数のスキルを整理し、検索しやすくなる
+* プロフェッショナルで一貫したスキルライブラリを維持できる
 
-### Writing effective descriptions
+### 効果的な description を書く
 
-The `description` field enables Skill discovery and should include both what the Skill does and when to use it.
+`description` フィールドはスキルの発見を可能にするもので、スキルが何をするかと、いつ使うかの両方を含めるべきです。
 
 <Warning>
-  **Always write in third person**. The description is injected into the system prompt, and inconsistent point-of-view can cause discovery problems.
+  **必ず三人称で書いてください**。description はシステムプロンプトに注入されるため、視点が一貫していないと発見の問題を引き起こすことがあります。
 
-  * **Good:** "Processes Excel files and generates reports"
-  * **Avoid:** "I can help you process Excel files"
-  * **Avoid:** "You can use this to process Excel files"
+  * **良い:** 「Processes Excel files and generates reports」
+  * **避ける:** 「I can help you process Excel files」
+  * **避ける:** 「You can use this to process Excel files」
 </Warning>
 
-**Be specific and include key terms**. Include both what the Skill does and specific triggers/contexts for when to use it.
+**具体的に書き、重要な用語を含めてください**。スキルが何をするかと、いつ使うかの具体的なトリガー・コンテキストの両方を含めます。
 
-Each Skill has exactly one description field. The description is critical for skill selection: agents use it to choose the right Skill from potentially 100+ available Skills. Your description must provide enough detail for an agent to know when to select this Skill, while the rest of SKILL.md provides the implementation details.
+各スキルには、description フィールドがちょうど 1 つあります。description はスキルの選択にとって極めて重要です。エージェントは、利用可能な 100 以上にもなり得るスキルの中から適切なものを選ぶために、これを使います。description は、エージェントがこのスキルをいつ選ぶべきかを判断するのに十分な詳細を提供しなければなりません。一方、SKILL.md のそれ以外の部分が実装の詳細を提供します。
 
-Effective examples:
+効果的な例:
 
-**PDF Processing skill:**
+**PDF Processing スキル:**
 
 ```yaml  theme={null}
 description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ```
 
-**Excel Analysis skill:**
+**Excel Analysis スキル:**
 
 ```yaml  theme={null}
 description: Analyze Excel spreadsheets, create pivot tables, generate charts. Use when analyzing Excel files, spreadsheets, tabular data, or .xlsx files.
 ```
 
-**Git Commit Helper skill:**
+**Git Commit Helper スキル:**
 
 ```yaml  theme={null}
 description: Generate descriptive commit messages by analyzing git diffs. Use when the user asks for help writing commit messages or reviewing staged changes.
 ```
 
-Avoid vague descriptions like these:
+次のような曖昧な description は避けてください。
 
 ```yaml  theme={null}
 description: Helps with documents
@@ -232,27 +232,27 @@ description: Processes data
 description: Does stuff with files
 ```
 
-### Progressive disclosure patterns
+### 段階的開示のパターン
 
-SKILL.md serves as an overview that points agents to detailed materials as needed, like a table of contents in an onboarding guide. For an explanation of how progressive disclosure works, see [How Skills work](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#how-skills-work) in the overview.
+SKILL.md は、オンボーディングガイドの目次のように、必要に応じてエージェントを詳細な資料へ案内する概要として機能します。段階的開示の仕組みの説明は、概要の [How Skills work](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#how-skills-work) を参照してください。
 
-**Practical guidance:**
+**実践的なガイダンス:**
 
-* Keep SKILL.md body under 500 lines for optimal performance
-* Split content into separate files when approaching this limit
-* Use the patterns below to organize instructions, code, and resources effectively
+* 最適なパフォーマンスのために、SKILL.md の本文は 500 行未満に保つ
+* この上限に近づいたら、内容を別のファイルに分割する
+* 以下のパターンを使って、指示、コード、リソースを効果的に整理する
 
-#### Visual overview: From simple to complex
+#### 視覚的な概要: 単純なものから複雑なものへ
 
-A basic Skill starts with just a SKILL.md file containing metadata and instructions:
+基本的なスキルは、メタデータと指示を含む SKILL.md ファイルだけから始まります。
 
 <img src="https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=87782ff239b297d9a9e8e1b72ed72db9" alt="Simple SKILL.md file showing YAML frontmatter and markdown body" data-og-width="2048" width="2048" data-og-height="1153" height="1153" data-path="images/agent-skills-simple-file.png" data-optimize="true" data-opv="3" srcset="https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?w=280&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=c61cc33b6f5855809907f7fda94cd80e 280w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?w=560&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=90d2c0c1c76b36e8d485f49e0810dbfd 560w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?w=840&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=ad17d231ac7b0bea7e5b4d58fb4aeabb 840w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?w=1100&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=f5d0a7a3c668435bb0aee9a3a8f8c329 1100w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?w=1650&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=0e927c1af9de5799cfe557d12249f6e6 1650w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-simple-file.png?w=2500&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=46bbb1a51dd4c8202a470ac8c80a893d 2500w" />
 
-As your Skill grows, you can bundle additional content that agents load only when needed:
+スキルが成長するにつれて、エージェントが必要なときにだけ読み込む追加の内容を同梱できます。
 
 <img src="https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=a5e0aa41e3d53985a7e3e43668a33ea3" alt="Bundling additional reference files like reference.md and forms.md." data-og-width="2048" width="2048" data-og-height="1327" height="1327" data-path="images/agent-skills-bundling-content.png" data-optimize="true" data-opv="3" srcset="https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?w=280&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=f8a0e73783e99b4a643d79eac86b70a2 280w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?w=560&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=dc510a2a9d3f14359416b706f067904a 560w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?w=840&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=82cd6286c966303f7dd914c28170e385 840w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?w=1100&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=56f3be36c77e4fe4b523df209a6824c6 1100w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?w=1650&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=d22b5161b2075656417d56f41a74f3dd 1650w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-bundling-content.png?w=2500&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=3dd4bdd6850ffcc96c6c45fcb0acd6eb 2500w" />
 
-The complete Skill directory structure might look like this:
+完全なスキルのディレクトリ構造は、次のようになることがあります。
 
 ```
 pdf/
@@ -266,7 +266,7 @@ pdf/
     └── validate.py       # Validation script
 ```
 
-#### Pattern 1: High-level guide with references
+#### パターン 1: 参照を持つ高レベルのガイド
 
 ````markdown  theme={null}
 ---
@@ -292,11 +292,11 @@ with pdfplumber.open("file.pdf") as pdf:
 **Examples**: See [EXAMPLES.md](EXAMPLES.md) for common patterns
 ````
 
-Agents load FORMS.md, REFERENCE.md, or EXAMPLES.md only when needed.
+エージェントは、FORMS.md、REFERENCE.md、EXAMPLES.md を必要なときにだけ読み込みます。
 
-#### Pattern 2: Domain-specific organization
+#### パターン 2: ドメイン別の構成
 
-For Skills with multiple domains, organize content by domain to avoid loading irrelevant context. When a user asks about sales metrics, the agent only needs to read sales-related schemas, not finance or marketing data. This keeps token usage low and context focused.
+複数のドメインを持つスキルでは、無関係なコンテキストの読み込みを避けるために、ドメインごとに内容を整理します。ユーザーが売上指標について尋ねたとき、エージェントが読む必要があるのは売上関連のスキーマだけで、財務やマーケティングのデータは不要です。これにより、トークンの使用量が低く保たれ、コンテキストが集中したままになります。
 
 ```
 bigquery-skill/
@@ -329,9 +329,9 @@ grep -i "api usage" reference/product.md
 ```
 ````
 
-#### Pattern 3: Conditional details
+#### パターン 3: 条件付きの詳細
 
-Show basic content, link to advanced content:
+基本的な内容を示し、高度な内容へリンクします。
 
 ```markdown  theme={null}
 # DOCX Processing
@@ -348,15 +348,15 @@ For simple edits, modify the XML directly.
 **For OOXML details**: See [OOXML.md](OOXML.md)
 ```
 
-Agents read REDLINING.md or OOXML.md only when the user needs those features.
+エージェントは、ユーザーがそれらの機能を必要とするときにだけ REDLINING.md や OOXML.md を読みます。
 
-### Avoid deeply nested references
+### 深くネストした参照を避ける
 
-Agents may partially read files when they're referenced from other referenced files. When encountering nested references, an agent might use commands like `head -100` to preview content rather than reading entire files, resulting in incomplete information.
+エージェントは、参照されたファイルからさらに参照されているファイルを、部分的にしか読まないことがあります。ネストした参照に遭遇すると、エージェントはファイル全体を読む代わりに `head -100` のようなコマンドで内容をプレビューし、不完全な情報になることがあります。
 
-**Keep references one level deep from SKILL.md**. All reference files should link directly from SKILL.md to ensure agents read complete files when needed.
+**参照は SKILL.md から 1 階層の深さにとどめてください**。必要なときにエージェントがファイル全体を読むよう、すべての参照ファイルは SKILL.md から直接リンクしてください。
 
-**Bad example: Too deep**:
+**悪い例: 深すぎる**:
 
 ```markdown  theme={null}
 # SKILL.md
@@ -369,7 +369,7 @@ See [details.md](details.md)...
 Here's the actual information...
 ```
 
-**Good example: One level deep**:
+**良い例: 1 階層の深さ**:
 
 ```markdown  theme={null}
 # SKILL.md
@@ -380,11 +380,11 @@ Here's the actual information...
 **Examples**: See [examples.md](examples.md)
 ```
 
-### Structure longer reference files with table of contents
+### 長い参照ファイルは目次で構造化する
 
-For reference files longer than 100 lines, include a table of contents at the top. This ensures agents can see the full scope of available information even when previewing with partial reads.
+100 行を超える参照ファイルには、先頭に目次を入れます。これにより、部分的な読み取りでプレビューする場合でも、エージェントは利用可能な情報の全体像を把握できます。
 
-**Example**:
+**例**:
 
 ```markdown  theme={null}
 # API Reference
@@ -403,17 +403,17 @@ For reference files longer than 100 lines, include a table of contents at the to
 ...
 ```
 
-Agents can then read the complete file or jump to specific sections as needed.
+エージェントは、そのうえでファイル全体を読むことも、必要に応じて特定の節へ移動することもできます。
 
-For details on how this filesystem-based architecture enables progressive disclosure, see the [Runtime environment](#runtime-environment) section in the Advanced section below.
+このファイルシステムベースのアーキテクチャがどのように段階的開示を可能にするかの詳細は、下の「高度な内容」にある[ランタイム環境](#runtime-environment)の節を参照してください。
 
-## Workflows and feedback loops
+## ワークフローとフィードバックループ
 
-### Use workflows for complex tasks
+### 複雑なタスクにはワークフローを使う
 
-Break complex operations into clear, sequential steps. For particularly complex workflows, provide a checklist that the agent can copy into its response and check off as it progresses.
+複雑な操作を、明確で順序立った手順に分解します。特に複雑なワークフローでは、エージェントが応答にコピーして、進めながらチェックを付けられるチェックリストを提供してください。
 
-**Example 1: Research synthesis workflow** (for Skills without code):
+**例 1: 調査の統合ワークフロー**（コードを含まないスキル向け）:
 
 ````markdown  theme={null}
 ## Research synthesis workflow
@@ -453,9 +453,9 @@ Organize findings by theme. Include:
 Check that every claim references the correct source document. If citations are incomplete, return to Step 3.
 ````
 
-This example shows how workflows apply to analysis tasks that don't require code. The checklist pattern works for any complex, multi-step process.
+この例は、コードを必要としない分析タスクにワークフローがどう適用されるかを示しています。チェックリストのパターンは、複雑な複数ステップのどんなプロセスにもうまく機能します。
 
-**Example 2: PDF form filling workflow** (for Skills with code):
+**例 2: PDF フォーム入力のワークフロー**（コードを含むスキル向け）:
 
 ````markdown  theme={null}
 ## PDF form filling workflow
@@ -498,15 +498,15 @@ Run: `python scripts/verify_output.py output.pdf`
 If verification fails, return to Step 2.
 ````
 
-Clear steps prevent agents from skipping critical validation. The checklist helps both you and the agent track progress through multi-step workflows.
+明確な手順は、エージェントが重要な検証を飛ばすのを防ぎます。チェックリストは、あなたとエージェントの双方が、複数ステップのワークフローの進捗を追うのに役立ちます。
 
-### Implement feedback loops
+### フィードバックループを実装する
 
-**Common pattern**: Run validator → fix errors → repeat
+**よくあるパターン**: バリデーターを実行 → エラーを修正 → 繰り返す
 
-This pattern greatly improves output quality.
+このパターンは出力の品質を大幅に向上させます。
 
-**Example 1: Style guide compliance** (for Skills without code):
+**例 1: スタイルガイドへの準拠**（コードを含まないスキル向け）:
 
 ```markdown  theme={null}
 ## Content review process
@@ -524,9 +524,9 @@ This pattern greatly improves output quality.
 5. Finalize and save the document
 ```
 
-This shows the validation loop pattern using reference documents instead of scripts. The "validator" is STYLE\_GUIDE.md, and the agent performs the check by reading and comparing.
+これは、スクリプトの代わりに参照ドキュメントを使った検証ループのパターンを示しています。「バリデーター」は STYLE\_GUIDE.md であり、エージェントは読んで比較することでチェックを行います。
 
-**Example 2: Document editing process** (for Skills with code):
+**例 2: ドキュメントの編集プロセス**（コードを含むスキル向け）:
 
 ```markdown  theme={null}
 ## Document editing process
@@ -542,22 +542,22 @@ This shows the validation loop pattern using reference documents instead of scri
 6. Test the output document
 ```
 
-The validation loop catches errors early.
+検証ループはエラーを早期に捕捉します。
 
-## Content guidelines
+## コンテンツのガイドライン
 
-### Avoid time-sensitive information
+### 時間に依存する情報を避ける
 
-Don't include information that will become outdated:
+古くなる情報を含めないでください。
 
-**Bad example: Time-sensitive** (will become wrong):
+**悪い例: 時間に依存する**（誤りになる）:
 
 ```markdown  theme={null}
 If you're doing this before August 2025, use the old API.
 After August 2025, use the new API.
 ```
 
-**Good example** (use "old patterns" section):
+**良い例**（「古いパターン」の節を使う）:
 
 ```markdown  theme={null}
 ## Current method
@@ -575,33 +575,33 @@ This endpoint is no longer supported.
 </details>
 ```
 
-The old patterns section provides historical context without cluttering the main content.
+古いパターンの節は、主要な内容を散らかすことなく、歴史的な文脈を提供します。
 
-### Use consistent terminology
+### 一貫した用語を使う
 
-Choose one term and use it throughout the Skill:
+1 つの用語を選び、スキル全体でそれを使います。
 
-**Good - Consistent**:
+**良い - 一貫している**:
 
-* Always "API endpoint"
-* Always "field"
-* Always "extract"
+* 常に「API endpoint」
+* 常に「field」
+* 常に「extract」
 
-**Bad - Inconsistent**:
+**悪い - 一貫していない**:
 
-* Mix "API endpoint", "URL", "API route", "path"
-* Mix "field", "box", "element", "control"
-* Mix "extract", "pull", "get", "retrieve"
+* 「API endpoint」「URL」「API route」「path」を混在させる
+* 「field」「box」「element」「control」を混在させる
+* 「extract」「pull」「get」「retrieve」を混在させる
 
-Consistency helps agents understand and follow instructions.
+一貫性は、エージェントが指示を理解して従うのに役立ちます。
 
-## Common patterns
+## よくあるパターン
 
-### Template pattern
+### テンプレートのパターン
 
-Provide templates for output format. Match the level of strictness to your needs.
+出力形式のテンプレートを提供します。厳格さの度合いを、必要に合わせます。
 
-**For strict requirements** (like API responses or data formats):
+**厳格な要件の場合**（API のレスポンスやデータ形式など）:
 
 ````markdown  theme={null}
 ## Report structure
@@ -625,7 +625,7 @@ ALWAYS use this exact template structure:
 ```
 ````
 
-**For flexible guidance** (when adaptation is useful):
+**柔軟なガイダンスの場合**（適応が有用なとき）:
 
 ````markdown  theme={null}
 ## Report structure
@@ -648,9 +648,9 @@ Here is a sensible default format, but use your best judgment based on the analy
 Adjust sections as needed for the specific analysis type.
 ````
 
-### Examples pattern
+### 例のパターン
 
-For Skills where output quality depends on seeing examples, provide input/output pairs just like in regular prompting:
+出力の品質が例を見ることに左右されるスキルでは、通常のプロンプトと同じように、入力と出力のペアを提供します。
 
 ````markdown  theme={null}
 ## Commit message format
@@ -688,11 +688,11 @@ chore: update dependencies and refactor error handling
 Follow this style: type(scope): brief description, then detailed explanation.
 ````
 
-Examples help agents understand the desired style and level of detail more clearly than descriptions alone.
+例は、説明だけの場合よりも、望ましいスタイルと詳細さの度合いをエージェントが明確に理解するのに役立ちます。
 
-### Conditional workflow pattern
+### 条件付きワークフローのパターン
 
-Guide agents through decision points:
+エージェントを判断ポイントに沿って導きます。
 
 ```markdown  theme={null}
 ## Document modification workflow
@@ -715,26 +715,26 @@ Guide agents through decision points:
 ```
 
 <Tip>
-  If workflows become large or complicated with many steps, consider pushing them into separate files and tell the agent to read the appropriate file based on the task at hand.
+  ワークフローが大きくなったり、多くの手順で複雑になったりする場合は、別々のファイルに押し出し、目の前のタスクに応じて適切なファイルを読むようエージェントに指示することを検討してください。
 </Tip>
 
-## Evaluation and iteration
+## 評価と反復
 
-### Build evaluations first
+### 評価を先に作る
 
-**Create evaluations BEFORE writing extensive documentation.** This ensures your Skill solves real problems rather than documenting imagined ones.
+**大がかりなドキュメントを書く前に、評価を作成してください。** これにより、スキルが想像上の問題を文書化するのではなく、実際の問題を解決することが確実になります。
 
-**Evaluation-driven development:**
+**評価駆動の開発:**
 
-1. **Identify gaps**: Run your agent on representative tasks without a Skill. Document specific failures or missing context
-2. **Create evaluations**: Build three scenarios that test these gaps
-3. **Establish baseline**: Measure the agent's performance without the Skill
-4. **Write minimal instructions**: Create just enough content to address the gaps and pass evaluations
-5. **Iterate**: Execute evaluations, compare against baseline, and refine
+1. **ギャップを特定する**: スキルなしで、代表的なタスクでエージェントを実行します。具体的な失敗や不足しているコンテキストを記録します
+2. **評価を作成する**: これらのギャップをテストする 3 つのシナリオを作ります
+3. **ベースラインを確立する**: スキルなしでのエージェントのパフォーマンスを測定します
+4. **最小限の指示を書く**: ギャップに対処し、評価に合格するのに足りるだけの内容を作ります
+5. **反復する**: 評価を実行し、ベースラインと比較し、改善します
 
-This approach ensures you're solving actual problems rather than anticipating requirements that may never materialize.
+このアプローチにより、実現しないかもしれない要件を先取りするのではなく、実際の問題を解決していることが確かになります。
 
-**Evaluation structure**:
+**評価の構造**:
 
 ```json  theme={null}
 {
@@ -750,90 +750,90 @@ This approach ensures you're solving actual problems rather than anticipating re
 ```
 
 <Note>
-  This example demonstrates a data-driven evaluation with a simple testing rubric. We do not currently provide a built-in way to run these evaluations. Users can create their own evaluation system. Evaluations are your source of truth for measuring Skill effectiveness.
+  この例は、単純なテストの評価基準を用いたデータ駆動の評価を示しています。これらの評価を実行するための組み込みの方法は、現時点では提供していません。ユーザーは独自の評価システムを作成できます。評価は、スキルの有効性を測るための信頼できる情報源です。
 </Note>
 
-### Develop Skills iteratively with the agent
+### エージェントとともにスキルを反復的に開発する
 
-The most effective Skill development process involves the agent itself. Work with one instance ("Agent A") to create a Skill that will be used by other instances ("Agent B"). Agent A helps you design and refine instructions, while Agent B tests them in real tasks. This works because the underlying models understand both how to write effective agent instructions and what information agents need.
+最も効果的なスキル開発のプロセスには、エージェント自身が関わります。1 つのインスタンス（「エージェント A」）とともに、ほかのインスタンス（「エージェント B」）が使うスキルを作成します。エージェント A は指示の設計と改善を助け、エージェント B は実際のタスクでそれをテストします。これがうまく機能するのは、基盤となるモデルが、効果的なエージェントへの指示の書き方と、エージェントがどんな情報を必要とするかの両方を理解しているからです。
 
-**Creating a new Skill:**
+**新しいスキルを作成する:**
 
-1. **Complete a task without a Skill**: Work through a problem with Agent A using normal prompting. As you work, you'll naturally provide context, explain preferences, and share procedural knowledge. Notice what information you repeatedly provide.
+1. **スキルなしでタスクを完了する**: 通常のプロンプトで、エージェント A とともに問題に取り組みます。作業しながら、自然にコンテキストを提供し、好みを説明し、手続き的な知識を共有することになります。繰り返し提供している情報に注目してください。
 
-2. **Identify the reusable pattern**: After completing the task, identify what context you provided that would be useful for similar future tasks.
+2. **再利用できるパターンを特定する**: タスクを完了したあと、将来の似たタスクに役立つはずの、自分が提供したコンテキストを特定します。
 
-   **Example**: If you worked through a BigQuery analysis, you might have provided table names, field definitions, filtering rules (like "always exclude test accounts"), and common query patterns.
+   **例**: BigQuery の分析に取り組んだなら、テーブル名、フィールドの定義、フィルタリングのルール（「テストアカウントを常に除外する」など）、よくあるクエリのパターンを提供したかもしれません。
 
-3. **Ask Agent A to create a Skill**: "Create a Skill that captures this BigQuery analysis pattern we just used. Include the table schemas, naming conventions, and the rule about filtering test accounts."
+3. **エージェント A にスキルの作成を依頼する**: 「今使った BigQuery の分析パターンを捉えたスキルを作成してください。テーブルスキーマ、命名規則、テストアカウントを除外するルールを含めてください。」
 
    <Tip>
-     Modern agents understand the Skill format and structure natively. You don't need special system prompts or a "writing skills" skill to get help creating Skills. Simply ask the agent to create a Skill and it will generate properly structured SKILL.md content with appropriate frontmatter and body content.
+     最近のエージェントは、スキルの形式と構造をネイティブに理解しています。スキルの作成を手伝ってもらうために、特別なシステムプロンプトや「スキルを書くスキル」は必要ありません。エージェントにスキルの作成を頼むだけで、適切な frontmatter と本文を持つ、正しく構造化された SKILL.md の内容が生成されます。
    </Tip>
 
-4. **Review for conciseness**: Check that Agent A hasn't added unnecessary explanations. Ask: "Remove the explanation about what win rate means - the agent already knows that."
+4. **簡潔さをレビューする**: エージェント A が不要な説明を加えていないかを確認します。次のように頼みます。「勝率とは何かの説明は削除してください - エージェントはすでに知っています。」
 
-5. **Improve information architecture**: Ask Agent A to organize the content more effectively. For example: "Organize this so the table schema is in a separate reference file. We might add more tables later."
+5. **情報アーキテクチャを改善する**: エージェント A に、内容をより効果的に整理するよう頼みます。たとえば次のとおりです。「テーブルスキーマは別の参照ファイルに入れるよう整理してください。あとでテーブルを追加するかもしれません。」
 
-6. **Test on similar tasks**: Use the Skill with Agent B (a fresh instance with the Skill loaded) on related use cases. Observe whether Agent B finds the right information, applies rules correctly, and handles the task successfully.
+6. **似たタスクでテストする**: 関連するユースケースで、エージェント B（スキルを読み込んだ新しいインスタンス）とともにスキルを使います。エージェント B が正しい情報を見つけ、ルールを正しく適用し、タスクをうまく処理するかを観察します。
 
-7. **Iterate based on observation**: If Agent B struggles or misses something, return to Agent A with specifics: "When the agent used this Skill, it forgot to filter by date for Q4. Should we add a section about date filtering patterns?"
+7. **観察に基づいて反復する**: エージェント B が苦戦したり何かを見落としたりした場合は、具体的な内容を持ってエージェント A に戻ります。「エージェントがこのスキルを使ったとき、第 4 四半期の日付によるフィルタリングを忘れました。日付フィルタリングのパターンに関する節を追加すべきでしょうか?」
 
-**Iterating on existing Skills:**
+**既存のスキルを反復する:**
 
-The same hierarchical pattern continues when improving Skills. You alternate between:
+スキルを改善するときも、同じ階層的なパターンが続きます。次の 2 つを交互に行います。
 
-* **Working with Agent A** (the expert who helps refine the Skill)
-* **Testing with Agent B** (the agent using the Skill to perform real work)
-* **Observing Agent B's behavior** and bringing insights back to Agent A
+* **エージェント A とともに作業する**（スキルの改善を助ける専門家）
+* **エージェント B でテストする**（スキルを使って実際の作業を行うエージェント）
+* **エージェント B の挙動を観察し**、得られた洞察をエージェント A に持ち帰る
 
-1. **Use the Skill in real workflows**: Give Agent B (with the Skill loaded) actual tasks, not test scenarios
+1. **実際のワークフローでスキルを使う**: エージェント B（スキルを読み込み済み）に、テストシナリオではなく実際のタスクを与えます
 
-2. **Observe Agent B's behavior**: Note where it struggles, succeeds, or makes unexpected choices
+2. **エージェント B の挙動を観察する**: どこで苦戦し、どこで成功し、どこで予想外の選択をするかに注目します
 
-   **Example observation**: "When I asked Agent B for a regional sales report, it wrote the query but forgot to filter out test accounts, even though the Skill mentions this rule."
+   **観察の例**: 「エージェント B に地域別の売上レポートを頼んだとき、スキルにこのルールが書かれているのに、クエリを書いたものの、テストアカウントの除外を忘れました。」
 
-3. **Return to Agent A for improvements**: Share the current SKILL.md and describe what you observed. Ask: "I noticed Agent B forgot to filter test accounts when I asked for a regional report. The Skill mentions filtering, but maybe it's not prominent enough?"
+3. **改善のためにエージェント A に戻る**: 現在の SKILL.md を共有し、観察したことを説明します。次のように頼みます。「地域別レポートを頼んだとき、エージェント B がテストアカウントの除外を忘れたことに気づきました。スキルにはフィルタリングが書かれていますが、目立ち方が足りないのでしょうか?」
 
-4. **Review Agent A's suggestions**: Agent A might suggest reorganizing to make rules more prominent, using stronger language like "MUST filter" instead of "always filter", or restructuring the workflow section.
+4. **エージェント A の提案をレビューする**: エージェント A は、ルールをより目立たせるための再編成、「always filter」の代わりに「MUST filter」のようなより強い言葉の使用、ワークフローの節の再構成を提案するかもしれません。
 
-5. **Apply and test changes**: Update the Skill with Agent A's refinements, then test again with Agent B on similar requests
+5. **変更を適用してテストする**: エージェント A の改良でスキルを更新し、似たリクエストでエージェント B を使って再びテストします
 
-6. **Repeat based on usage**: Continue this observe-refine-test cycle as you encounter new scenarios. Each iteration improves the Skill based on real agent behavior, not assumptions.
+6. **使用状況に基づいて繰り返す**: 新しいシナリオに出会うたびに、この観察・改善・テストのサイクルを続けます。各反復は、想定ではなく、エージェントの実際の挙動に基づいてスキルを改善します。
 
-**Gathering team feedback:**
+**チームのフィードバックを集める:**
 
-1. Share Skills with teammates and observe their usage
-2. Ask: Does the Skill activate when expected? Are instructions clear? What's missing?
-3. Incorporate feedback to address blind spots in your own usage patterns
+1. スキルをチームメイトと共有し、その使われ方を観察する
+2. 次を尋ねる: スキルは期待どおりに起動するか。指示は明確か。何が足りないか。
+3. 自分自身の使用パターンの盲点に対処するために、フィードバックを取り入れる
 
-**Why this approach works**: Agent A understands agent needs, you provide domain expertise, Agent B reveals gaps through real usage, and iterative refinement improves Skills based on observed behavior rather than assumptions.
+**このアプローチがうまく機能する理由**: エージェント A がエージェントのニーズを理解し、あなたがドメインの専門知識を提供し、エージェント B が実際の使用を通じてギャップを明らかにし、反復的な改善が、想定ではなく観察された挙動に基づいてスキルを良くします。
 
-### Observe how agents navigate Skills
+### エージェントがスキルをどう辿るかを観察する
 
-As you iterate on Skills, pay attention to how agents actually use them in practice. Watch for:
+スキルを反復するときは、エージェントが実際にそれをどう使っているかに注意を払ってください。次の点に注目します。
 
-* **Unexpected exploration paths**: Does the agent read files in an order you didn't anticipate? This might indicate your structure isn't as intuitive as you thought
-* **Missed connections**: Does the agent fail to follow references to important files? Your links might need to be more explicit or prominent
-* **Overreliance on certain sections**: If the agent repeatedly reads the same file, consider whether that content should be in the main SKILL.md instead
-* **Ignored content**: If the agent never accesses a bundled file, it might be unnecessary or poorly signaled in the main instructions
+* **予想外の探索経路**: エージェントが、あなたが想定していなかった順序でファイルを読んでいないか。構造が思ったほど直感的ではない可能性があります
+* **見落とされたつながり**: エージェントが重要なファイルへの参照を辿れていないか。リンクをより明示的に、または目立たせる必要があるかもしれません
+* **特定の節への過度な依存**: エージェントが同じファイルを繰り返し読むなら、その内容を主要な SKILL.md に入れるべきではないか検討してください
+* **無視された内容**: エージェントが同梱ファイルに一度もアクセスしないなら、それは不要か、主要な指示の中での示し方が不十分なのかもしれません
 
-Iterate based on these observations rather than assumptions. The 'name' and 'description' in your Skill's metadata are particularly critical. Agents use these when deciding whether to trigger the Skill in response to the current task. Make sure they clearly describe what the Skill does and when it should be used.
+想定ではなく、これらの観察に基づいて反復してください。スキルのメタデータにある 'name' と 'description' は、特に重要です。エージェントは、現在のタスクに応じてスキルを起動するかどうかを判断するときに、これらを使います。スキルが何をするか、いつ使うべきかを、明確に説明していることを確認してください。
 
-## Anti-patterns to avoid
+## 避けるべきアンチパターン
 
-### Avoid Windows-style paths
+### Windows 形式のパスを避ける
 
-Always use forward slashes in file paths, even on Windows:
+Windows 上でも、ファイルパスには常にスラッシュを使います。
 
-* ✓ **Good**: `scripts/helper.py`, `reference/guide.md`
-* ✗ **Avoid**: `scripts\helper.py`, `reference\guide.md`
+* ✓ **良い**: `scripts/helper.py`、`reference/guide.md`
+* ✗ **避ける**: `scripts\helper.py`、`reference\guide.md`
 
-Unix-style paths work across all platforms, while Windows-style paths cause errors on Unix systems.
+Unix 形式のパスはすべてのプラットフォームで動作しますが、Windows 形式のパスは Unix システムでエラーを引き起こします。
 
-### Avoid offering too many options
+### 選択肢を提示しすぎない
 
-Don't present multiple approaches unless necessary:
+必要でない限り、複数のアプローチを提示しないでください。
 
 ````markdown  theme={null}
 **Bad example: Too many choices** (confusing):
@@ -848,15 +848,15 @@ import pdfplumber
 For scanned PDFs requiring OCR, use pdf2image with pytesseract instead."
 ````
 
-## Advanced: Skills with executable code
+## 高度な内容: 実行可能なコードを含むスキル
 
-The sections below focus on Skills that include executable scripts. If your Skill uses only markdown instructions, skip to [Checklist for effective Skills](#checklist-for-effective-skills).
+以下の節は、実行可能なスクリプトを含むスキルに焦点を当てています。スキルが markdown の指示だけを使うなら、[効果的なスキルのチェックリスト](#checklist-for-effective-skills)まで読み飛ばしてください。
 
-### Solve, don't punt
+### 解決し、丸投げしない
 
-When writing scripts for Skills, handle error conditions rather than punting to the agent.
+スキルのスクリプトを書くときは、エージェントに丸投げするのではなく、エラー条件を処理します。
 
-**Good example: Handle errors explicitly**:
+**良い例: エラーを明示的に処理する**:
 
 ```python  theme={null}
 def process_file(path):
@@ -876,7 +876,7 @@ def process_file(path):
         return ''
 ```
 
-**Bad example: Punt to the agent**:
+**悪い例: エージェントに丸投げする**:
 
 ```python  theme={null}
 def process_file(path):
@@ -884,9 +884,9 @@ def process_file(path):
     return open(path).read()
 ```
 
-Configuration parameters should also be justified and documented to avoid "voodoo constants" (Ousterhout's law). If you don't know the right value, how will the agent determine it?
+設定パラメータも、「ブードゥー定数」（Ousterhout の法則）を避けるために、根拠を示して文書化すべきです。正しい値がわからないなら、エージェントはどうやってそれを決めるのでしょうか?
 
-**Good example: Self-documenting**:
+**良い例: 自己文書化されている**:
 
 ```python  theme={null}
 # HTTP requests typically complete within 30 seconds
@@ -898,36 +898,36 @@ REQUEST_TIMEOUT = 30
 MAX_RETRIES = 3
 ```
 
-**Bad example: Magic numbers**:
+**悪い例: マジックナンバー**:
 
 ```python  theme={null}
 TIMEOUT = 47  # Why 47?
 RETRIES = 5   # Why 5?
 ```
 
-### Provide utility scripts
+### ユーティリティスクリプトを提供する
 
-Even if your agent could write a script, pre-made scripts offer advantages:
+エージェントがスクリプトを書けるとしても、あらかじめ用意したスクリプトには利点があります。
 
-**Benefits of utility scripts**:
+**ユーティリティスクリプトの利点**:
 
-* More reliable than generated code
-* Save tokens (no need to include code in context)
-* Save time (no code generation required)
-* Ensure consistency across uses
+* 生成されたコードより信頼できる
+* トークンを節約できる（コードをコンテキストに含める必要がない）
+* 時間を節約できる（コードの生成が不要）
+* 使用のたびに一貫性が保たれる
 
 <img src="https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=4bbc45f2c2e0bee9f2f0d5da669bad00" alt="Bundling executable scripts alongside instruction files" data-og-width="2048" width="2048" data-og-height="1154" height="1154" data-path="images/agent-skills-executable-scripts.png" data-optimize="true" data-opv="3" srcset="https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?w=280&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=9a04e6535a8467bfeea492e517de389f 280w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?w=560&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=e49333ad90141af17c0d7651cca7216b 560w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?w=840&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=954265a5df52223d6572b6214168c428 840w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?w=1100&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=2ff7a2d8f2a83ee8af132b29f10150fd 1100w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?w=1650&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=48ab96245e04077f4d15e9170e081cfb 1650w, https://mintcdn.com/anthropic-claude-docs/4Bny2bjzuGBK7o00/images/agent-skills-executable-scripts.png?w=2500&fit=max&auto=format&n=4Bny2bjzuGBK7o00&q=85&s=0301a6c8b3ee879497cc5b5483177c90 2500w" />
 
-The diagram above shows how executable scripts work alongside instruction files. The instruction file (forms.md) references the script, and the agent can execute it without loading its contents into context.
+上の図は、実行可能なスクリプトが指示ファイルとどう連携するかを示しています。指示ファイル（forms.md）がスクリプトを参照し、エージェントは中身をコンテキストに読み込むことなく、それを実行できます。
 
-**Important distinction**: Make clear in your instructions whether the agent should:
+**重要な区別**: エージェントが次のどちらをすべきかを、指示の中で明確にしてください。
 
-* **Execute the script** (most common): "Run `analyze_form.py` to extract fields"
-* **Read it as reference** (for complex logic): "See `analyze_form.py` for the field extraction algorithm"
+* **スクリプトを実行する**（最も一般的）: 「`analyze_form.py` を実行してフィールドを抽出する」
+* **参考として読む**（複雑なロジックの場合）: 「フィールド抽出のアルゴリズムは `analyze_form.py` を参照する」
 
-For most utility scripts, execution is preferred because it's more reliable and efficient. See the [Runtime environment](#runtime-environment) section below for details on how script execution works.
+ほとんどのユーティリティスクリプトでは、より信頼でき効率的なため、実行が推奨されます。スクリプトの実行がどう機能するかの詳細は、下の[ランタイム環境](#runtime-environment)の節を参照してください。
 
-**Example**:
+**例**:
 
 ````markdown  theme={null}
 ## Utility scripts
@@ -960,9 +960,9 @@ python scripts/fill_form.py input.pdf fields.json output.pdf
 ```
 ````
 
-### Use visual analysis
+### 視覚的な分析を使う
 
-When inputs can be rendered as images, have the agent analyze them:
+入力を画像としてレンダリングできるなら、エージェントにそれを分析させます。
 
 ````markdown  theme={null}
 ## Form layout analysis
@@ -977,65 +977,65 @@ When inputs can be rendered as images, have the agent analyze them:
 ````
 
 <Note>
-  In this example, you'd need to write the `pdf_to_images.py` script.
+  この例では、`pdf_to_images.py` スクリプトを自分で書く必要があります。
 </Note>
 
-Agent vision capabilities help understand layouts and structures.
+エージェントの視覚能力は、レイアウトと構造の理解に役立ちます。
 
-### Create verifiable intermediate outputs
+### 検証可能な中間出力を作る
 
-When agents perform complex, open-ended tasks, they can make mistakes. The "plan-validate-execute" pattern catches errors early by having the agent first create a plan in a structured format, then validate that plan with a script before executing it.
+エージェントが複雑で自由度の高いタスクを実行するとき、間違いを犯すことがあります。「plan-validate-execute」パターンは、エージェントにまず構造化された形式で計画を作成させ、それを実行する前にスクリプトで検証させることで、エラーを早期に捕捉します。
 
-**Example**: Imagine asking the agent to update 50 form fields in a PDF based on a spreadsheet. Without validation, it might reference non-existent fields, create conflicting values, miss required fields, or apply updates incorrectly.
+**例**: スプレッドシートに基づいて、PDF の 50 個のフォームフィールドを更新するようエージェントに頼む場面を想像してください。検証がなければ、存在しないフィールドを参照したり、矛盾する値を作ったり、必須のフィールドを見落としたり、更新を誤って適用したりするかもしれません。
 
-**Solution**: Use the workflow pattern shown above (PDF form filling), but add an intermediate `changes.json` file that gets validated before applying changes. The workflow becomes: analyze → **create plan file** → **validate plan** → execute → verify.
+**解決策**: 上で示したワークフローのパターン（PDF フォームの入力）を使い、変更を適用する前に検証される中間の `changes.json` ファイルを加えます。ワークフローは、分析 → **計画ファイルを作成** → **計画を検証** → 実行 → 確認、となります。
 
-**Why this pattern works:**
+**このパターンがうまく機能する理由:**
 
-* **Catches errors early**: Validation finds problems before changes are applied
-* **Machine-verifiable**: Scripts provide objective verification
-* **Reversible planning**: The agent can iterate on the plan without touching originals
-* **Clear debugging**: Error messages point to specific problems
+* **エラーを早期に捕捉する**: 変更を適用する前に、検証が問題を見つける
+* **機械で検証できる**: スクリプトが客観的な検証を提供する
+* **元に戻せる計画**: エージェントは、原本に触れることなく計画を反復できる
+* **明確なデバッグ**: エラーメッセージが具体的な問題を指す
 
-**When to use**: Batch operations, destructive changes, complex validation rules, high-stakes operations.
+**使うとき**: バッチ操作、破壊的な変更、複雑な検証ルール、重大な影響を伴う操作。
 
-**Implementation tip**: Make validation scripts verbose with specific error messages like "Field 'signature\_date' not found. Available fields: customer\_name, order\_total, signature\_date\_signed" to help the agent fix issues.
+**実装のヒント**: エージェントが問題を修正しやすいよう、検証スクリプトは「Field 'signature\_date' not found. Available fields: customer\_name, order\_total, signature\_date\_signed」のような具体的なエラーメッセージで詳細に出力させます。
 
-### Package dependencies
+### 依存関係をパッケージ化する
 
-Skills run in the code execution environment with platform-specific limitations:
+スキルは、プラットフォーム固有の制限があるコード実行環境で動作します。
 
-* **claude.ai**: Can install packages from npm and PyPI and pull from GitHub repositories
-* **Anthropic API**: Has no network access and no runtime package installation
+* **claude.ai**: npm と PyPI からパッケージをインストールでき、GitHub リポジトリから取得できる
+* **Anthropic API**: ネットワークアクセスがなく、実行時のパッケージインストールもできない
 
-List required packages in your SKILL.md and verify they're available in the [code execution tool documentation](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool).
+必要なパッケージを SKILL.md に列挙し、[code execution tool documentation](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool) で利用可能であることを確認してください。
 
-### Runtime environment
+### ランタイム環境
 
-Skills run in a code execution environment with filesystem access, bash commands, and code execution capabilities. For the conceptual explanation of this architecture, see [The Skills architecture](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#the-skills-architecture) in the overview.
+スキルは、ファイルシステムへのアクセス、bash コマンド、コード実行の機能を備えたコード実行環境で動作します。このアーキテクチャの概念的な説明は、概要の [The Skills architecture](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#the-skills-architecture) を参照してください。
 
-**How this affects your authoring:**
+**これがスキル作成にどう影響するか:**
 
-**How agents access Skills:**
+**エージェントがスキルにアクセスする方法:**
 
-1. **Metadata pre-loaded**: At startup, the name and description from all Skills' YAML frontmatter are loaded into the system prompt
-2. **Files read on-demand**: Agents use their file-reading tools to access SKILL.md and other files from the filesystem when needed
-3. **Scripts executed efficiently**: Utility scripts can be executed via bash without loading their full contents into context. Only the script's output consumes tokens
-4. **No context penalty for large files**: Reference files, data, or documentation don't consume context tokens until actually read
+1. **メタデータの事前読み込み**: 起動時に、すべてのスキルの YAML frontmatter にある name と description がシステムプロンプトに読み込まれます
+2. **ファイルのオンデマンドの読み取り**: エージェントは、ファイル読み取りのツールを使って、必要なときにファイルシステムから SKILL.md やほかのファイルにアクセスします
+3. **スクリプトの効率的な実行**: ユーティリティスクリプトは、全内容をコンテキストに読み込まずに bash で実行できます。トークンを消費するのは、スクリプトの出力だけです
+4. **大きなファイルにコンテキストのペナルティがない**: 参照ファイル、データ、ドキュメントは、実際に読まれるまでコンテキストのトークンを消費しません
 
-* **File paths matter**: Agents navigate your skill directory like a filesystem. Use forward slashes (`reference/guide.md`), not backslashes
-* **Name files descriptively**: Use names that indicate content: `form_validation_rules.md`, not `doc2.md`
-* **Organize for discovery**: Structure directories by domain or feature
-  * Good: `reference/finance.md`, `reference/sales.md`
-  * Bad: `docs/file1.md`, `docs/file2.md`
-* **Bundle comprehensive resources**: Include complete API docs, extensive examples, large datasets; no context penalty until accessed
-* **Prefer scripts for deterministic operations**: Write `validate_form.py` rather than asking the agent to generate validation code
-* **Make execution intent clear**:
-  * "Run `analyze_form.py` to extract fields" (execute)
-  * "See `analyze_form.py` for the extraction algorithm" (read as reference)
-* **Test file access patterns**: Verify the agent can navigate your directory structure by testing with real requests
+* **ファイルパスが重要**: エージェントは、スキルのディレクトリをファイルシステムのように辿ります。バックスラッシュではなく、スラッシュ（`reference/guide.md`）を使ってください
+* **ファイルに説明的な名前を付ける**: `doc2.md` ではなく、内容を示す名前（`form_validation_rules.md`）を使います
+* **発見しやすいよう整理する**: ドメインや機能ごとにディレクトリを構成します
+  * 良い: `reference/finance.md`、`reference/sales.md`
+  * 悪い: `docs/file1.md`、`docs/file2.md`
+* **包括的なリソースを同梱する**: 完全な API ドキュメント、豊富な例、大きなデータセットを含めます。アクセスされるまでコンテキストのペナルティはありません
+* **決定的な操作にはスクリプトを優先する**: エージェントに検証コードを生成させるのではなく、`validate_form.py` を書きます
+* **実行の意図を明確にする**:
+  * 「`analyze_form.py` を実行してフィールドを抽出する」（実行）
+  * 「抽出アルゴリズムは `analyze_form.py` を参照する」（参考として読む）
+* **ファイルアクセスのパターンをテストする**: 実際のリクエストでテストして、エージェントがディレクトリ構造を辿れることを確認します
 
-**Example:**
+**例:**
 
 ```
 bigquery-skill/
@@ -1046,33 +1046,33 @@ bigquery-skill/
     └── product.md (usage analytics)
 ```
 
-When the user asks about revenue, the agent reads SKILL.md, sees the reference to `reference/finance.md`, and invokes bash to read just that file. The sales.md and product.md files remain on the filesystem, consuming zero context tokens until needed. This filesystem-based model is what enables progressive disclosure. Agents can navigate and selectively load exactly what each task requires.
+ユーザーが収益について尋ねると、エージェントは SKILL.md を読み、`reference/finance.md` への参照を見つけ、bash を呼び出してそのファイルだけを読みます。sales.md と product.md はファイルシステム上に残り、必要になるまでコンテキストのトークンを一切消費しません。このファイルシステムベースのモデルが、段階的開示を可能にしています。エージェントは、各タスクが必要とするものを正確に辿って、選択的に読み込めます。
 
-For complete details on the technical architecture, see [How Skills work](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#how-skills-work) in the Skills overview.
+技術的なアーキテクチャの完全な詳細は、Skills overview の [How Skills work](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#how-skills-work) を参照してください。
 
-### MCP tool references
+### MCP ツールの参照
 
-If your Skill uses MCP (Model Context Protocol) tools, always use fully qualified tool names to avoid "tool not found" errors.
+スキルが MCP（Model Context Protocol）のツールを使う場合は、「tool not found」エラーを避けるために、常に完全修飾のツール名を使います。
 
-**Format**: `ServerName:tool_name`
+**形式**: `ServerName:tool_name`
 
-**Example**:
+**例**:
 
 ```markdown  theme={null}
 Use the BigQuery:bigquery_schema tool to retrieve table schemas.
 Use the GitHub:create_issue tool to create issues.
 ```
 
-Where:
+ここで:
 
-* `BigQuery` and `GitHub` are MCP server names
-* `bigquery_schema` and `create_issue` are the tool names within those servers
+* `BigQuery` と `GitHub` は MCP サーバー名です
+* `bigquery_schema` と `create_issue` は、それらのサーバー内のツール名です
 
-Without the server prefix, agents may fail to locate the tool, especially when multiple MCP servers are available.
+サーバーのプレフィックスがないと、特に複数の MCP サーバーが利用可能な場合、エージェントはツールを見つけられないことがあります。
 
-### Avoid assuming tools are installed
+### ツールがインストールされていると仮定しない
 
-Don't assume packages are available:
+パッケージが利用可能だと仮定しないでください。
 
 ````markdown  theme={null}
 **Bad example: Assumes installation**:
@@ -1088,63 +1088,63 @@ reader = PdfReader("file.pdf")
 ```"
 ````
 
-## Technical notes
+## 技術的な注記
 
-### YAML frontmatter requirements
+### YAML frontmatter の要件
 
-The SKILL.md frontmatter requires `name` (64 characters max) and `description` (1024 characters max) fields. See the [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#skill-structure) for complete structure details.
+SKILL.md の frontmatter には、`name`（最大 64 文字）と `description`（最大 1024 文字）のフィールドが必要です。構造の完全な詳細は [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#skill-structure) を参照してください。
 
-### Token budgets
+### トークン予算
 
-Keep SKILL.md body under 500 lines for optimal performance. If your content exceeds this, split it into separate files using the progressive disclosure patterns described earlier. For architectural details, see the [Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#how-skills-work).
+最適なパフォーマンスのために、SKILL.md の本文は 500 行未満に保ちます。内容がこれを超える場合は、前述の段階的開示のパターンを使って、別々のファイルに分割します。アーキテクチャの詳細は、[Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#how-skills-work) を参照してください。
 
-## Checklist for effective Skills
+## 効果的なスキルのチェックリスト
 
-Before sharing a Skill, verify:
+スキルを共有する前に、次を確認します。
 
-### Core quality
+### 中核となる品質
 
-* [ ] Description is specific and includes key terms
-* [ ] Description includes both what the Skill does and when to use it
-* [ ] SKILL.md body is under 500 lines
-* [ ] Additional details are in separate files (if needed)
-* [ ] No time-sensitive information (or in "old patterns" section)
-* [ ] Consistent terminology throughout
-* [ ] Examples are concrete, not abstract
-* [ ] File references are one level deep
-* [ ] Progressive disclosure used appropriately
-* [ ] Workflows have clear steps
+* [ ] description が具体的で、重要な用語を含んでいる
+* [ ] description に、スキルが何をするかと、いつ使うかの両方が含まれている
+* [ ] SKILL.md の本文が 500 行未満である
+* [ ] 追加の詳細は別のファイルにある（必要な場合）
+* [ ] 時間に依存する情報がない（または「古いパターン」の節にある）
+* [ ] 全体を通して用語が一貫している
+* [ ] 例が抽象的ではなく具体的である
+* [ ] ファイルの参照が 1 階層の深さである
+* [ ] 段階的開示が適切に使われている
+* [ ] ワークフローに明確な手順がある
 
-### Code and scripts
+### コードとスクリプト
 
-* [ ] Scripts solve problems rather than punt to the agent
-* [ ] Error handling is explicit and helpful
-* [ ] No "voodoo constants" (all values justified)
-* [ ] Required packages listed in instructions and verified as available
-* [ ] Scripts have clear documentation
-* [ ] No Windows-style paths (all forward slashes)
-* [ ] Validation/verification steps for critical operations
-* [ ] Feedback loops included for quality-critical tasks
+* [ ] スクリプトが、エージェントに丸投げせず問題を解決している
+* [ ] エラー処理が明示的で、役に立つ
+* [ ] 「ブードゥー定数」がない（すべての値に根拠がある）
+* [ ] 必要なパッケージが指示に列挙され、利用可能であることが確認されている
+* [ ] スクリプトに明確なドキュメントがある
+* [ ] Windows 形式のパスがない（すべてスラッシュ）
+* [ ] 重要な操作に、検証・確認の手順がある
+* [ ] 品質が重要なタスクに、フィードバックループが含まれている
 
-### Testing
+### テスト
 
-* [ ] At least three evaluations created
-* [ ] Tested with Haiku, Sonnet, and Opus
-* [ ] Tested with real usage scenarios
-* [ ] Team feedback incorporated (if applicable)
+* [ ] 少なくとも 3 つの評価を作成した
+* [ ] Haiku、Sonnet、Opus でテストした
+* [ ] 実際の使用シナリオでテストした
+* [ ] チームのフィードバックを取り入れた（該当する場合）
 
-## Next steps
+## 次のステップ
 
 <CardGroup cols={2}>
-  <Card title="Get started with Agent Skills" icon="rocket" href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart">
-    Create your first Skill
+  <Card title="Agent Skills を始める" icon="rocket" href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart">
+    最初のスキルを作成する
   </Card>
 
-  <Card title="Use Skills in Claude Code" icon="terminal" href="https://code.claude.com/docs/en/skills">
-    Create and manage Skills in Claude Code
+  <Card title="Claude Code でスキルを使う" icon="terminal" href="https://code.claude.com/docs/en/skills">
+    Claude Code でスキルを作成・管理する
   </Card>
 
-  <Card title="Use Skills with the API" icon="code" href="https://platform.claude.com/docs/en/build-with-claude/skills-guide">
-    Upload and use Skills programmatically
+  <Card title="API でスキルを使う" icon="code" href="https://platform.claude.com/docs/en/build-with-claude/skills-guide">
+    スキルをプログラムからアップロードして使う
   </Card>
 </CardGroup>

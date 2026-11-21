@@ -1,19 +1,18 @@
-# Writing SKILL.md for Discovery
+# 発見されやすい SKILL.md の書き方
 
-Part of superpowers:writing-skills: the SKILL.md template and how to name,
-describe and size a skill so agents find it and read it.
+superpowers:writing-skills の一部です。SKILL.md のテンプレートと、エージェントがスキルを見つけて読むように、スキルに名前を付け、説明し、サイズを決める方法を扱います。
 
-## SKILL.md Structure
+## SKILL.md の構造
 
-**Frontmatter (YAML):**
-- Two required fields: `name` and `description` (see [agentskills.io/specification](https://agentskills.io/specification) for all supported fields)
-- Max 1024 characters total
-- `name`: Use letters, numbers, and hyphens only (no parentheses, special chars)
-- `description`: Third-person, describes ONLY when to use (NOT what it does)
-  - Start with "Use when..." to focus on triggering conditions
-  - Include specific symptoms, situations, and contexts
-  - **NEVER summarize the skill's process or workflow** (see Skill Discovery Optimization below for why)
-  - Keep under 500 characters if possible
+**frontmatter（YAML）:**
+- 必須フィールドは 2 つ: `name` と `description`（サポートされるすべてのフィールドは [agentskills.io/specification](https://agentskills.io/specification) を参照）
+- 合計で最大 1024 文字
+- `name`: 英字・数字・ハイフンのみを使う（括弧や特殊文字は使わない）
+- `description`: 三人称で、いつ使うかだけを書く（何をするかは書かない）
+  - 「Use when...」で始めて、トリガーとなる条件に焦点を当てる
+  - 具体的な症状、状況、コンテキストを含める
+  - **スキルのプロセスやワークフローを決して要約しない**（理由は下の「スキル発見の最適化」を参照）
+  - できれば 500 文字未満に収める
 
 ```markdown
 ---
@@ -21,54 +20,54 @@ name: Skill-Name-With-Hyphens
 description: Use when [specific triggering conditions and symptoms]
 ---
 
-# Skill Name
+# スキル名
 
-## Overview
-What is this? Core principle in 1-2 sentences.
+## 概要
+これは何か。基本原則を 1〜2 文で。
 
-## When to Use
-[Small inline flowchart IF decision non-obvious]
+## 使うとき
+[判断が自明でない場合は、小さなインラインのフローチャート]
 
-Bullet list with SYMPTOMS and use cases
-When NOT to use
+症状とユースケースの箇条書き
+使わないとき
 
-## Core Pattern (for techniques/patterns)
-Before/after code comparison
+## 基本パターン（技法・パターン向け）
+変更前後のコード比較
 
-## Quick Reference
-Table or bullets for scanning common operations
+## クイックリファレンス
+よくある操作を流し読みするための表または箇条書き
 
-## Implementation
-Inline code for simple patterns
-Link to file for heavy reference or reusable tools
+## 実装
+単純なパターンはインラインのコード
+大きなリファレンスや再利用できるツールはファイルへのリンク
 
-## Common Mistakes
-What goes wrong + fixes
+## よくある間違い
+何がうまくいかないか + 修正方法
 
-## Real-World Impact (optional)
-Concrete results
+## 実際の影響（任意）
+具体的な結果
 ```
 
 
-## Skill Discovery Optimization (SDO)
+## スキル発見の最適化（SDO）
 
-**Critical for discovery:** Future agents need to FIND your skill
+**発見にとって最重要:** 将来のエージェントがあなたのスキルを**見つけられなければなりません**
 
-### 1. Rich Description Field
+### 1. 充実した description フィールド
 
-**Purpose:** Your agent reads the description to decide which skills to load for a given task. Make it answer: "Should I read this skill right now?"
+**目的:** エージェントは description を読んで、あるタスクにどのスキルを読み込むかを決めます。「今このスキルを読むべきか?」に答えられるようにしてください。
 
-**Format:** Start with "Use when..." to focus on triggering conditions
+**形式:** 「Use when...」で始めて、トリガーとなる条件に焦点を当てます
 
-**CRITICAL: Description = When to Use, NOT What the Skill Does**
+**最重要: description = いつ使うか。スキルが何をするかではない**
 
-The description should ONLY describe triggering conditions. Do NOT summarize the skill's process or workflow in the description.
+description に書くのはトリガーとなる条件**だけ**です。スキルのプロセスやワークフローを description に要約してはいけません。
 
-**Why this matters:** Testing revealed that when a description summarizes the skill's workflow, an agent may follow the description instead of reading the full skill content. A description saying "code review between tasks" caused an agent to do ONE review, even though the skill's flowchart clearly showed TWO reviews (spec compliance then code quality).
+**これが重要な理由:** テストの結果、description がスキルのワークフローを要約していると、エージェントがスキルの全文を読まずに description に従ってしまうことがありました。「タスクの合間にコードレビュー」という description のせいで、スキルのフローチャートには 2 回のレビュー（仕様準拠、次にコード品質）が明確に示されていたにもかかわらず、エージェントはレビューを**1 回**しか行いませんでした。
 
-When the description was changed to just "Use when executing implementation plans with independent tasks" (no workflow summary), the agent correctly read the flowchart and followed the two-stage review process.
+description を「Use when executing implementation plans with independent tasks」だけ（ワークフローの要約なし）に変えたところ、エージェントはフローチャートを正しく読み、2 段階のレビュープロセスに従いました。
 
-**The trap:** Descriptions that summarize workflow create a shortcut agents will take. The skill body becomes documentation agents skip.
+**落とし穴:** ワークフローを要約した description は、エージェントが取る近道になります。スキル本文は、エージェントが読み飛ばすドキュメントになってしまいます。
 
 ```yaml
 # ❌ BAD: Summarizes workflow - agents may follow this instead of reading skill
@@ -84,13 +83,13 @@ description: Use when executing implementation plans with independent tasks in t
 description: Use when implementing any feature or bugfix, before writing implementation code
 ```
 
-**Content:**
-- Use concrete triggers, symptoms, and situations that signal this skill applies
-- Describe the *problem* (race conditions, inconsistent behavior) not *language-specific symptoms* (setTimeout, sleep)
-- Keep triggers technology-agnostic unless the skill itself is technology-specific
-- If skill is technology-specific, make that explicit in the trigger
-- Write in third person (injected into system prompt)
-- **NEVER summarize the skill's process or workflow**
+**内容:**
+- このスキルが当てはまることを示す、具体的なトリガー、症状、状況を使う
+- *言語固有の症状*（setTimeout、sleep）ではなく、*問題*（競合状態、一貫しない挙動）を書く
+- スキル自体が特定の技術に固有でない限り、トリガーは技術に依存しない形にする
+- スキルが特定の技術に固有なら、トリガーでそれを明示する
+- 三人称で書く（システムプロンプトに注入されるため）
+- **スキルのプロセスやワークフローを決して要約しない**
 
 ```yaml
 # ❌ BAD: Too abstract, vague, doesn't include when to use
@@ -109,32 +108,32 @@ description: Use when tests have race conditions, timing dependencies, or pass/f
 description: Use when using React Router and handling authentication redirects
 ```
 
-### 2. Keyword Coverage
+### 2. キーワードの網羅
 
-Use words an agent would search for:
-- Error messages: "Hook timed out", "ENOTEMPTY", "race condition"
-- Symptoms: "flaky", "hanging", "zombie", "pollution"
-- Synonyms: "timeout/hang/freeze", "cleanup/teardown/afterEach"
-- Tools: Actual commands, library names, file types
+エージェントが検索しそうな語を使います。
+- エラーメッセージ: "Hook timed out"、"ENOTEMPTY"、"race condition"
+- 症状: "flaky"、"hanging"、"zombie"、"pollution"
+- 同義語: "timeout/hang/freeze"、"cleanup/teardown/afterEach"
+- ツール: 実際のコマンド、ライブラリ名、ファイルの種類
 
-### 3. Descriptive Naming
+### 3. わかりやすい命名
 
-**Use active voice, verb-first:**
-- ✅ `creating-skills` not `skill-creation`
-- ✅ `condition-based-waiting` not `async-test-helpers`
+**能動態で、動詞から始めます:**
+- ✅ `creating-skills`（`skill-creation` ではなく）
+- ✅ `condition-based-waiting`（`async-test-helpers` ではなく）
 
-### 4. Token Efficiency (Critical)
+### 4. トークン効率（最重要）
 
-**Problem:** getting-started and frequently-referenced skills load into EVERY conversation. Every token counts.
+**問題:** getting-started や頻繁に参照されるスキルは、**すべての**会話に読み込まれます。1 トークンも無駄にできません。
 
-**Target word counts:**
-- getting-started workflows: <150 words each
-- Frequently-loaded skills: <200 words total
-- Other skills: <500 words (still be concise)
+**目標の語数:**
+- getting-started のワークフロー: 各 150 語未満
+- 頻繁に読み込まれるスキル: 合計 200 語未満
+- その他のスキル: 500 語未満（それでも簡潔に）
 
-**Techniques:**
+**技法:**
 
-**Move details to tool help:**
+**詳細はツールのヘルプに移す:**
 ```bash
 # ❌ BAD: Document all flags in SKILL.md
 search-conversations supports --text, --both, --after DATE, --before DATE, --limit N
@@ -143,7 +142,7 @@ search-conversations supports --text, --both, --after DATE, --before DATE, --lim
 search-conversations supports multiple modes and filters. Run --help for details.
 ```
 
-**Use cross-references:**
+**相互参照を使う:**
 ```markdown
 # ❌ BAD: Repeat workflow details
 When searching, dispatch subagent with template...
@@ -153,7 +152,7 @@ When searching, dispatch subagent with template...
 Always use subagents (50-100x context savings). REQUIRED: Use [other-skill-name] for workflow.
 ```
 
-**Compress examples:**
+**例を圧縮する:**
 ```markdown
 # ❌ BAD: Verbose example (42 words)
 your human partner: "How did we handle authentication errors in React Router before?"
@@ -166,36 +165,36 @@ You: Searching...
 [Dispatch subagent → synthesis]
 ```
 
-**Eliminate redundancy:**
-- Don't repeat what's in cross-referenced skills
-- Don't explain what's obvious from command
-- Don't include multiple examples of same pattern
+**冗長さをなくす:**
+- 相互参照先のスキルにある内容を繰り返さない
+- コマンドから明らかなことを説明しない
+- 同じパターンの例を複数入れない
 
-**Verification:**
+**検証:**
 ```bash
 wc -w skills/path/SKILL.md
 # getting-started workflows: aim for <150 each
 # Other frequently-loaded: aim for <200 total
 ```
 
-**Name by what you DO or core insight:**
+**自分が何をするか、または核心の洞察で名付ける:**
 - ✅ `condition-based-waiting` > `async-test-helpers`
-- ✅ `using-skills` not `skill-usage`
+- ✅ `using-skills`（`skill-usage` ではなく）
 - ✅ `flatten-with-flags` > `data-structure-refactoring`
 - ✅ `root-cause-tracing` > `debugging-techniques`
 
-**Gerunds (-ing) work well for processes:**
-- `creating-skills`, `testing-skills`, `debugging-with-logs`
-- Active, describes the action you're taking
+**動名詞（-ing）はプロセスにうまく機能します:**
+- `creating-skills`、`testing-skills`、`debugging-with-logs`
+- 能動的で、あなたが取る行動を表す
 
-### 5. Cross-Referencing Other Skills
+### 5. ほかのスキルへの相互参照
 
-**When writing documentation that references other skills:**
+**ほかのスキルを参照するドキュメントを書くとき:**
 
-Use skill name only, with explicit requirement markers:
-- ✅ Good: `**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`
-- ✅ Good: `**REQUIRED BACKGROUND:** You MUST understand superpowers:systematic-debugging`
-- ❌ Bad: `See skills/testing/test-driven-development` (unclear if required)
-- ❌ Bad: `@skills/testing/test-driven-development/SKILL.md` (force-loads, burns context)
+スキル名だけを使い、明示的な要件マーカーを付けます。
+- ✅ 良い: `**必須サブスキル:** superpowers:test-driven-development を使います`
+- ✅ 良い: `**必須の前提知識:** superpowers:systematic-debugging を必ず理解していなければなりません`
+- ❌ 悪い: `See skills/testing/test-driven-development`（必須かどうか不明確）
+- ❌ 悪い: `@skills/testing/test-driven-development/SKILL.md`（強制的に読み込まれ、コンテキストを消費する）
 
-**Why no @ links:** `@` syntax force-loads files immediately, consuming 200k+ context before you need them.
+**@ リンクを使わない理由:** `@` 構文はファイルを即座に強制的に読み込み、必要になる前に 200k 以上のコンテキストを消費します。

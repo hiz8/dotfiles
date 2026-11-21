@@ -1,36 +1,36 @@
-# Flowcharts in Skills
+# スキルのフローチャート
 
-Part of superpowers:writing-skills.
+superpowers:writing-skills の一部です。
 
-## Flowchart Usage
+## フローチャートの使い方
 
 ```dot
 digraph when_flowchart {
-    "Need to show information?" [shape=diamond];
-    "Decision where I might go wrong?" [shape=diamond];
-    "Use markdown" [shape=box];
-    "Small inline flowchart" [shape=box];
+    "情報を示す必要がある？" [shape=diamond];
+    "間違えそうな判断がある？" [shape=diamond];
+    "Markdown を使う" [shape=box];
+    "小さなインラインのフローチャート" [shape=box];
 
-    "Need to show information?" -> "Decision where I might go wrong?" [label="yes"];
-    "Decision where I might go wrong?" -> "Small inline flowchart" [label="yes"];
-    "Decision where I might go wrong?" -> "Use markdown" [label="no"];
+    "情報を示す必要がある？" -> "間違えそうな判断がある？" [label="はい"];
+    "間違えそうな判断がある？" -> "小さなインラインのフローチャート" [label="はい"];
+    "間違えそうな判断がある？" -> "Markdown を使う" [label="いいえ"];
 }
 ```
 
-**Use flowcharts ONLY for:**
-- Non-obvious decision points
-- Process loops where you might stop too early
-- "When to use A vs B" decisions
+**フローチャートを使うのは次の場合**に限ります:
+- 自明でない判断ポイント
+- 早く止まりすぎるおそれのあるプロセスのループ
+- 「A と B のどちらを使うか」の判断
 
-**Never use flowcharts for:**
-- Reference material → Tables, lists
-- Code examples → Markdown blocks
-- Linear instructions → Numbered lists
-- Labels without semantic meaning (step1, helper2)
+**フローチャートを決して使わないもの:**
+- リファレンス資料 → 表、リスト
+- コード例 → Markdown のブロック
+- 直線的な指示 → 番号付きリスト
+- 意味のないラベル（step1、helper2）
 
-See `graphviz-conventions.dot` in this directory for graphviz style rules.
+graphviz のスタイルルールは、このディレクトリの `graphviz-conventions.dot` を参照してください。
 
-**Visualizing for your human partner:** Use `render-graphs.js` in the writing-skills directory to render a skill's flowcharts to SVG, run from there:
+**人間のパートナー向けに可視化する:** writing-skills ディレクトリにある `render-graphs.js` を使うと、スキルのフローチャートを SVG に描画できます。そのディレクトリから実行してください。
 ```bash
 node ./render-graphs.js ../some-skill           # Each diagram separately
 node ./render-graphs.js ../some-skill --combine # All diagrams in one SVG

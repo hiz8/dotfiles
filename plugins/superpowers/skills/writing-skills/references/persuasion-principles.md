@@ -1,187 +1,187 @@
-# Persuasion Principles for Skill Design
+# スキル設計のための説得の原則
 
-## Overview
+## 概要
 
-LLMs respond to the same persuasion principles as humans. Understanding this psychology helps you design more effective skills - not to manipulate, but to ensure critical practices are followed even under pressure.
+LLM は人間と同じ説得の原則に反応します。この心理を理解すると、より効果的なスキルを設計できます。目的は操作ではなく、圧力の下でも重要なプラクティスが確実に守られるようにすることです。
 
-**Research foundation:** Meincke et al. (2025) tested 7 persuasion principles with N=28,000 AI conversations. Persuasion techniques more than doubled compliance rates (33% → 72%, p < .001).
+**研究の土台:** Meincke ら（2025）は、28,000 件の AI との会話（N=28,000）で 7 つの説得の原則をテストしました。説得の技法により、遵守率は 2 倍以上になりました（33% → 72%、p < .001）。
 
-## The Seven Principles
+## 7 つの原則
 
-### 1. Authority
-**What it is:** Deference to expertise, credentials, or official sources.
+### 1. 権威（Authority）
+**これは何か:** 専門知識、資格、公的な情報源への服従。
 
-**How it works in skills:**
-- Imperative language: "YOU MUST", "Never", "Always"
-- Non-negotiable framing: "No exceptions"
-- Eliminates decision fatigue and rationalization
+**スキルでの働き方:**
+- 命令的な言葉: 「YOU MUST」「Never」「Always」
+- 交渉の余地のない枠組み: 「例外なし」
+- 決断疲れと自己正当化をなくす
 
-**When to use:**
-- Discipline-enforcing skills (TDD, verification requirements)
-- Safety-critical practices
-- Established best practices
+**使うとき:**
+- 規律を強制するスキル（TDD、検証の要件）
+- 安全が重要なプラクティス
+- 確立されたベストプラクティス
 
-**Example:**
+**例:**
 ```markdown
-✅ Write code before test? Delete it. Start over. No exceptions.
-❌ Consider writing tests first when feasible.
+✅ テストの前にコードを書いた? 削除してください。最初からやり直してください。例外なし。
+❌ 可能なら、先にテストを書くことを検討してください。
 ```
 
-### 2. Commitment
-**What it is:** Consistency with prior actions, statements, or public declarations.
+### 2. コミットメント（Commitment）
+**これは何か:** 過去の行動、発言、公の宣言との一貫性。
 
-**How it works in skills:**
-- Require announcements: "Announce skill usage"
-- Force explicit choices: "Choose A, B, or C"
-- Use tracking: todos for checklists
+**スキルでの働き方:**
+- 宣言を求める: 「スキルの使用を宣言する」
+- 明示的な選択を強いる: 「A、B、C のどれかを選ぶ」
+- 追跡を使う: チェックリストには todo
 
-**When to use:**
-- Ensuring skills are actually followed
-- Multi-step processes
-- Accountability mechanisms
+**使うとき:**
+- スキルが実際に守られるようにする
+- 複数ステップのプロセス
+- 説明責任の仕組み
 
-**Example:**
+**例:**
 ```markdown
-✅ When you find a skill, you MUST announce: "I'm using [Skill Name]"
-❌ Consider letting your partner know which skill you're using.
+✅ スキルを見つけたら、必ず宣言しなければなりません: 「[スキル名] を使います」
+❌ どのスキルを使っているか、パートナーに知らせることを検討してください。
 ```
 
-### 3. Scarcity
-**What it is:** Urgency from time limits or limited availability.
+### 3. 希少性（Scarcity）
+**これは何か:** 時間の制限や入手の限定から生まれる切迫感。
 
-**How it works in skills:**
-- Time-bound requirements: "Before proceeding"
-- Sequential dependencies: "Immediately after X"
-- Prevents procrastination
+**スキルでの働き方:**
+- 期限つきの要件: 「進む前に」
+- 順序の依存関係: 「X の直後に」
+- 先延ばしを防ぐ
 
-**When to use:**
-- Immediate verification requirements
-- Time-sensitive workflows
-- Preventing "I'll do it later"
+**使うとき:**
+- 即時の検証が必要な要件
+- 時間的な制約のあるワークフロー
+- 「あとでやる」を防ぐ
 
-**Example:**
+**例:**
 ```markdown
-✅ After completing a task, IMMEDIATELY request code review before proceeding.
-❌ You can review code when convenient.
+✅ タスクを完了したら、進む前に直ちにコードレビューを依頼してください。
+❌ 都合のよいときにコードをレビューしてもかまいません。
 ```
 
-### 4. Social Proof
-**What it is:** Conformity to what others do or what's considered normal.
+### 4. 社会的証明（Social Proof）
+**これは何か:** 他者がしていること、普通とされることへの同調。
 
-**How it works in skills:**
-- Universal patterns: "Every time", "Always"
-- Failure modes: "X without Y = failure"
-- Establishes norms
+**スキルでの働き方:**
+- 普遍的なパターン: 「毎回」「常に」
+- 失敗のモード: 「Y なしの X = 失敗」
+- 規範を確立する
 
-**When to use:**
-- Documenting universal practices
-- Warning about common failures
-- Reinforcing standards
+**使うとき:**
+- 普遍的なプラクティスを文書化する
+- よくある失敗について警告する
+- 標準を強化する
 
-**Example:**
+**例:**
 ```markdown
-✅ Checklists without todo tracking = steps get skipped. Every time.
-❌ Some people find a todo list helpful for checklists.
+✅ todo による追跡のないチェックリスト = 手順が飛ばされる。毎回。
+❌ チェックリストに todo リストが役立つと感じる人もいます。
 ```
 
-### 5. Unity
-**What it is:** Shared identity, "we-ness", in-group belonging.
+### 5. 一体性（Unity）
+**これは何か:** 共有されたアイデンティティ、「私たち」という感覚、内集団への帰属。
 
-**How it works in skills:**
-- Collaborative language: "our codebase", "we're colleagues"
-- Shared goals: "we both want quality"
+**スキルでの働き方:**
+- 協働的な言葉: 「私たちのコードベース」「私たちは同僚だ」
+- 共有された目標: 「私たちはどちらも品質を望んでいる」
 
-**When to use:**
-- Collaborative workflows
-- Establishing team culture
-- Non-hierarchical practices
+**使うとき:**
+- 協働的なワークフロー
+- チームの文化を築く
+- 上下関係のないプラクティス
 
-**Example:**
+**例:**
 ```markdown
-✅ We're colleagues working together. I need your honest technical judgment.
-❌ You should probably tell me if I'm wrong.
+✅ 私たちは一緒に働く同僚です。あなたの率直な技術的判断が必要です。
+❌ 私が間違っているなら、たぶん教えたほうがよいでしょう。
 ```
 
-### 6. Reciprocity
-**What it is:** Obligation to return benefits received.
+### 6. 返報性（Reciprocity）
+**これは何か:** 受けた恩恵にお返しをする義務感。
 
-**How it works:**
-- Use sparingly - can feel manipulative
-- Rarely needed in skills
+**働き方:**
+- 控えめに使う - 操作的に感じられることがある
+- スキルではほとんど必要ない
 
-**When to avoid:**
-- Almost always (other principles more effective)
+**避けるとき:**
+- ほぼ常に（ほかの原則のほうが効果的）
 
-### 7. Liking
-**What it is:** Preference for cooperating with those we like.
+### 7. 好意（Liking）
+**これは何か:** 好意を持つ相手に協力したがる傾向。
 
-**How it works:**
-- **DON'T USE for compliance**
-- Conflicts with honest feedback culture
-- Creates sycophancy
+**働き方:**
+- **遵守のために使わない**
+- 率直なフィードバックの文化と衝突する
+- 迎合を生む
 
-**When to avoid:**
-- Always for discipline enforcement
+**避けるとき:**
+- 規律の強制では常に
 
-## Principle Combinations by Skill Type
+## スキルの種類別の原則の組み合わせ
 
-| Skill Type | Use | Avoid |
+| スキルの種類 | 使う | 避ける |
 |------------|-----|-------|
-| Discipline-enforcing | Authority + Commitment + Social Proof | Liking, Reciprocity |
-| Guidance/technique | Moderate Authority + Unity | Heavy authority |
-| Collaborative | Unity + Commitment | Authority, Liking |
-| Reference | Clarity only | All persuasion |
+| 規律を強制する | 権威 + コミットメント + 社会的証明 | 好意、返報性 |
+| ガイダンス/技法 | 中程度の権威 + 一体性 | 強い権威 |
+| 協働的 | 一体性 + コミットメント | 権威、好意 |
+| リファレンス | 明快さのみ | すべての説得 |
 
-## Why This Works: The Psychology
+## なぜうまく機能するのか: 心理学
 
-**Bright-line rules reduce rationalization:**
-- "YOU MUST" removes decision fatigue
-- Absolute language eliminates "is this an exception?" questions
-- Explicit anti-rationalization counters close specific loopholes
+**明確な線引きのルールは、自己正当化を減らします:**
+- 「YOU MUST」は決断疲れをなくす
+- 絶対的な言葉は「これは例外か?」という問いをなくす
+- 自己正当化への明示的な反論が、具体的な抜け穴をふさぐ
 
-**Implementation intentions create automatic behavior:**
-- Clear triggers + required actions = automatic execution
-- "When X, do Y" more effective than "generally do Y"
-- Reduces cognitive load on compliance
+**実行意図は、自動的な行動を生みます:**
+- 明確なトリガー + 必須の行動 = 自動的な実行
+- 「X のときは Y をする」は、「一般に Y をする」よりも効果的
+- 遵守にかかる認知的負荷を減らす
 
-**LLMs are parahuman:**
-- Trained on human text containing these patterns
-- Authority language precedes compliance in training data
-- Commitment sequences (statement → action) frequently modeled
-- Social proof patterns (everyone does X) establish norms
+**LLM は準人間的です:**
+- これらのパターンを含む人間のテキストで訓練されている
+- 訓練データでは、権威的な言葉のあとに遵守が続く
+- コミットメントの連なり（発言 → 行動）が頻繁にモデル化されている
+- 社会的証明のパターン（みんなが X をする）が規範を確立する
 
-## Ethical Use
+## 倫理的な使い方
 
-**Legitimate:**
-- Ensuring critical practices are followed
-- Creating effective documentation
-- Preventing predictable failures
+**正当なもの:**
+- 重要なプラクティスが確実に守られるようにする
+- 効果的なドキュメントを作る
+- 予測できる失敗を防ぐ
 
-**Illegitimate:**
-- Manipulating for personal gain
-- Creating false urgency
-- Guilt-based compliance
+**不当なもの:**
+- 私的な利益のために操作する
+- 偽の切迫感を作る
+- 罪悪感に基づく遵守
 
-**The test:** Would this technique serve the user's genuine interests if they fully understood it?
+**テスト:** この技法は、ユーザーが完全に理解したとしても、ユーザーの真の利益にかなうでしょうか?
 
-## Research Citations
+## 研究の引用
 
 **Cialdini, R. B. (2021).** *Influence: The Psychology of Persuasion (New and Expanded).* Harper Business.
-- Seven principles of persuasion
-- Empirical foundation for influence research
+- 説得の 7 つの原則
+- 影響力の研究の実証的な土台
 
 **Meincke, L., Shapiro, D., Duckworth, A. L., Mollick, E., Mollick, L., & Cialdini, R. (2025).** Call Me A Jerk: Persuading AI to Comply with Objectionable Requests. University of Pennsylvania.
-- Tested 7 principles with N=28,000 LLM conversations
-- Compliance increased 33% → 72% with persuasion techniques
-- Authority, commitment, scarcity most effective
-- Validates parahuman model of LLM behavior
+- 28,000 件の LLM の会話（N=28,000）で 7 つの原則をテストした
+- 説得の技法により、遵守が 33% → 72% に増加した
+- 権威、コミットメント、希少性が最も効果的だった
+- LLM の挙動に関する準人間モデルを裏づける
 
-## Quick Reference
+## クイックリファレンス
 
-When designing a skill, ask:
+スキルを設計するときは、次を自問してください。
 
-1. **What type is it?** (Discipline vs. guidance vs. reference)
-2. **What behavior am I trying to change?**
-3. **Which principle(s) apply?** (Usually authority + commitment for discipline)
-4. **Am I combining too many?** (Don't use all seven)
-5. **Is this ethical?** (Serves user's genuine interests?)
+1. **どの種類か?**（規律 vs. ガイダンス vs. リファレンス）
+2. **どの行動を変えようとしているか?**
+3. **どの原則が当てはまるか?**（規律では通常、権威 + コミットメント）
+4. **組み合わせすぎていないか?**（7 つすべては使わない）
+5. **倫理的か?**（ユーザーの真の利益にかなうか?）

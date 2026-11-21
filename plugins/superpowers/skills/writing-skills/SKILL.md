@@ -1,75 +1,75 @@
 ---
 name: writing-skills
-description: Use when creating new skills, editing existing skills, or verifying skills work before deployment
+description: 新しいスキルの作成、既存スキルの編集、デプロイ前のスキルの動作検証を行うときに使います
 ---
 
-# Writing Skills
+# スキルの作成
 
-## Overview
+## 概要
 
-**Writing skills IS Test-Driven Development applied to process documentation.**
+**スキルを書くことは、プロセスのドキュメントに適用した Test-Driven Development そのものです。**
 
-**Personal skills live in your runtime's skills directory** (`~/.claude/skills/` on Claude Code) — see [codex-tools.md](../using-superpowers/references/codex-tools.md) or [gemini-tools.md](../using-superpowers/references/gemini-tools.md) for the path on those runtimes. Codex, Copilot CLI, and Gemini CLI all also recognize `~/.agents/skills/` as a cross-runtime alias.
+**個人用スキルは、実行環境のスキルディレクトリに置きます**（Claude Code では `~/.claude/skills/`）。ほかの実行環境でのパスは [codex-tools.md](../using-superpowers/references/codex-tools.md) または [gemini-tools.md](../using-superpowers/references/gemini-tools.md) を参照してください。Codex、Copilot CLI、Gemini CLI はいずれも、実行環境をまたぐエイリアスとして `~/.agents/skills/` も認識します。
 
-You write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).
+テストケース（subagent を使った圧力をかけるテストシナリオ）を書き、それが失敗する（ベースラインの挙動）のを確認し、スキル（ドキュメント）を書き、テストが通る（エージェントが従う）のを確認し、リファクタリングします（抜け穴をふさぎます）。
 
-**Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.
+**基本原則:** スキルなしでエージェントが失敗するのを確認していないなら、そのスキルが正しいことを教えているかどうかはわかりません。
 
-**REQUIRED BACKGROUND:** You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.
+**必須の前提知識:** このスキルを使う前に、superpowers:test-driven-development を必ず理解していなければなりません。そのスキルが RED-GREEN-REFACTOR サイクルの基本を定めています。このスキルは TDD をドキュメントに適用したものです。
 
-**Official guidance:** For Anthropic's official skill authoring best practices, see references/anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.
+**公式ガイダンス:** Anthropic 公式のスキル作成ベストプラクティスは references/anthropic-best-practices.md を参照してください。この文書は、このスキルの TDD を軸にしたアプローチを補完する、追加のパターンとガイドラインを提供します。
 
-## What is a Skill?
+## スキルとは
 
-A **skill** is a reference guide for proven techniques, patterns, or tools. Skills help future agents find and apply effective approaches.
+**スキル**とは、実績のある技法・パターン・ツールのリファレンスガイドです。スキルは、将来のエージェントが効果的なアプローチを見つけて適用するのに役立ちます。
 
-**Skills are:** Reusable techniques, patterns, tools, reference guides
+**スキルであるもの:** 再利用できる技法、パターン、ツール、リファレンスガイド
 
-**Skills are NOT:** Narratives about how you solved a problem once
+**スキルではないもの:** 一度問題をどう解決したかの物語
 
-## TDD Mapping for Skills
+## スキルにおける TDD の対応関係
 
-| TDD Concept | Skill Creation |
+| TDD の概念 | スキルの作成 |
 |-------------|----------------|
-| **Test case** | Pressure scenario with subagent |
-| **Production code** | Skill document (SKILL.md) |
-| **Test fails (RED)** | Agent violates rule without skill (baseline) |
-| **Test passes (GREEN)** | Agent complies with skill present |
-| **Refactor** | Close loopholes while maintaining compliance |
-| **Write test first** | Run baseline scenario BEFORE writing skill |
-| **Watch it fail** | Document exact rationalizations agent uses |
-| **Minimal code** | Write skill addressing those specific violations |
-| **Watch it pass** | Verify agent now complies |
-| **Refactor cycle** | Find new rationalizations → plug → re-verify |
+| **テストケース** | subagent を使った圧力をかけるテストシナリオ |
+| **本番コード** | スキル文書（SKILL.md） |
+| **テストが失敗する（RED）** | スキルなしでエージェントがルールに違反する（ベースライン） |
+| **テストが通る（GREEN）** | スキルがある状態でエージェントが従う |
+| **リファクタリング** | 遵守を保ったまま抜け穴をふさぐ |
+| **テストを先に書く** | スキルを書く**前に**ベースラインのシナリオを実行する |
+| **失敗するのを見る** | エージェントが使う自己正当化を正確に記録する |
+| **最小限のコード** | それらの具体的な違反に対処するスキルを書く |
+| **通るのを見る** | エージェントが従うようになったことを確認する |
+| **リファクタリングのサイクル** | 新たな自己正当化を見つける → ふさぐ → 再検証する |
 
-The entire skill creation process follows RED-GREEN-REFACTOR.
+スキル作成のプロセス全体が RED-GREEN-REFACTOR に従います。
 
-## When to Create a Skill
+## スキルを作成するとき
 
-**Create when:**
-- Technique wasn't intuitively obvious to you
-- You'd reference this again across projects
-- Pattern applies broadly (not project-specific)
-- Others would benefit
+**作成するのは次の場合です:**
+- その技法が直感的には明白ではなかった
+- プロジェクトをまたいで再び参照するだろう
+- パターンが広く当てはまる（プロジェクト固有ではない）
+- ほかの人にも役立つ
 
-**Don't create for:**
-- One-off solutions
-- Standard practices well-documented elsewhere
-- Project-specific conventions (put in your instructions file)
-- Mechanical constraints (if it's enforceable with regex/validation, automate it—save documentation for judgment calls)
+**作成しないのは次の場合です:**
+- 一度限りの解決策
+- ほかの場所で十分に文書化されている標準的なプラクティス
+- プロジェクト固有の規約（指示ファイルに書きます）
+- 機械的な制約（正規表現やバリデーションで強制できるなら自動化します。ドキュメントは判断を要する事柄のために取っておきます）
 
-## Skill Types
+## スキルの種類
 
 ### Technique
-Concrete method with steps to follow (condition-based-waiting, root-cause-tracing)
+従うべき手順を持つ具体的な方法（condition-based-waiting、root-cause-tracing）
 
 ### Pattern
-Way of thinking about problems (flatten-with-flags, test-invariants)
+問題の捉え方（flatten-with-flags、test-invariants）
 
 ### Reference
-API docs, syntax guides, tool documentation (office docs)
+API ドキュメント、構文ガイド、ツールのドキュメント（office docs）
 
-## Directory Structure
+## ディレクトリ構造
 
 
 ```
@@ -79,76 +79,68 @@ skills/
     supporting-file.*     # Only if needed
 ```
 
-**Flat namespace** - all skills in one searchable namespace
+**フラットな名前空間** - すべてのスキルを、検索できる 1 つの名前空間に置きます
 
-**Separate files for:**
-1. **Heavy reference** (100+ lines) - API docs, comprehensive syntax
-2. **Reusable tools** - Scripts, utilities, templates
+**ファイルを分けるもの:**
+1. **大きなリファレンス**（100 行以上） - API ドキュメント、網羅的な構文
+2. **再利用できるツール** - スクリプト、ユーティリティ、テンプレート
 
-**Keep inline:**
-- Principles and concepts
-- Code patterns (< 50 lines)
-- Everything else
+**インラインに残すもの:**
+- 原則と概念
+- コードパターン（50 行未満）
+- それ以外のすべて
 
-## Writing SKILL.md
+## SKILL.md を書く
 
-A skill's `description` says only when to use it: triggering conditions and
-symptoms, starting with "Use when...". It never summarizes the skill's
-workflow, because an agent that reads a workflow summary follows it instead
-of reading the skill.
+スキルの `description` には、いつ使うかだけを書きます。トリガーとなる条件と症状を、「Use when...」で始めて書きます。スキルのワークフローの要約は決して書きません。ワークフローの要約を読んだエージェントは、スキルを読まずにその要約に従ってしまうからです。
 
-When you write or change a skill's frontmatter, name or description, or
-need to cut its size, read [references/discovery.md](references/discovery.md):
-the SKILL.md template, description and keyword guidance, naming, token
-budgets, and cross-referencing other skills.
+スキルの frontmatter、name、description を書く・変更するとき、またはサイズを削る必要があるときは、[references/discovery.md](references/discovery.md) を読んでください。SKILL.md のテンプレート、description とキーワードのガイダンス、命名、トークン予算、ほかのスキルへの相互参照が載っています。
 
-## Flowcharts
+## フローチャート
 
-When you add or change a flowchart in a skill, read
-[references/flowcharts.md](references/flowcharts.md) first: when a flowchart
-earns its place, the graphviz conventions, and how to render one.
+スキルにフローチャートを追加・変更するときは、先に [references/flowcharts.md](references/flowcharts.md) を読んでください。フローチャートが有用になるのはどんなときか、graphviz の規約、描画の方法が載っています。
 
-## Code Examples
+## コード例
 
-**One excellent example beats many mediocre ones**
+**1 つの優れた例は、多くの平凡な例に勝ります**
 
-Choose most relevant language:
-- Testing techniques → TypeScript/JavaScript
-- System debugging → Shell/Python
-- Data processing → Python
+最も関連の深い言語を選びます:
+- テスト技法 → TypeScript/JavaScript
+- システムのデバッグ → Shell/Python
+- データ処理 → Python
 
-**Good example:**
-- Complete and runnable
-- Well-commented explaining WHY
-- From real scenario
-- Shows pattern clearly
-- Ready to adapt (not generic template)
+**良い例:**
+- 完全で実行できる
+- WHY を説明する十分なコメントがある
+- 実際のシナリオに基づく
+- パターンを明確に示す
+- 適応させやすい（汎用テンプレートではない）
 
-**Don't:**
-- Implement in 5+ languages
-- Create fill-in-the-blank templates
-- Write contrived examples
+**してはいけないこと:**
+- 5 つ以上の言語で実装する
+- 穴埋め式のテンプレートを作る
+- 作り物の例を書く
 
-You're good at porting - one great example is enough.
+あなたは移植が得意です。優れた例が 1 つあれば十分です。
 
-## File Organization
+## ファイルの構成
 
-### Self-Contained Skill
+### 自己完結型のスキル
 ```
 defense-in-depth/
   SKILL.md    # Everything inline
 ```
-When: All content fits, no heavy reference needed
+使うとき: 内容がすべて収まり、大きなリファレンスが不要な場合
 
-### Skill with Reusable Tool
+### 再利用できるツールを持つスキル
 ```
 condition-based-waiting/
   SKILL.md    # Overview + patterns
   example.ts  # Working helpers to adapt
 ```
-When: Tool is reusable code, not just narrative
+使うとき: ツールが単なる説明ではなく、再利用できるコードである場合
 
-### Skill with Heavy Reference
+### 大きなリファレンスを持つスキル
 ```
 pptx/
   SKILL.md       # Overview + workflows
@@ -156,244 +148,241 @@ pptx/
   ooxml.md       # 500 lines XML structure
   scripts/       # Executable tools
 ```
-When: Reference material too large for inline
+使うとき: リファレンス資料がインラインに置くには大きすぎる場合
 
-Invoke bundled scripts through their interpreter in the prose (`bash scripts/tool.sh`, `node scripts/tool.js`), never by bare path: some harness plugin packagers strip executable bits, and a bare `scripts/tool.sh` fails there with `Permission denied`.
+同梱のスクリプトは、本文中ではインタープリター経由で呼び出してください（`bash scripts/tool.sh`、`node scripts/tool.js`）。素のパスでは決して呼び出さないでください。ハーネスのプラグインパッケージャーの中には実行ビットを取り除くものがあり、素の `scripts/tool.sh` はそこで `Permission denied` により失敗するからです。
 
-## The Iron Law (Same as TDD)
+## 鉄則（TDD と同じ）
 
 ```
-NO SKILL WITHOUT A FAILING TEST FIRST
+失敗するテストなしにスキルを作ってはならない
 ```
 
-This applies to NEW skills AND EDITS to existing skills.
+これは新しいスキルにも、既存スキルの**編集**にも当てはまります。
 
-Write skill before testing? Delete it. Start over.
-Edit skill without testing? Same violation.
+テストの前にスキルを書いたなら、削除してください。最初からやり直してください。
+テストせずにスキルを編集しても、同じ違反です。
 
-**No exceptions:**
-- Not for "simple additions"
-- Not for "just adding a section"
-- Not for "documentation updates"
-- Don't keep untested changes as "reference"
-- Don't "adapt" while running tests
-- Delete means delete
+**例外なし:**
+- 「単純な追加」でも例外ではない
+- 「節を足すだけ」でも例外ではない
+- 「ドキュメントの更新」でも例外ではない
+- テストしていない変更を「参考」として残さない
+- テストの実行中に「手直し」しない
+- 削除とは削除することです
 
-**REQUIRED BACKGROUND:** The superpowers:test-driven-development skill explains why this matters. Same principles apply to documentation.
+**必須の前提知識:** superpowers:test-driven-development スキルが、これがなぜ重要かを説明しています。同じ原則がドキュメントにも当てはまります。
 
-## Testing All Skill Types
+## すべての種類のスキルをテストする
 
-Different skill types need different test approaches:
+スキルの種類ごとに、必要なテスト方法が異なります。
 
-### Discipline-Enforcing Skills (rules/requirements)
+### 規律を強制するスキル（ルール・要件）
 
-**Examples:** TDD, verification-before-completion, designing-before-coding
+**例:** TDD、verification-before-completion、designing-before-coding
 
-**Test with:**
-- Academic questions: Do they understand the rules?
-- Pressure scenarios: Do they comply under stress?
-- Multiple pressures combined: time + sunk cost + exhaustion
-- Identify rationalizations and add explicit counters
+**テストの方法:**
+- 学術的な質問: ルールを理解しているか
+- 圧力をかけるテストシナリオ: 強い圧力の下でも従うか
+- 複数の圧力の組み合わせ: 時間 + サンクコスト + 疲労
+- 自己正当化を特定し、明示的な反論を追加する
 
-**Success criteria:** Agent follows rule under maximum pressure
+**成功基準:** エージェントが最大限の圧力の下でもルールに従う
 
-### Technique Skills (how-to guides)
+### 技法スキル（ハウツーガイド）
 
-**Examples:** condition-based-waiting, root-cause-tracing, defensive-programming
+**例:** condition-based-waiting、root-cause-tracing、defensive-programming
 
-**Test with:**
-- Application scenarios: Can they apply the technique correctly?
-- Variation scenarios: Do they handle edge cases?
-- Missing information tests: Do instructions have gaps?
+**テストの方法:**
+- 適用シナリオ: 技法を正しく適用できるか
+- バリエーションのシナリオ: エッジケースを扱えるか
+- 情報不足のテスト: 指示に抜けがないか
 
-**Success criteria:** Agent successfully applies technique to new scenario
+**成功基準:** エージェントが新しいシナリオに技法をうまく適用できる
 
-### Pattern Skills (mental models)
+### パターンスキル（メンタルモデル）
 
-**Examples:** reducing-complexity, information-hiding concepts
+**例:** reducing-complexity、information-hiding の概念
 
-**Test with:**
-- Recognition scenarios: Do they recognize when pattern applies?
-- Application scenarios: Can they use the mental model?
-- Counter-examples: Do they know when NOT to apply?
+**テストの方法:**
+- 認識のシナリオ: パターンがいつ当てはまるかを認識できるか
+- 適用シナリオ: メンタルモデルを使えるか
+- 反例: いつ適用**しない**かを知っているか
 
-**Success criteria:** Agent correctly identifies when/how to apply pattern
+**成功基準:** エージェントがパターンをいつ・どう適用するかを正しく特定できる
 
-### Reference Skills (documentation/APIs)
+### リファレンススキル（ドキュメント・API）
 
-**Examples:** API documentation, command references, library guides
+**例:** API ドキュメント、コマンドリファレンス、ライブラリガイド
 
-**Test with:**
-- Retrieval scenarios: Can they find the right information?
-- Application scenarios: Can they use what they found correctly?
-- Gap testing: Are common use cases covered?
+**テストの方法:**
+- 検索のシナリオ: 正しい情報を見つけられるか
+- 適用シナリオ: 見つけた情報を正しく使えるか
+- 抜けのテスト: よくあるユースケースがカバーされているか
 
-**Success criteria:** Agent finds and correctly applies reference information
+**成功基準:** エージェントがリファレンスの情報を見つけ、正しく適用できる
 
-## Common Rationalizations for Skipping Testing
+## テストを省略するためのよくある自己正当化
 
-| Excuse | Reality |
+| 言い訳 | 現実 |
 |--------|---------|
-| "Skill is obviously clear" | Clear to you ≠ clear to other agents. Test it. |
-| "It's just a reference" | References can have gaps, unclear sections. Test retrieval. |
-| "Testing is overkill" | Untested skills have issues. Always. 15 min testing saves hours. |
-| "I'll test if problems emerge" | Problems = agents can't use skill. Test BEFORE deploying. |
-| "Too tedious to test" | Testing is less tedious than debugging bad skill in production. |
-| "I'm confident it's good" | Overconfidence guarantees issues. Test anyway. |
-| "Academic review is enough" | Reading ≠ using. Test application scenarios. |
-| "No time to test" | Deploying untested skill wastes more time fixing it later. |
+| 「スキルは明らかに明快だ」 | あなたにとって明快でも、ほかのエージェントにとって明快とは限りません。テストしてください。 |
+| 「ただのリファレンスだ」 | リファレンスにも抜けや不明確な節があり得ます。検索をテストしてください。 |
+| 「テストは大げさだ」 | テストしていないスキルには問題があります。例外なく。15 分のテストで何時間も節約できます。 |
+| 「問題が出たらテストする」 | 問題とは、エージェントがスキルを使えないことです。デプロイする**前に**テストしてください。 |
+| 「テストは面倒すぎる」 | 本番で不良スキルをデバッグするより、テストのほうが面倒ではありません。 |
+| 「自信がある、良いスキルだ」 | 過信は必ず問題を生みます。それでもテストしてください。 |
+| 「机上のレビューで十分だ」 | 読むことと使うことは別です。適用シナリオをテストしてください。 |
+| 「テストする時間がない」 | テストしていないスキルをデプロイすると、あとで直すのにより多くの時間を失います。 |
 
-**All of these mean: Test before deploying. No exceptions.**
+**これらはすべて、デプロイする前にテストしなければならないということです。例外なし。**
 
-## Match the Form to the Failure
+## 形式を失敗に合わせる
 
-Before writing guidance, classify the baseline failure. The form that bulletproofs one failure type measurably backfires on another.
+ガイダンスを書く前に、ベースラインの失敗を分類してください。ある種類の失敗を封じる形式が、別の種類では明確に逆効果になります。
 
-| Baseline failure | Right form | Wrong form |
+| ベースラインの失敗 | 適切な形式 | 不適切な形式 |
 |---|---|---|
-| Skips/violates a rule under pressure (knows better, does it anyway) | Prohibition + rationalization table + red flags (see references/bulletproofing.md) | Soft guidance ("prefer...", "consider...") |
-| Complies, but output has the wrong shape (bloated prompt, buried verdict, restated spec) | Positive recipe or contract: state what the output IS — its parts, in order | Prohibition list ("don't restate", "never narrate") |
-| Omits a required element from something they already produce | Structural: REQUIRED field or slot in the template they fill in | Prose reminders near the template |
-| Behavior should depend on a condition | Conditional keyed to an observable predicate ("if the brief exists, reference it") | Unconditional rule + exemption clauses |
+| 圧力の下でルールを飛ばす・破る（わかっていてもやってしまう） | 禁止 + 自己正当化の表 + 危険信号（references/bulletproofing.md を参照） | 緩いガイダンス（「〜が望ましい」「〜を検討する」） |
+| 従ってはいるが、出力の形が悪い（膨らんだプロンプト、埋もれた結論、仕様の言い直し） | 肯定形のレシピまたは契約: 出力が何であるか、その構成要素を順に述べる | 禁止のリスト（「言い直さない」「語らない」） |
+| すでに作っているものに、必須の要素が抜ける | 構造で解決する: 記入するテンプレートに REQUIRED のフィールドやスロットを設ける | テンプレートの近くでの文章による注意喚起 |
+| 振る舞いが条件に依存すべき | 観測できる述語に結びついた条件（「ブリーフがあれば、それを参照する」） | 無条件のルール + 例外条項 |
 
-**Why prohibitions backfire on shaping problems:** under a competing incentive ("make the prompt self-contained"), agents negotiate with "don't X". In head-to-head wording tests on dispatch-prompt guidance, the prohibition arm produced clearly more of the unwanted content than the recipe arm (fully separated distributions), and trended worse than even the no-guidance control — micro-test your own case rather than assuming, but never reach for the prohibition by default. A recipe leaves nothing to negotiate: the output matches the stated shape or it doesn't.
+**形づくりの問題で禁止が逆効果になる理由:** 競合するインセンティブ（「プロンプトを自己完結させる」）があると、エージェントは「X をするな」と交渉します。ディスパッチ用プロンプトのガイダンスに関する文言の直接比較テストでは、禁止の群は、レシピの群よりも不要な内容を明らかに多く生み出し（分布は完全に分離していました）、ガイダンスなしの対照群よりも悪い傾向さえありました。自分のケースをマイクロテストで確かめ、思い込まないでください。ただし、禁止を既定の手段として選んではいけません。レシピには交渉の余地がありません。出力が示された形に一致するか、しないかのどちらかです。
 
-**Rules for whichever form you pick:**
-- **No nuance clauses.** "Don't X unless it matters" reopens the negotiation — appending a single nuance clause to a winning recipe degraded it from consistent to noisy in the same wording tests. Express a real exception as its own conditional on an observable predicate.
-- **Exemption clauses don't scope.** "This limit doesn't apply to code blocks" still suppresses code blocks. If part of the output must be exempt, restructure so the rule can't reach it.
+**どの形式を選ぶ場合も守るルール:**
+- **ニュアンスの条項を入れない。** 「重要でない限り X をするな」は交渉を再び開きます。同じ文言テストで、うまくいっているレシピにニュアンスの条項を 1 つ付け足しただけで、安定していた結果がばらつくようになりました。本当の例外は、観測できる述語に結びついた独立した条件として表現してください。
+- **例外条項では範囲を限定できない。** 「この制限はコードブロックには適用されない」と書いても、コードブロックは抑制されたままです。出力の一部を例外にする必要があるなら、ルールがそこに及ばないよう構造を作り直してください。
 
-## Bulletproofing Against Rationalization
+## 自己正当化への対策を固める
 
-When the baseline failure is a discipline failure, read
-[references/bulletproofing.md](references/bulletproofing.md) before you write
-the guidance: closing loopholes, the spirit-vs-letter line, the
-rationalization table, and the red-flags list.
+ベースラインの失敗が規律の失敗であるときは、ガイダンスを書く前に [references/bulletproofing.md](references/bulletproofing.md) を読んでください。抜け穴のふさぎ方、精神と文言の線引き、自己正当化の表、危険信号のリストが載っています。
 
-## RED-GREEN-REFACTOR for Skills
+## スキルの RED-GREEN-REFACTOR
 
-Follow the TDD cycle:
+TDD のサイクルに従います。
 
-### RED: Write Failing Test (Baseline)
+### RED: 失敗するテストを書く（ベースライン）
 
-Run pressure scenario with subagent WITHOUT the skill. Document exact behavior:
-- What choices did they make?
-- What rationalizations did they use (verbatim)?
-- Which pressures triggered violations?
+スキルなしで、subagent に圧力をかけるテストシナリオを実行します。正確な挙動を記録してください。
+- どんな選択をしたか
+- どんな自己正当化を使ったか（原文のまま）
+- どの圧力が違反を引き起こしたか
 
-This is "watch the test fail" - you must see what agents naturally do before writing the skill.
+これが「テストが失敗するのを見る」ことです。スキルを書く前に、エージェントが自然に何をするかを確認しなければなりません。
 
-### GREEN: Write Minimal Skill
+### GREEN: 最小限のスキルを書く
 
-Write skill that addresses those specific rationalizations. Don't add extra content for hypothetical cases.
+それらの具体的な自己正当化に対処するスキルを書きます。仮定上のケースのために余計な内容を足さないでください。
 
-Run same scenarios WITH skill. Agent should now comply.
+同じシナリオをスキルありで実行します。エージェントが従うようになっているはずです。
 
-### REFACTOR: Close Loopholes
+### REFACTOR: 抜け穴をふさぐ
 
-Agent found new rationalization? Add explicit counter. Re-test until bulletproof.
+エージェントが新しい自己正当化を見つけましたか。明示的な反論を追加してください。完全に固まるまで再テストしてください。
 
-### Micro-Test Wording Before Full Scenarios
+### 完全なシナリオの前に、文言をマイクロテストする
 
-Full pressure-scenario runs are the final gate, but they are slow and expensive per iteration. Verify the wording itself first with micro-tests:
+圧力をかけるテストシナリオを完全な形で実行するのは最終ゲートですが、反復ごとの時間もコストもかかります。まず、マイクロテストで文言そのものを検証してください。
 
-1. **One fresh-context sample per call** — a raw API call, or a single-shot subagent if you don't have API access. System prompt = the realistic context the guidance will live in (the full skill or prompt template, not the guidance in isolation); user message = a task that tempts the failure.
-2. **Always include a no-guidance control.** If the control doesn't exhibit the failure, there is nothing to fix — stop, don't author the guidance.
-3. **5+ reps per variant.** Single samples lie.
-4. **Manually read every flagged match.** Score programmatically if you like, but template echoes and quoted counter-examples masquerade as hits; automated counts alone overstate both failure and success.
-5. **Variance is a metric.** When guidance lands, reps converge on the same shape. Five different interpretations across five reps means the wording isn't binding — tighten the form before adding words.
+1. **1 回の呼び出しにつき、新しいコンテキストでサンプルを 1 つ** — 生の API 呼び出し、API にアクセスできないなら単発の subagent。システムプロンプト = そのガイダンスが実際に置かれるコンテキスト（ガイダンス単体ではなく、スキル全体またはプロンプトテンプレート全体）。ユーザーメッセージ = 失敗を誘発するタスク。
+2. **ガイダンスなしの対照群を必ず含める。** 対照群が失敗を示さないなら、直すべきものはありません。止まってください。ガイダンスを書いてはいけません。
+3. **バリアントごとに 5 回以上繰り返す。** 1 サンプルは嘘をつきます。
+4. **フラグが立った一致をすべて手で読む。** 採点はプログラムで行っても構いませんが、テンプレートのエコーや引用された反例が一致のふりをします。自動集計だけでは、失敗も成功も過大に見えます。
+5. **ばらつきは指標である。** ガイダンスが定着すると、繰り返しは同じ形に収束します。5 回で 5 通りの解釈が出るなら、文言は拘束力を持っていません。言葉を足す前に形式を引き締めてください。
 
-Micro-tests verify wording; they do not replace pressure scenarios for discipline skills.
+マイクロテストは文言を検証するものです。規律のスキルでは、圧力をかけるテストシナリオの代わりにはなりません。
 
-**Testing methodology:** See [references/testing-skills-with-subagents.md](references/testing-skills-with-subagents.md) for the complete testing methodology:
-- How to write pressure scenarios
-- Pressure types (time, sunk cost, authority, exhaustion)
-- Plugging holes systematically
-- Meta-testing techniques
+**テスト方法論:** 完全なテスト方法論は [references/testing-skills-with-subagents.md](references/testing-skills-with-subagents.md) を参照してください。
+- 圧力をかけるテストシナリオの書き方
+- 圧力の種類（時間、サンクコスト、権威、疲労）
+- 抜け穴を体系的にふさぐ方法
+- メタテストの技法
 
-## Anti-Patterns
+## アンチパターン
 
-### ❌ Narrative Example
-"In session 2025-10-03, we found empty projectDir caused..."
-**Why bad:** Too specific, not reusable
+### ❌ 物語的な例
+「2025-10-03 のセッションで、空の projectDir が原因で...とわかった」
+**なぜ悪いか:** 具体的すぎて、再利用できません
 
-### ❌ Multi-Language Dilution
+### ❌ 複数言語による希薄化
 example-js.js, example-py.py, example-go.go
-**Why bad:** Mediocre quality, maintenance burden
+**なぜ悪いか:** 質が平凡になり、メンテナンスの負担が生じます
 
-### ❌ Code in Flowcharts
+### ❌ フローチャート内のコード
 ```dot
 step1 [label="import fs"];
 step2 [label="read file"];
 ```
-**Why bad:** Can't copy-paste, hard to read
+**なぜ悪いか:** コピー＆ペーストできず、読みにくいです
 
-### ❌ Generic Labels
+### ❌ 汎用的なラベル
 helper1, helper2, step3, pattern4
-**Why bad:** Labels should have semantic meaning
+**なぜ悪いか:** ラベルには意味のある名前を付けるべきです
 
-## STOP: Before Moving to Next Skill
+## 止まってください: 次のスキルに進む前に
 
-**After writing ANY skill, you MUST STOP and complete the deployment process.**
+**どんなスキルでも書いたあとは、必ず止まってデプロイのプロセスを完了しなければなりません。**
 
-**Do NOT:**
-- Create multiple skills in batch without testing each
-- Move to next skill before current one is verified
-- Skip testing because "batching is more efficient"
+**してはいけないこと:**
+- それぞれをテストせずに、複数のスキルをまとめて作成する
+- 現在のスキルが検証される前に、次のスキルに進む
+- 「まとめて行うほうが効率的」を理由にテストを省略する
 
-**The deployment checklist below is MANDATORY for EACH skill.**
+**以下のデプロイのチェックリストは、スキルごとに必須です。**
 
-Deploying untested skills = deploying untested code. It's a violation of quality standards.
+テストしていないスキルをデプロイすることは、テストしていないコードをデプロイすることです。品質基準への違反です。
 
-## Skill Creation Checklist (TDD Adapted)
+## スキル作成のチェックリスト（TDD 版）
 
-**IMPORTANT: Create a todo for EACH checklist item below.**
+**重要: 以下のチェックリストの項目ごとに todo を作成してください。**
 
-**RED Phase - Write Failing Test:**
-- [ ] Create pressure scenarios (3+ combined pressures for discipline skills)
-- [ ] Run scenarios WITHOUT skill - document baseline behavior verbatim
-- [ ] Identify patterns in rationalizations/failures
+**RED フェーズ - 失敗するテストを書く:**
+- [ ] 圧力をかけるテストシナリオを作成する（規律のスキルでは 3 つ以上の圧力を組み合わせる）
+- [ ] スキルなしでシナリオを実行する - ベースラインの挙動を原文のまま記録する
+- [ ] 自己正当化・失敗のパターンを特定する
 
-**GREEN Phase - Write Minimal Skill:**
-- [ ] Name uses only letters, numbers, hyphens (no parentheses/special chars)
-- [ ] YAML frontmatter with required `name` and `description` fields (max 1024 chars; see [spec](https://agentskills.io/specification))
-- [ ] Description starts with "Use when..." and includes specific triggers/symptoms
-- [ ] Description written in third person
-- [ ] Keywords throughout for search (errors, symptoms, tools)
-- [ ] Clear overview with core principle
-- [ ] Address specific baseline failures identified in RED
-- [ ] Guidance form matches the failure type (see Match the Form to the Failure)
-- [ ] For behavior-shaping guidance: wording micro-tested against a no-guidance control (5+ reps, every flagged match read manually) — N/A for pure reference skills
-- [ ] Code inline OR link to separate file
-- [ ] One excellent example (not multi-language)
-- [ ] Run scenarios WITH skill - verify agents now comply
+**GREEN フェーズ - 最小限のスキルを書く:**
+- [ ] 名前に使うのは英字・数字・ハイフンのみ（括弧や特殊文字は使わない）
+- [ ] 必須の `name` と `description` フィールドを持つ YAML frontmatter（最大 1024 文字。[仕様](https://agentskills.io/specification) を参照）
+- [ ] description は「Use when...」で始まり、具体的なトリガー・症状を含む
+- [ ] description は三人称で書く
+- [ ] 検索のためにキーワードを全体にちりばめる（エラー、症状、ツール）
+- [ ] 基本原則を含む明確な概要
+- [ ] RED で特定したベースラインの具体的な失敗に対処する
+- [ ] ガイダンスの形式が失敗の種類に合っている（「形式を失敗に合わせる」を参照）
+- [ ] 振る舞いを形づくるガイダンスでは: 文言を、ガイダンスなしの対照群に対してマイクロテストしている（5 回以上、フラグが立った一致をすべて手で読む） — 純粋なリファレンススキルでは該当なし
+- [ ] コードはインラインに置く、または別ファイルへリンクする
+- [ ] 優れた例が 1 つ（複数言語にしない）
+- [ ] スキルありでシナリオを実行する - エージェントが従うようになったことを確認する
 
-**REFACTOR Phase - Close Loopholes:**
-- [ ] Identify NEW rationalizations from testing
-- [ ] Add explicit counters (if discipline skill)
-- [ ] Build rationalization table from all test iterations
-- [ ] Create red flags list
-- [ ] Re-test until bulletproof
+**REFACTOR フェーズ - 抜け穴をふさぐ:**
+- [ ] テストから**新しい**自己正当化を特定する
+- [ ] 明示的な反論を追加する（規律のスキルの場合）
+- [ ] すべてのテスト反復から自己正当化の表を作る
+- [ ] 危険信号のリストを作る
+- [ ] 完全に固まるまで再テストする
 
-**Quality Checks:**
-- [ ] Small flowchart only if decision non-obvious
-- [ ] Quick reference table
-- [ ] Common mistakes section
-- [ ] No narrative storytelling
-- [ ] Supporting files only for tools or heavy reference
+**品質チェック:**
+- [ ] 小さなフローチャートは、判断が自明でない場合にのみ
+- [ ] クイックリファレンスの表
+- [ ] よくある間違いの節
+- [ ] 物語的な語りがない
+- [ ] 補助ファイルはツールか大きなリファレンスのためだけ
 
-**Deployment:**
-- [ ] Commit skill to git and push to your fork (if configured)
-- [ ] Consider contributing back via PR (if broadly useful)
+**デプロイ:**
+- [ ] スキルを git にコミットし、（設定していれば）自分のフォークにプッシュする
+- [ ] （広く役立つなら）PR で還元することを検討する
 
-## Discovery Workflow
+## 発見のワークフロー
 
-How future agents find your skill:
+将来のエージェントがあなたのスキルを見つける流れです。
 
-1. **Encounters problem** ("tests are flaky")
-2. **Searches skills** (greps descriptions, browses categories)
-3. **Finds SKILL** (description matches)
-4. **Scans overview** (is this relevant?)
-5. **Reads patterns** (quick reference table)
-6. **Loads example** (only when implementing)
+1. **問題に遭遇する**（「テストが不安定だ」）
+2. **スキルを検索する**（description を grep する、カテゴリを眺める）
+3. **スキルを見つける**（description が一致する）
+4. **概要を流し読みする**（これは関連があるか）
+5. **パターンを読む**（クイックリファレンスの表）
+6. **例を読み込む**（実装するときだけ）
 
-**Optimize for this flow** - put searchable terms early and often.
+**この流れに最適化してください** - 検索される語を早い位置に、何度も置いてください。

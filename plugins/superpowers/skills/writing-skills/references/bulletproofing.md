@@ -1,79 +1,78 @@
-# Bulletproofing Skills Against Rationalization
+# 自己正当化に対するスキルの強化
 
-Part of superpowers:writing-skills. Use it when the baseline failure is a
-discipline failure: the agent knows the rule and skips it under pressure.
+superpowers:writing-skills の一部です。ベースラインの失敗が規律の失敗である場合、つまりエージェントがルールを知っていながら、圧力の下でそれを飛ばす場合に使います。
 
-## Bulletproofing Skills Against Rationalization
+## 自己正当化に対するスキルの強化
 
-Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
+規律を強制するスキル（TDD など）は、自己正当化に耐えられなければなりません。エージェントは賢く、圧力の下では抜け穴を見つけます。
 
-**Scope:** this toolkit is for discipline failures — an agent that knows the rule and skips it under pressure. For wrong-shaped output or omitted elements, prohibition-based bulletproofing backfires; use the forms in Match the Form to the Failure instead.
+**適用範囲:** このツールキットは規律の失敗、つまりエージェントがルールを知っていながら圧力の下でそれを飛ばす場合のためのものです。出力の形が悪い場合や要素が抜ける場合、禁止に基づく強化は逆効果になります。代わりに「形式を失敗に合わせる」にある形式を使ってください。
 
-**Psychology note:** Understanding WHY persuasion techniques work helps you apply them systematically. See persuasion-principles.md in this directory for research foundation (Cialdini, 2021; Meincke et al., 2025) on authority, commitment, scarcity, social proof, and unity principles.
+**心理学に関する注記:** 説得の技法が**なぜ**うまく機能するのかを理解すると、それらを体系的に適用できます。権威・コミットメント・希少性・社会的証明・一体性の原則に関する研究の土台（Cialdini, 2021; Meincke et al., 2025）は、このディレクトリの persuasion-principles.md を参照してください。
 
-### Close Every Loophole Explicitly
+### あらゆる抜け穴を明示的にふさぐ
 
-Don't just state the rule - forbid specific workarounds:
+ルールを述べるだけでなく、具体的な回避策を禁じてください。
 
 <Bad>
 ```markdown
-Write code before test? Delete it.
+テストの前にコードを書いた? 削除してください。
 ```
 </Bad>
 
 <Good>
 ```markdown
-Write code before test? Delete it. Start over.
+テストの前にコードを書いた? 削除してください。最初からやり直してください。
 
-**No exceptions:**
-- Don't keep it as "reference"
-- Don't "adapt" it while writing tests
-- Don't look at it
-- Delete means delete
+**例外なし:**
+- 「参考」として残さない
+- テストを書いている間に「手直し」しない
+- 見ない
+- 削除とは削除することです
 ```
 </Good>
 
-### Address "Spirit vs Letter" Arguments
+### 「精神 vs 文言」の議論に対処する
 
-Add foundational principle early:
+基礎となる原則を早い段階で加えます。
 
 ```markdown
-**Violating the letter of the rules is violating the spirit of the rules.**
+**ルールの文言に違反することは、ルールの精神に違反することです。**
 ```
 
-This cuts off entire class of "I'm following the spirit" rationalizations.
+これにより、「精神には従っている」という種類の自己正当化がまるごと断たれます。
 
-### Build Rationalization Table
+### 自己正当化の表を作る
 
-Capture rationalizations from baseline testing (see Testing section below). Every excuse agents make goes in the table:
+ベースラインのテスト（下の「テスト」の節を参照）から自己正当化を集めます。エージェントが口にした言い訳はすべて表に入れます。
 
 ```markdown
-| Excuse | Reality |
+| 言い訳 | 現実 |
 |--------|---------|
-| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
-| "I'll test after" | Tests passing immediately prove nothing. |
-| "Tests after achieve same goals" | Tests-after = "what does this do?" Tests-first = "what should this do?" |
+| 「単純すぎてテストは不要だ」 | 単純なコードも壊れます。テストは 30 秒で済みます。 |
+| 「あとでテストする」 | すぐに通るテストは何も証明しません。 |
+| 「あとからのテストでも同じ目的を達成できる」 | あとからのテスト = 「これは何をするのか?」。先のテスト = 「これは何をすべきか?」 |
 ```
 
-### Create Red Flags List
+### 危険信号のリストを作る
 
-Make it easy for agents to self-check when rationalizing:
+自己正当化しているときに、エージェントが自分でチェックしやすくします。
 
 ```markdown
-## Red Flags - STOP and Start Over
+## 危険信号 - 止まって最初からやり直してください
 
-- Code before test
-- "I already manually tested it"
-- "Tests after achieve the same purpose"
-- "It's about spirit not ritual"
-- "This is different because..."
+- テストの前にコードがある
+- 「もう手動でテストした」
+- 「あとからのテストでも同じ目的を達成できる」
+- 「大事なのは精神であって儀式ではない」
+- 「これは違う、なぜなら...」
 
-**All of these mean: Delete code. Start over with TDD.**
+**これらはすべて、コードを削除して TDD で最初からやり直すということです。**
 ```
 
-### Update SDO for Violation Symptoms
+### 違反の症状に合わせて SDO を更新する
 
-Add to description: symptoms of when you're ABOUT to violate the rule:
+description に、ルールに違反しそうなときの症状を加えます。
 
 ```yaml
 description: use when implementing any feature or bugfix, before writing implementation code

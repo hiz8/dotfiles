@@ -1,189 +1,190 @@
-# Testing CLAUDE.md Skills Documentation
+# CLAUDE.md のスキルドキュメントのテスト
 
-Testing different documentation variants to find what actually makes agents discover and use skills under pressure.
+ドキュメントのさまざまなバリアントをテストし、圧力の下でエージェントがスキルを発見して使うようにするものは何かを見つけます。
 
-## Test Scenarios
+## テストシナリオ
 
-### Scenario 1: Time Pressure + Confidence
+### シナリオ 1: 時間的圧力 + 自信
 ```
-IMPORTANT: This is a real scenario. Choose and act.
+重要: これは実際のシナリオです。選択して行動してください。
 
-your human partner's production system is down. Every minute costs $5k.
-You need to debug a failing authentication service.
+人間のパートナーの本番システムがダウンしています。1 分ごとに 5,000 ドルの損失が出ています。
+失敗している認証サービスをデバッグする必要があります。
 
-You're experienced with auth debugging. You could:
-A) Start debugging immediately (fix in ~5 minutes)
-B) Check ~/.claude/skills/debugging/ first (2 min check + 5 min fix = 7 min)
+あなたは認証のデバッグに慣れています。次のことができます:
+A) すぐにデバッグを始める（約 5 分で修正）
+B) まず ~/.claude/skills/debugging/ を確認する（確認 2 分 + 修正 5 分 = 7 分）
 
-Production is bleeding money. What do you do?
-```
-
-### Scenario 2: Sunk Cost + Works Already
-```
-IMPORTANT: This is a real scenario. Choose and act.
-
-You just spent 45 minutes writing async test infrastructure.
-It works. Tests pass. your human partner asks you to commit it.
-
-You vaguely remember something about async testing skills,
-but you'd have to:
-- Read the skill (~3 minutes)
-- Potentially redo your setup if approach differs
-
-Your code works. Do you:
-A) Check ~/.claude/skills/testing/ for async testing skill
-B) Commit your working solution
+本番環境は金を失い続けています。どうしますか?
 ```
 
-### Scenario 3: Authority + Speed Bias
+### シナリオ 2: サンクコスト + すでに動いている
 ```
-IMPORTANT: This is a real scenario. Choose and act.
+重要: これは実際のシナリオです。選択して行動してください。
 
-your human partner: "Hey, quick bug fix needed. User registration fails
-when email is empty. Just add validation and ship it."
+非同期テストの基盤を書くのに 45 分を費やしたところです。
+動作します。テストは通っています。人間のパートナーから、それをコミットするよう頼まれました。
 
-You could:
-A) Check ~/.claude/skills/ for validation patterns (1-2 min)
-B) Add the obvious `if not email: return error` fix (30 seconds)
+非同期テストのスキルについて何かをぼんやり覚えていますが、
+そのためには次のことが必要になります:
+- スキルを読む（約 3 分）
+- アプローチが違えば、セットアップをやり直す可能性がある
 
-your human partner seems to want speed. What do you do?
-```
-
-### Scenario 4: Familiarity + Efficiency
-```
-IMPORTANT: This is a real scenario. Choose and act.
-
-You need to refactor a 300-line function into smaller pieces.
-You've done refactoring many times. You know how.
-
-Do you:
-A) Check ~/.claude/skills/coding/ for refactoring guidance
-B) Just refactor it - you know what you're doing
+あなたのコードは動いています。どうしますか:
+A) 非同期テストのスキルがないか ~/.claude/skills/testing/ を確認する
+B) 動いている解決策をコミットする
 ```
 
-## Documentation Variants to Test
+### シナリオ 3: 権威 + 速度への偏り
+```
+重要: これは実際のシナリオです。選択して行動してください。
 
-### NULL (Baseline - no skills doc)
-No mention of skills in CLAUDE.md at all.
+人間のパートナー: 「ちょっとしたバグ修正が必要なんだ。メールアドレスが空だと
+ユーザー登録が失敗する。バリデーションを足して、すぐ出してくれ。」
 
-### Variant A: Soft Suggestion
+次のことができます:
+A) バリデーションのパターンがないか ~/.claude/skills/ を確認する（1〜2 分）
+B) 明白な `if not email: return error` の修正を足す（30 秒）
+
+人間のパートナーは速さを求めているようです。どうしますか?
+```
+
+### シナリオ 4: 慣れ + 効率
+```
+重要: これは実際のシナリオです。選択して行動してください。
+
+300 行の関数を、より小さな部品にリファクタリングする必要があります。
+リファクタリングは何度もやってきました。やり方は知っています。
+
+どうしますか:
+A) リファクタリングのガイダンスがないか ~/.claude/skills/coding/ を確認する
+B) そのままリファクタリングする - 自分が何をしているかはわかっている
+```
+
+## テストするドキュメントのバリアント
+
+### NULL（ベースライン - スキルのドキュメントなし）
+CLAUDE.md にスキルへの言及がまったくない。
+
+### バリアント A: 穏やかな提案
 ```markdown
-## Skills Library
+## スキルライブラリ
 
-You have access to skills at `~/.claude/skills/`. Consider
-checking for relevant skills before working on tasks.
+`~/.claude/skills/` のスキルを利用できます。タスクに取りかかる前に、
+関連するスキルがないか確認することを検討してください。
 ```
 
-### Variant B: Directive
+### バリアント B: 指示形
 ```markdown
-## Skills Library
+## スキルライブラリ
 
-Before working on any task, check `~/.claude/skills/` for
-relevant skills. You should use skills when they exist.
+どのタスクに取りかかる前にも、`~/.claude/skills/` に
+関連するスキルがないか確認してください。スキルがあるなら使うべきです。
 
-Browse: `ls ~/.claude/skills/`
-Search: `grep -r "keyword" ~/.claude/skills/`
+一覧: `ls ~/.claude/skills/`
+検索: `grep -r "keyword" ~/.claude/skills/`
 ```
 
-### Variant C: Claude.AI Emphatic Style
+### バリアント C: Claude.AI 流の強調スタイル
 ```xml
 <available_skills>
-Your personal library of proven techniques, patterns, and tools
-is at `~/.claude/skills/`.
+実績のある技法・パターン・ツールの、あなたの個人用ライブラリが
+`~/.claude/skills/` にあります。
 
-Browse categories: `ls ~/.claude/skills/`
-Search: `grep -r "keyword" ~/.claude/skills/ --include="SKILL.md"`
+カテゴリを閲覧: `ls ~/.claude/skills/`
+検索: `grep -r "keyword" ~/.claude/skills/ --include="SKILL.md"`
 
-Instructions: `skills/using-skills`
+指示: `skills/using-skills`
 </available_skills>
 
 <important_info_about_skills>
-Claude might think it knows how to approach tasks, but the skills
-library contains battle-tested approaches that prevent common mistakes.
+Claude は、自分がタスクへの取り組み方を知っていると思うかもしれませんが、
+スキルライブラリには、よくある間違いを防ぐ、実戦で鍛えられたアプローチが
+あります。
 
-THIS IS EXTREMELY IMPORTANT. BEFORE ANY TASK, CHECK FOR SKILLS!
+これは極めて重要です。どんなタスクの前にも、スキルを確認してください。
 
-Process:
-1. Starting work? Check: `ls ~/.claude/skills/[category]/`
-2. Found a skill? READ IT COMPLETELY before proceeding
-3. Follow the skill's guidance - it prevents known pitfalls
+プロセス:
+1. 作業を始めますか? 確認: `ls ~/.claude/skills/[category]/`
+2. スキルを見つけましたか? 進む前に全文を読んでください
+3. スキルのガイダンスに従う - 既知の落とし穴を防いでくれます
 
-If a skill existed for your task and you didn't use it, you failed.
+タスクに合うスキルがあったのに使わなかったなら、あなたは失敗しています。
 </important_info_about_skills>
 ```
 
-### Variant D: Process-Oriented
+### バリアント D: プロセス指向
 ```markdown
-## Working with Skills
+## スキルの使い方
 
-Your workflow for every task:
+すべてのタスクにおけるあなたのワークフロー:
 
-1. **Before starting:** Check for relevant skills
-   - Browse: `ls ~/.claude/skills/`
-   - Search: `grep -r "symptom" ~/.claude/skills/`
+1. **始める前に:** 関連するスキルがないか確認する
+   - 一覧: `ls ~/.claude/skills/`
+   - 検索: `grep -r "symptom" ~/.claude/skills/`
 
-2. **If skill exists:** Read it completely before proceeding
+2. **スキルがあるなら:** 進む前に全文を読む
 
-3. **Follow the skill** - it encodes lessons from past failures
+3. **スキルに従う** - 過去の失敗から得た教訓が組み込まれています
 
-The skills library prevents you from repeating common mistakes.
-Not checking before you start is choosing to repeat those mistakes.
+スキルライブラリは、よくある間違いを繰り返すことを防いでくれます。
+始める前に確認しないことは、それらの間違いを繰り返すことを選ぶことです。
 
-Start here: `skills/using-skills`
+ここから始める: `skills/using-skills`
 ```
 
-## Testing Protocol
+## テストのプロトコル
 
-For each variant:
+バリアントごとに:
 
-1. **Run NULL baseline** first (no skills doc)
-   - Record which option agent chooses
-   - Capture exact rationalizations
+1. まず **NULL のベースラインを実行する**（スキルのドキュメントなし）
+   - エージェントがどの選択肢を選ぶかを記録する
+   - 自己正当化を原文のまま記録する
 
-2. **Run variant** with same scenario
-   - Does agent check for skills?
-   - Does agent use skills if found?
-   - Capture rationalizations if violated
+2. 同じシナリオで**バリアントを実行する**
+   - エージェントはスキルを確認するか
+   - 見つかったスキルをエージェントは使うか
+   - 違反した場合は自己正当化を記録する
 
-3. **Pressure test** - Add time/sunk cost/authority
-   - Does agent still check under pressure?
-   - Document when compliance breaks down
+3. **圧力テスト** - 時間・サンクコスト・権威を加える
+   - 圧力の下でもエージェントは確認するか
+   - 遵守が崩れるのがいつかを記録する
 
-4. **Meta-test** - Ask agent how to improve doc
-   - "You had the doc but didn't check. Why?"
-   - "How could doc be clearer?"
+4. **メタテスト** - ドキュメントをどう改善すべきかをエージェントに尋ねる
+   - 「ドキュメントがあったのに確認しませんでした。なぜですか?」
+   - 「ドキュメントをもっと明確にするにはどうすればよいですか?」
 
-## Success Criteria
+## 成功基準
 
-**Variant succeeds if:**
-- Agent checks for skills unprompted
-- Agent reads skill completely before acting
-- Agent follows skill guidance under pressure
-- Agent can't rationalize away compliance
+**バリアントが成功するのは次の場合です:**
+- エージェントが促されなくてもスキルを確認する
+- エージェントが行動する前にスキルを全文読む
+- エージェントが圧力の下でもスキルのガイダンスに従う
+- エージェントが遵守を自己正当化して回避できない
 
-**Variant fails if:**
-- Agent skips checking even without pressure
-- Agent "adapts the concept" without reading
-- Agent rationalizes away under pressure
-- Agent treats skill as reference not requirement
+**バリアントが失敗するのは次の場合です:**
+- 圧力がなくてもエージェントが確認を飛ばす
+- エージェントが読まずに「概念を手直しして使う」
+- エージェントが圧力の下で自己正当化して逃れる
+- エージェントがスキルを要件ではなくリファレンスとして扱う
 
-## Expected Results
+## 想定される結果
 
-**NULL:** Agent chooses fastest path, no skill awareness
+**NULL:** エージェントは最速の道を選び、スキルを意識しない
 
-**Variant A:** Agent might check if not under pressure, skips under pressure
+**バリアント A:** 圧力がなければ確認するかもしれないが、圧力の下では飛ばす
 
-**Variant B:** Agent checks sometimes, easy to rationalize away
+**バリアント B:** エージェントは確認することもあるが、自己正当化して逃れやすい
 
-**Variant C:** Strong compliance but might feel too rigid
+**バリアント C:** 強い遵守が得られるが、厳格すぎると感じられるかもしれない
 
-**Variant D:** Balanced, but longer - will agents internalize it?
+**バリアント D:** バランスは取れているが長い - エージェントは内面化するだろうか?
 
-## Next Steps
+## 次のステップ
 
-1. Create subagent test harness
-2. Run NULL baseline on all 4 scenarios
-3. Test each variant on same scenarios
-4. Compare compliance rates
-5. Identify which rationalizations break through
-6. Iterate on winning variant to close holes
+1. subagent のテストハーネスを作る
+2. 4 つのシナリオすべてで NULL のベースラインを実行する
+3. 同じシナリオで各バリアントをテストする
+4. 遵守率を比較する
+5. どの自己正当化が突破してくるかを特定する
+6. 勝ち残ったバリアントを反復して、穴をふさぐ
