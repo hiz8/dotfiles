@@ -116,9 +116,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 . "$HOME/.cargo/env"
 
 # bun
@@ -128,3 +125,5 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # WSL: Use Windows Firefox as default browser
 export BROWSER="/mnt/c/Program Files/Mozilla Firefox/firefox.exe"
+
+eval "$(/home/hiz/.local/bin/mise activate bash)" # added by https://mise.run/bash
