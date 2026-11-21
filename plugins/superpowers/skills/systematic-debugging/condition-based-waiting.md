@@ -1,37 +1,37 @@
-# Condition-Based Waiting
+# 条件ベースの待機
 
-## Overview
+## 概要
 
-Flaky tests often guess at timing with arbitrary delays. This creates race conditions where tests pass on fast machines but fail under load or in CI.
+不安定な（flaky な）テストは、任意の遅延でタイミングを当て推量していることがよくあります。これは競合状態を生み、速いマシンでは通るのに、負荷がかかったときや CI では失敗するテストになります。
 
-**Core principle:** Wait for the actual condition you care about, not a guess about how long it takes.
+**基本原則:** 時間がどれくらいかかるかの当て推量ではなく、実際に気にしている条件を待ってください。
 
-## When to Use
+## 使うとき
 
 ```dot
 digraph when_to_use {
-    "Test uses setTimeout/sleep?" [shape=diamond];
-    "Testing timing behavior?" [shape=diamond];
-    "Document WHY timeout needed" [shape=box];
-    "Use condition-based waiting" [shape=box];
+    "テストが setTimeout/sleep を使っている？" [shape=diamond];
+    "タイミングの振る舞いをテストしている？" [shape=diamond];
+    "タイムアウトが必要な理由を文書化する" [shape=box];
+    "条件ベースの待機を使う" [shape=box];
 
-    "Test uses setTimeout/sleep?" -> "Testing timing behavior?" [label="yes"];
-    "Testing timing behavior?" -> "Document WHY timeout needed" [label="yes"];
-    "Testing timing behavior?" -> "Use condition-based waiting" [label="no"];
+    "テストが setTimeout/sleep を使っている？" -> "タイミングの振る舞いをテストしている？" [label="はい"];
+    "タイミングの振る舞いをテストしている？" -> "タイムアウトが必要な理由を文書化する" [label="はい"];
+    "タイミングの振る舞いをテストしている？" -> "条件ベースの待機を使う" [label="いいえ"];
 }
 ```
 
-**Use when:**
-- Tests have arbitrary delays (`setTimeout`, `sleep`, `time.sleep()`)
-- Tests are flaky (pass sometimes, fail under load)
-- Tests timeout when run in parallel
-- Waiting for async operations to complete
+**次のときに使います:**
+- テストに任意の遅延がある（`setTimeout`、`sleep`、`time.sleep()`）
+- テストが不安定（通ることもあれば、負荷がかかると失敗する）
+- 並列で実行するとテストがタイムアウトする
+- 非同期操作の完了を待っている
 
-**Don't use when:**
-- Testing actual timing behavior (debounce, throttle intervals)
-- Always document WHY if using arbitrary timeout
+**次のときは使いません:**
+- 実際のタイミングの振る舞いをテストしている（debounce、throttle の間隔）
+- 任意のタイムアウトを使うなら、その理由を必ず文書化する
 
-## Core Pattern
+## 基本パターン
 
 ```typescript
 // ❌ BEFORE: Guessing at timing
@@ -45,19 +45,19 @@ const result = getResult();
 expect(result).toBeDefined();
 ```
 
-## Quick Patterns
+## 手早く使えるパターン
 
-| Scenario | Pattern |
-|----------|---------|
-| Wait for event | `waitFor(() => events.find(e => e.type === 'DONE'))` |
-| Wait for state | `waitFor(() => machine.state === 'ready')` |
-| Wait for count | `waitFor(() => items.length >= 5)` |
-| Wait for file | `waitFor(() => fs.existsSync(path))` |
-| Complex condition | `waitFor(() => obj.ready && obj.value > 10)` |
+| シナリオ | パターン |
+|----------|----------|
+| イベントを待つ | `waitFor(() => events.find(e => e.type === 'DONE'))` |
+| 状態を待つ | `waitFor(() => machine.state === 'ready')` |
+| 件数を待つ | `waitFor(() => items.length >= 5)` |
+| ファイルを待つ | `waitFor(() => fs.existsSync(path))` |
+| 複雑な条件 | `waitFor(() => obj.ready && obj.value > 10)` |
 
-## Implementation
+## 実装
 
-Generic polling function:
+汎用のポーリング関数:
 ```typescript
 async function waitFor<T>(
   condition: () => T | undefined | null | false,
@@ -79,20 +79,20 @@ async function waitFor<T>(
 }
 ```
 
-See `condition-based-waiting-example.ts` in this directory for complete implementation with domain-specific helpers (`waitForEvent`, `waitForEventCount`, `waitForEventMatch`) from actual debugging session.
+実際のデバッグセッションで使った、ドメイン固有のヘルパー（`waitForEvent`、`waitForEventCount`、`waitForEventMatch`）を含む完全な実装は、このディレクトリの `condition-based-waiting-example.ts` を参照してください。
 
-## Common Mistakes
+## よくある間違い
 
-**❌ Polling too fast:** `setTimeout(check, 1)` - wastes CPU
-**✅ Fix:** Poll every 10ms
+**❌ ポーリングが速すぎる:** `setTimeout(check, 1)` - CPU を無駄にする
+**✅ 修正:** 10ms ごとにポーリングする
 
-**❌ No timeout:** Loop forever if condition never met
-**✅ Fix:** Always include timeout with clear error
+**❌ タイムアウトがない:** 条件が満たされないと永遠にループする
+**✅ 修正:** 明確なエラーを伴うタイムアウトを必ず入れる
 
-**❌ Stale data:** Cache state before loop
-**✅ Fix:** Call getter inside loop for fresh data
+**❌ 古いデータ:** ループの前に状態をキャッシュする
+**✅ 修正:** ループの内側でゲッターを呼び、新しいデータを取得する
 
-## When Arbitrary Timeout IS Correct
+## 任意のタイムアウトが正しいとき
 
 ```typescript
 // Tool ticks every 100ms - need 2 ticks to verify partial output
@@ -101,15 +101,15 @@ await new Promise(r => setTimeout(r, 200));   // Then: wait for timed behavior
 // 200ms = 2 ticks at 100ms intervals - documented and justified
 ```
 
-**Requirements:**
-1. First wait for triggering condition
-2. Based on known timing (not guessing)
-3. Comment explaining WHY
+**要件:**
+1. まず、きっかけとなる条件を待つ
+2. 既知のタイミングに基づく（当て推量ではない）
+3. なぜかを説明するコメントを付ける
 
-## Real-World Impact
+## 実際の影響
 
-From debugging session (2025-10-03):
-- Fixed 15 flaky tests across 3 files
-- Pass rate: 60% → 100%
-- Execution time: 40% faster
-- No more race conditions
+デバッグセッション（2025-10-03）より:
+- 3 つのファイルにまたがる 15 件の不安定なテストを修正した
+- 通過率: 60% → 100%
+- 実行時間: 40% 短縮
+- 競合状態は解消した

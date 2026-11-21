@@ -1,26 +1,26 @@
-# Defense-in-Depth Validation
+# 多層防御による検証
 
-## Overview
+## 概要
 
-When you fix a bug caused by invalid data, adding validation at one place feels sufficient. But that single check can be bypassed by different code paths, refactoring, or mocks.
+無効なデータが原因のバグを直すとき、1 か所に検証を追加すれば十分に感じられます。しかし、その 1 つのチェックは、別のコードパス、リファクタリング、モックによって回避されうるものです。
 
-**Core principle:** Validate at EVERY layer data passes through. Make the bug structurally impossible.
+**基本原則:** データが通る**すべての**層で検証してください。バグを構造的に不可能にします。
 
-## Why Multiple Layers
+## なぜ複数の層なのか
 
-Single validation: "We fixed the bug"
-Multiple layers: "We made the bug impossible"
+単一の検証: 「バグを直した」
+複数の層: 「バグを不可能にした」
 
-Different layers catch different cases:
-- Entry validation catches most bugs
-- Business logic catches edge cases
-- Environment guards prevent context-specific dangers
-- Debug logging helps when other layers fail
+層ごとに捕まえるケースが異なります:
+- 入口の検証は、ほとんどのバグを捕まえる
+- ビジネスロジックは、エッジケースを捕まえる
+- 環境ガードは、特定のコンテキストに固有の危険を防ぐ
+- デバッグログは、他の層が失敗したときに助けになる
 
-## The Four Layers
+## 4 つの層
 
-### Layer 1: Entry Point Validation
-**Purpose:** Reject obviously invalid input at API boundary
+### 層 1: エントリポイントの検証
+**目的:** API の境界で、明らかに無効な入力を拒否する
 
 ```typescript
 function createProject(name: string, workingDirectory: string) {
@@ -37,8 +37,8 @@ function createProject(name: string, workingDirectory: string) {
 }
 ```
 
-### Layer 2: Business Logic Validation
-**Purpose:** Ensure data makes sense for this operation
+### 層 2: ビジネスロジックの検証
+**目的:** データがこの操作にとって意味をなすことを保証する
 
 ```typescript
 function initializeWorkspace(projectDir: string, sessionId: string) {
@@ -49,8 +49,8 @@ function initializeWorkspace(projectDir: string, sessionId: string) {
 }
 ```
 
-### Layer 3: Environment Guards
-**Purpose:** Prevent dangerous operations in specific contexts
+### 層 3: 環境ガード
+**目的:** 特定のコンテキストで危険な操作を防ぐ
 
 ```typescript
 async function gitInit(directory: string) {
@@ -69,8 +69,8 @@ async function gitInit(directory: string) {
 }
 ```
 
-### Layer 4: Debug Instrumentation
-**Purpose:** Capture context for forensics
+### 層 4: デバッグ用の計装
+**目的:** フォレンジックのためにコンテキストを記録する
 
 ```typescript
 async function gitInit(directory: string) {
@@ -84,39 +84,39 @@ async function gitInit(directory: string) {
 }
 ```
 
-## Applying the Pattern
+## パターンの適用
 
-When you find a bug:
+バグを見つけたとき:
 
-1. **Trace the data flow** - Where does bad value originate? Where used?
-2. **Map all checkpoints** - List every point data passes through
-3. **Add validation at each layer** - Entry, business, environment, debug
-4. **Test each layer** - Try to bypass layer 1, verify layer 2 catches it
+1. **データフローをたどる** - 不正な値はどこで生まれるか？ どこで使われるか？
+2. **すべてのチェックポイントを洗い出す** - データが通るすべての地点を挙げる
+3. **各層に検証を追加する** - エントリ、ビジネス、環境、デバッグ
+4. **各層をテストする** - 層 1 を回避しようとし、層 2 がそれを捕まえることを確認する
 
-## Example from Session
+## セッションでの例
 
-Bug: Empty `projectDir` caused `git init` in source code
+バグ: 空の `projectDir` が原因で、ソースコードのディレクトリで `git init` が実行された
 
-**Data flow:**
-1. Test setup → empty string
+**データフロー:**
+1. テストのセットアップ → 空文字列
 2. `Project.create(name, '')`
 3. `WorkspaceManager.createWorkspace('')`
-4. `git init` runs in `process.cwd()`
+4. `git init` が `process.cwd()` で実行される
 
-**Four layers added:**
-- Layer 1: `Project.create()` validates not empty/exists/writable
-- Layer 2: `WorkspaceManager` validates projectDir not empty
-- Layer 3: `WorktreeManager` refuses git init outside tmpdir in tests
-- Layer 4: Stack trace logging before git init
+**追加した 4 つの層:**
+- 層 1: `Project.create()` が、空でないこと・存在すること・書き込み可能であることを検証する
+- 層 2: `WorkspaceManager` が、projectDir が空でないことを検証する
+- 層 3: `WorktreeManager` が、テスト中に tmpdir の外での git init を拒否する
+- 層 4: git init の前にスタックトレースをログに記録する
 
-**Result:** All 1847 tests passed, bug impossible to reproduce
+**結果:** 1847 件のテストがすべて通り、バグは再現不可能になった
 
-## Key Insight
+## 重要な洞察
 
-All four layers were necessary. During testing, each layer caught bugs the others missed:
-- Different code paths bypassed entry validation
-- Mocks bypassed business logic checks
-- Edge cases on different platforms needed environment guards
-- Debug logging identified structural misuse
+4 つの層はすべて必要でした。テスト中、各層が他の層の見逃したバグを捕まえました:
+- 別のコードパスが、エントリの検証を回避した
+- モックが、ビジネスロジックのチェックを回避した
+- 別のプラットフォームでのエッジケースには、環境ガードが必要だった
+- デバッグログが、構造的な誤用を特定した
 
-**Don't stop at one validation point.** Add checks at every layer.
+**検証ポイントを 1 つで止めてはいけません。** すべての層にチェックを追加してください。

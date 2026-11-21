@@ -1,33 +1,32 @@
-# Writing Good Tests
+# 良いテストの書き方
 
-**Load this reference when:** writing or changing tests, adding mocks, or
-adding cleanup/helper methods for tests.
+**このリファレンスを読むとき:** テストを書く・変更するとき、モックを追加するとき、
+またはテスト用のクリーンアップ/ヘルパーメソッドを追加するとき。
 
-## Overview
+## 概要
 
-A test exists to catch a specific break. Two principles govern everything
-here:
+テストは、特定の破壊を捕まえるために存在します。ここでのすべては 2 つの原則に
+支えられています:
 
 ```
 1. Every test names the break it catches
 2. Every test exercises the real thing
 ```
 
-Strict TDD produces both naturally: a test written first and watched
-failing against real code has already proven it can fail, and only earns
-a mock when the real dependency proves slow or external.
+厳格な TDD は、この両方を自然に生み出します。先に書いて、実際のコードに対して
+失敗するのを確認したテストは、すでに失敗しうることを証明済みです。そして、実際の
+依存先が遅い、または外部にあると分かったときにだけ、モックを使う資格を得ます。
 
-## Principle 1: Name the Break
+## 原則 1: 破壊に名前を付ける
 
-Before writing the test body, answer: **what production change should
-make this test fail — and is that change a bug or a decision?** A test
-earns its place by catching a wrong branch, missing side effect, wrong
-argument, boundary case, or broken contract.
+テスト本体を書く前に、次に答えてください: **どのプロダクションコードの変更でこの
+テストが失敗するべきか — そしてその変更はバグか、それとも決定か？** テストが存在を
+認められるのは、誤った分岐、欠けた副作用、誤った引数、境界ケース、壊れた契約を
+捕まえるときです。
 
-**Derive expectations independently.** Use literals and hand-checked
-fixtures; table-driven tests with literal `want` values are the preferred
-shape. An expectation computed by the code under test — or its helpers —
-passes no matter what that code does:
+**期待値は独立に導出してください。** リテラルと手作業で確認したフィクスチャを使って
+ください。リテラルの `want` 値を持つテーブル駆動テストが望ましい形です。テスト対象の
+コード（またはそのヘルパー）が計算した期待値は、そのコードが何をしても通ります:
 
 ```typescript
 // ❌ Mirror assertion: the same builder computes both sides — always true
@@ -38,31 +37,29 @@ expect(buildSearchQuery({ tag: 'urgent' })).toBe(expected);
 expect(buildSearchQuery({ tag: 'urgent' })).toBe('tag:"urgent"');
 ```
 
-**No change detectors.** If only intentional decisions can fail a test —
-a constant's value, exact message wording, private structure — it fires
-on redesign and sleeps through bugs. Test the behavior that depends on
-the decision: not `expect(MAX_RETRIES).toBe(5)` but "a failing call is
-retried 5 times and the 6th attempt never happens."
+**変更検知テストにしないでください。** 意図的な決定だけがテストを失敗させるなら —
+定数の値、メッセージの正確な文言、プライベートな構造など — そのテストは再設計のたびに
+発火し、バグの間は眠り続けます。決定に依存する振る舞いをテストしてください。
+`expect(MAX_RETRIES).toBe(5)` ではなく、「失敗した呼び出しは 5 回リトライされ、
+6 回目の試行は決して行われない」をテストします。
 
-**Behavior, not text.** Asserting that a script, skill, or config
-contains an exact line proves only that the source is the source. Run
-scripts against controlled inputs and assert outputs, side effects, or
-exit codes. Documents that instruct agents are tested by the consuming
-agent's behavior (superpowers:writing-skills); prose for humans earns no
-test at all.
+**テキストではなく振る舞い。** スクリプト、スキル、設定が特定の 1 行を含んでいると
+アサートしても、ソースがソースであることしか証明できません。スクリプトは制御した
+入力で実行し、出力、副作用、終了コードをアサートしてください。エージェントに指示する
+ドキュメントは、それを使うエージェントの振る舞いでテストします
+（superpowers:writing-skills）。人間向けの文章にはテストは要りません。
 
-**Your code, not the framework.** Test the contract your code makes at
-its boundaries — the route you register, the query you emit, the payload
-you produce. Upstream mechanics are their maintainers' tests to write
-(the classic: asserting your router invokes a registered handler — that
-is the framework's test, not yours). When upstream behavior genuinely
-surprised you, write one narrow characterization test naming the
-assumption. The same boundary applies inside your code: constructors,
-getters, constants, and trivial forwarding earn tests only when they
-validate, normalize, default, derive, enforce, or cause side effects —
-otherwise assert the first consumer-visible result that depends on them.
+**フレームワークではなく、自分のコード。** 自分のコードが境界で結ぶ契約をテストして
+ください — 登録したルート、発行するクエリ、生成するペイロードなどです。上流の仕組みは、
+その保守者が書くべきテストです（典型例: ルーターが登録済みのハンドラーを呼び出すことを
+アサートするテスト — それはフレームワークのテストであり、あなたのものではありません）。
+上流の振る舞いに本当に驚かされたときは、その前提に名前を付けた、範囲の狭い
+特性テスト（characterization test）を 1 つ書いてください。同じ境界はコードの内側にも
+あります。コンストラクタ、ゲッター、定数、単純な転送がテストに値するのは、検証、
+正規化、デフォルト値の設定、導出、強制、または副作用を起こすときだけです — それ以外は、
+それらに依存する、利用者から見える最初の結果をアサートしてください。
 
-### Gate Function
+### ゲート関数
 
 ```
 BEFORE writing the test body:
@@ -78,12 +75,12 @@ BEFORE writing the test body:
     Replace it with a literal or hand-checked fixture
 ```
 
-## Principle 2: Exercise the Real Thing
+## 原則 2: 実際のものを動かす
 
-**The mock earns no assertions.** A mock assertion passes when the mock
-is present and fails when it is absent — it says nothing about the
-component. Assert the real component's behavior; if the mock is what you
-are checking, unmock it or delete the assertion.
+**モックにアサーションを付けてはいけません。** モックに対するアサーションは、モックが
+あれば通り、なければ失敗します — コンポーネントについては何も語りません。実際の
+コンポーネントの振る舞いをアサートしてください。確認しているのがモックそのものなら、
+モックを外すか、アサーションを削除してください。
 
 ```typescript
 // ✅ Real behavior
@@ -93,13 +90,12 @@ expect(screen.getByRole('navigation')).toBeInTheDocument();
 expect(screen.getByTestId('sidebar-mock')).toBeInTheDocument();
 ```
 
-**your human partner's correction:** "Are we testing the behavior of a
-mock?"
+**人間のパートナーからの指摘:** 「モックの振る舞いをテストしていないか？」
 
-**Mock at the right level.** Learn every side effect of the real method
-before replacing it; mock the slow or external operation and keep what
-the test depends on real. When unsure, run the test against the real
-implementation first and observe what actually needs to happen.
+**適切なレベルでモックする。** 実際のメソッドを置き換える前に、その副作用をすべて
+把握してください。遅い、または外部にある操作をモックし、テストが依存するものは本物の
+まま残してください。迷ったら、まず実際の実装に対してテストを実行し、実際に何が必要
+なのかを観察してください。
 
 ```typescript
 // ❌ The mock swallows the config write that duplicate detection reads
@@ -111,28 +107,29 @@ vi.mock('ToolCatalog', () => ({
 vi.mock('MCPServerManager');
 ```
 
-**Make doubles specific.** When arguments, call counts, or ordering are
-part of the contract, assert them — a fake that accepts anything verifies
-nothing. Give each branch (success, error, malformed) its own fixture or
-spy, so the wrong branch cannot satisfy the expectation.
+**テストダブルは具体的にする。** 引数、呼び出し回数、順序が契約の一部であるときは、
+それらをアサートしてください — 何でも受け入れるフェイクは何も検証しません。分岐
+（成功、エラー、不正な形式）ごとに専用のフィクスチャまたはスパイを用意し、誤った分岐が
+期待を満たせないようにしてください。
 
-**Mirror real data completely.** Mock the complete structure as it exists
-in reality — all documented fields — not just the ones your test reads.
-Partial mocks fail silently when downstream code reads an omitted field:
-the test passes while integration breaks.
+**実際のデータを完全に写す。** モックは、現実に存在する構造全体を — 文書化された
+すべてのフィールドを — 写してください。テストが読むフィールドだけではいけません。
+部分的なモックは、下流のコードが省略されたフィールドを読むと、静かに失敗します。
+テストは通るのに、統合が壊れます。
 
-**Production classes carry production methods only.** Cleanup that only
-tests need lives in test utilities, never as a `destroy()` on the
-production class. Ask: is this method called only from tests? Does this
-class own this resource's lifecycle? Wrong answers → test utility.
+**プロダクションのクラスにはプロダクションのメソッドだけを持たせる。** テストだけが
+必要とするクリーンアップは、テストユーティリティに置いてください。プロダクションの
+クラスに `destroy()` として置いてはいけません。次を自問してください: このメソッドは
+テストからしか呼ばれないか？ このクラスはそのリソースのライフサイクルを所有して
+いるか？ 答えが「誤り」ならテストユーティリティに置きます。
 
-**Prefer real components over complex mocks.** When mock setup outgrows
-the test logic, mocks miss methods the real components have, or tests
-break when the mock changes, switch to an integration test with real
-components. **your human partner's question:** "Do we need to be using a
-mock here?"
+**複雑なモックより実際のコンポーネントを選ぶ。** モックのセットアップがテストの
+ロジックより大きくなったとき、モックが実際のコンポーネントにあるメソッドを欠いて
+いるとき、モックを変えるとテストが壊れるときは、実際のコンポーネントを使う統合
+テストに切り替えてください。**人間のパートナーからの問い:** 「ここでモックを使う
+必要があるのか？」
 
-### Gate Function
+### ゲート関数
 
 ```
 BEFORE adding a mock or test helper:
@@ -147,52 +144,52 @@ BEFORE adding a mock or test helper:
     Unmock it or delete the assertion.
 ```
 
-## Tests Ship With the Implementation
+## テストは実装と一緒に出荷する
 
-The TDD cycle — failing test, minimal implementation, refactor — is what
-"complete" means. Ship the tests the behavior needs and only those:
-trivial code and human prose earn none, and a test written to satisfy
-process costs maintenance forever.
+TDD のサイクル — 失敗するテスト、最小限の実装、リファクタリング — が「完了」の意味です。
+その振る舞いが必要とするテストを、そしてそれだけを出荷してください。些末なコードと
+人間向けの文章にはテストは要りません。プロセスを満たすために書いたテストは、永遠に
+保守コストを生みます。
 
-## The Mutation Check
+## ミューテーションチェック
 
-Before finishing, mentally mutate the production code; at least one test
-should fail for each realistic mutation:
+終える前に、頭の中でプロダクションコードを変異させてください。現実的な変異ごとに、
+少なくとも 1 つのテストが失敗するはずです:
 
-- Wrong constant or argument
-- Wrong branch handler
-- Missing state change or side effect
-- Empty or default return
-- Missing validation for zero, empty, nil, unauthorized, or malformed input
+- 誤った定数または引数
+- 誤った分岐のハンドラー
+- 状態変更や副作用の欠落
+- 空またはデフォルトの戻り値
+- ゼロ、空、nil、権限なし、不正な形式の入力に対する検証の欠落
 
-A mutation nothing catches marks the behavior as unprotected — or the
-test as tautological.
+何にも捕まらない変異は、その振る舞いが保護されていないこと、またはテストが
+トートロジーであることを示します。
 
-## Quick Reference
+## クイックリファレンス
 
-| When you... | Do |
-|-------------|-----|
-| Write any test | Name the break it catches — a bug, not a decision |
-| Build an expected value | Derive it by hand; never with the code under test |
-| Test a script or document | Run it / pressure-test its consumer; never grep its text |
-| Reach for a dependency test | Test your boundary contract, not their documented mechanics |
-| Want to assert on a mocked element | Test the real component, or unmock it |
-| Are about to mock a method | Learn its side effects; mock the slow/external level |
-| Build a mock response | Mirror the real structure completely |
-| Need cleanup only tests use | Put it in test utilities |
-| Watch mock setup balloon | Switch to an integration test with real components |
-| Finish a test file | Run the mutation check |
+| こうするとき | こうする |
+|--------------|----------|
+| テストを書くとき | それが捕まえる破壊に名前を付ける — 決定ではなくバグ |
+| 期待値を作るとき | 手作業で導出する。テスト対象のコードを使ってはいけない |
+| スクリプトやドキュメントをテストするとき | 実行する / それを使うものに圧力をかけてテストする。テキストを grep してはいけない |
+| 依存先のテストに手を伸ばすとき | 自分の境界の契約をテストする。相手の文書化された仕組みはテストしない |
+| モックされた要素にアサートしたくなったとき | 実際のコンポーネントをテストするか、モックを外す |
+| メソッドをモックしようとしているとき | 副作用を把握する。遅い/外部のレベルをモックする |
+| モックのレスポンスを作るとき | 実際の構造を完全に写す |
+| テストだけが使うクリーンアップが必要なとき | テストユーティリティに置く |
+| モックのセットアップが膨らんでいくのを見たとき | 実際のコンポーネントを使う統合テストに切り替える |
+| テストファイルを書き終えたとき | ミューテーションチェックを実行する |
 
-## Warning Signs
+## 警告サイン
 
-- Setup and assertion share the same object, guaranteeing equality
-- The test can fail only through a panic, crash, or missing selector
-- The test fails on every intentional change, never on accidental breakage
-- Expected values are hidden behind loops, builders, or helpers
-- The test greps source text, or asserts a removed symbol stays removed
-- The test would still matter if only the framework remained
-- The test exists for coverage, checking no side effect or outcome
-- An assertion checks a `*-mock` test ID, or fails if you remove the mock
-- A method is called only from test files
-- Mock setup is more than half the test, or you can't explain why the mock is needed
-- Mocking "just to be safe"
+- セットアップとアサーションが同じオブジェクトを共有しており、等しいことが保証されている
+- テストが失敗しうるのは、パニック、クラッシュ、セレクタの欠落によってだけである
+- 意図的な変更のたびにテストが失敗し、偶発的な破損では決して失敗しない
+- 期待値がループ、ビルダー、ヘルパーの裏に隠れている
+- テストがソースのテキストを grep する、または削除されたシンボルが削除されたままであることをアサートする
+- フレームワークだけが残っていてもそのテストは意味を持つ
+- テストがカバレッジのために存在し、副作用も結果も確認していない
+- アサーションが `*-mock` のテスト ID を確認している、またはモックを外すと失敗する
+- メソッドがテストファイルからしか呼ばれない
+- モックのセットアップがテストの半分以上を占める、またはモックが必要な理由を説明できない
+- 「念のため」にモックしている
