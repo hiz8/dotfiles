@@ -54,11 +54,6 @@ description: あらゆる会話を始めるときに使います - スキルの�
 使っているハーネスが以下にあれば、特別な指示が書かれたそのリファレンスファイルを読んでください:
 
 - Claude Code: `references/claude-code-tools.md`
-- Codex: `references/codex-tools.md`
-- Pi: `references/pi-tools.md`
-- Antigravity: `references/antigravity-tools.md`
-- Hermes Agent: `references/hermes-tools.md`
-- Muse: `references/muse-tools.md`
 
 ## ユーザーの指示
 

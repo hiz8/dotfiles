@@ -31,11 +31,11 @@ BYTE_EXEMPT = {
     ".claude-plugin/plugin.json",
     ".devin-plugin/plugin.json",
 }
-# 原文のまま保持する 6 ファイル
-VERBATIM = [
+# 対象外のハーネス向けとして削除した 6 ファイル（upstream にはあるがプラグインには置かない）
+REMOVED = {
     f"skills/using-superpowers/references/{n}-tools.md"
     for n in ("codex", "gemini", "pi", "antigravity", "hermes", "muse")
-]
+}
 
 KANA = re.compile(r"[぀-ゟ゠-ヿ]")
 FORBIDDEN = re.compile(r"効く|効か|効い|効け")
@@ -127,7 +127,7 @@ def main():
         failures.append((check, path, msg))
 
     # 1. ファイル構成
-    expected = upstream_files(up)
+    expected = upstream_files(up) - REMOVED
     actual = plugin_files()
     for f in sorted(expected - actual):
         fail("1 ファイル構成", f, "欠落")
@@ -197,16 +197,12 @@ def main():
             for p in sorted((skills_dir / s).rglob("*.md")):
                 rel = p.relative_to(PLUGIN).as_posix()
                 text = read(p)
-                if rel in VERBATIM:
-                    if p.read_bytes() != (up / rel).read_bytes():
-                        fail("5 翻訳済み", rel, "原文維持ファイルが upstream と不一致")
-                else:
-                    if not KANA.search(text):
-                        fail("5 翻訳済み", rel, "未翻訳（ひらがな・カタカナなし）")
-                    if p.name == "SKILL.md":
-                        fm = parse_frontmatter(text) or {}
-                        if not KANA.search(fm.get("description", "")):
-                            fail("5 翻訳済み", rel, "description が未翻訳")
+                if not KANA.search(text):
+                    fail("5 翻訳済み", rel, "未翻訳（ひらがな・カタカナなし）")
+                if p.name == "SKILL.md":
+                    fm = parse_frontmatter(text) or {}
+                    if not KANA.search(fm.get("description", "")):
+                        fail("5 翻訳済み", rel, "description が未翻訳")
                 for m in FORBIDDEN.finditer(text):
                     line = text.count("\n", 0, m.start()) + 1
                     fail("6 禁止表現", rel, f"{line} 行目: 「{m.group(0)}」")

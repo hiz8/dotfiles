@@ -43,11 +43,14 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
   - エージェント間のステータス語 `DONE` `DONE_WITH_CONCERNS` `BLOCKED` `NEEDS_CONTEXT` `ADDRESSED`
   - 計画書見出しの `Task` リテラル（`### Task 1: ...`）。`subagent-driven-development/scripts/task-brief`
     が英語の `Task` で見出しを解析するため、計画書の見出し形式を指示・例示している箇所の `Task` は訳さない
-  - `using-superpowers/references/` の codex / gemini / pi / antigravity / hermes / muse
-    各 `*-tools.md`（ファイルごと原文のまま。`claude-code-tools.md` は翻訳する）
 
 ### upstream との意図的な差異
 
+- `using-superpowers/references/` の codex / gemini / pi / antigravity / hermes / muse 各 `*-tools.md` は削除した
+  （このプラグインの対象は Claude Code・Copilot CLI・Devin CLI のため）。using-superpowers/SKILL.md の
+  プラットフォーム一覧からも該当行を削り、writing-skills/SKILL.md の codex-tools.md / gemini-tools.md への
+  リンクは「その実行環境のドキュメントを参照」に置き換えた。`check-translation.py` はこの 6 ファイルを
+  ファイル構成の検査対象から外している
 - systematic-debugging/SKILL.md: 原文の "see Phase 4.5"（実在しない見出し）は、実体である「フェーズ 4 の手順 5」に補正して訳した。
   同ファイル内の "step 5 below" も同じ表記「フェーズ 4 の手順 5」にそろえている
 

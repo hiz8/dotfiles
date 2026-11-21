@@ -9,7 +9,7 @@ description: 新しいスキルの作成、既存スキルの編集、デプロ�
 
 **スキルを書くことは、プロセスのドキュメントに適用した Test-Driven Development そのものです。**
 
-**個人用スキルは、実行環境のスキルディレクトリに置きます**（Claude Code では `~/.claude/skills/`）。ほかの実行環境でのパスは [codex-tools.md](../using-superpowers/references/codex-tools.md) または [gemini-tools.md](../using-superpowers/references/gemini-tools.md) を参照してください。Codex、Copilot CLI、Gemini CLI はいずれも、実行環境をまたぐエイリアスとして `~/.agents/skills/` も認識します。
+**個人用スキルは、実行環境のスキルディレクトリに置きます**（Claude Code では `~/.claude/skills/`）。ほかの実行環境でのパスは、その実行環境のドキュメントを参照してください。Codex、Copilot CLI、Gemini CLI はいずれも、実行環境をまたぐエイリアスとして `~/.agents/skills/` も認識します。
 
 テストケース（subagent を使った圧力をかけるテストシナリオ）を書き、それが失敗する（ベースラインの挙動）のを確認し、スキル（ドキュメント）を書き、テストが通る（エージェントが従う）のを確認し、リファクタリングします（抜け穴をふさぎます）。
 
