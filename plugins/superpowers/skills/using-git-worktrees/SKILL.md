@@ -1,21 +1,21 @@
 ---
 name: using-git-worktrees
-description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback
+description: 現在のワークスペースから隔離する必要がある機能開発を始めるとき、または実装計画を実行する前に使います - ネイティブツール、またはフォールバックとして git worktree により、隔離されたワークスペースを確実に用意します
 ---
 
-# Using Git Worktrees
+# git worktree の使い方
 
-## Overview
+## 概要
 
-Ensure work happens in an isolated workspace. Prefer your platform's native worktree tools. Fall back to manual git worktrees only when no native tool is available.
+作業が隔離されたワークスペースで行われるようにします。プラットフォームのネイティブな worktree ツールを優先してください。ネイティブツールが使えないときに限り、手動の git worktree にフォールバックします。
 
-**Core principle:** Detect existing isolation first. Then use native tools. Then fall back to git. Never fight the harness.
+**基本原則:** まず既存の隔離を検出する。次にネイティブツールを使う。その次に git にフォールバックする。ハーネスと争ってはいけません。
 
-**Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
+**開始時に宣言する:** 「using-git-worktrees スキルを使って、隔離されたワークスペースを用意します。」
 
-## Step 0: Detect Existing Isolation
+## ステップ 0: 既存の隔離を検出する
 
-**Before creating anything, check if you are already in an isolated workspace.**
+**何かを作る前に、すでに隔離されたワークスペースにいるかどうかを確認してください。**
 
 ```bash
 GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
@@ -23,71 +23,71 @@ GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
 BRANCH=$(git branch --show-current)
 ```
 
-**Submodule guard:** `GIT_DIR != GIT_COMMON` is also true inside git submodules. Before concluding "already in a worktree," verify you are not in a submodule:
+**サブモジュールの確認:** `GIT_DIR != GIT_COMMON` は、git のサブモジュールの中でも真になります。「すでに worktree の中にいる」と結論づける前に、サブモジュールにいないことを確認してください:
 
 ```bash
 # If this returns a path, you're in a submodule, not a worktree — treat as normal repo
 git rev-parse --show-superproject-working-tree 2>/dev/null
 ```
 
-**If `GIT_DIR != GIT_COMMON` (and not a submodule):** You are already in a linked worktree. Skip to Step 2 (Project Setup). Do NOT create another worktree.
+**`GIT_DIR != GIT_COMMON` で（サブモジュールではない）場合:** すでにリンクされた worktree の中にいます。ステップ 2（プロジェクトのセットアップ）に進んでください。別の worktree を作ってはいけません。
 
-Report with branch state:
-- On a branch: "Already in isolated workspace at `<path>` on branch `<name>`."
-- Detached HEAD: "Already in isolated workspace at `<path>` (detached HEAD, externally managed). Branch creation needed at finish time."
+ブランチの状態とあわせて報告します:
+- ブランチ上にいる場合: 「すでに隔離されたワークスペース `<path>` のブランチ `<name>` にいます。」
+- detached HEAD の場合: 「すでに隔離されたワークスペース `<path>` にいます（detached HEAD、外部で管理されています）。完了時にブランチの作成が必要です。」
 
-**If `GIT_DIR == GIT_COMMON` (or in a submodule):** You are in a normal repo checkout.
+**`GIT_DIR == GIT_COMMON` の場合（またはサブモジュールの中の場合）:** 通常のリポジトリのチェックアウトにいます。
 
-Has the user already indicated their worktree preference in your instructions? If not, ask for consent before creating a worktree:
+ユーザーはあなたへの指示の中で、すでに worktree についての希望を示していますか? 示していなければ、worktree を作る前に同意を求めてください:
 
-> "Would you like me to set up an isolated worktree? It protects your current branch from changes."
+> 「隔離された worktree を用意しましょうか? 現在のブランチを変更から守れます。」
 
-Honor any existing declared preference without asking. If the user declines consent, work in place and skip to Step 2.
+すでに表明されている希望があれば、尋ねずにそれに従ってください。ユーザーが同意しなければ、その場で作業し、ステップ 2 に進んでください。
 
-## Step 1: Create Isolated Workspace
+## ステップ 1: 隔離されたワークスペースを作る
 
-**You have two mechanisms. Try them in this order.**
+**手段は 2 つあります。この順序で試してください。**
 
-### 1a. Native Worktree Tools (preferred)
+### 1a. ネイティブの worktree ツール（推奨）
 
-The user has asked for an isolated workspace (Step 0 consent). Do you already have a way to create a worktree? It might be a tool with a name like `EnterWorktree`, `WorktreeCreate`, a `/worktree` command, or a `--worktree` flag. If you do, use it and skip to Step 2.
+ユーザーは隔離されたワークスペースを求めています（ステップ 0 での同意）。worktree を作る手段をすでに持っていますか? `EnterWorktree`、`WorktreeCreate` のような名前のツールや、`/worktree` コマンド、`--worktree` フラグかもしれません。持っているなら、それを使ってステップ 2 に進んでください。
 
-Native tools handle directory placement, branch creation, and cleanup automatically. Using `git worktree add` when you have a native tool creates phantom state your harness can't see or manage.
+ネイティブツールは、ディレクトリの配置、ブランチの作成、後片付けを自動的に処理します。ネイティブツールがあるのに `git worktree add` を使うと、ハーネスから見えず管理もできない幻の状態が作られます。
 
-Only proceed to Step 1b if you have no native worktree tool available.
+ネイティブな worktree ツールが使えない場合に限り、ステップ 1b に進んでください。
 
-### 1b. Git Worktree Fallback
+### 1b. git worktree へのフォールバック
 
-**Only use this if Step 1a does not apply** — you have no native worktree tool available. Create a worktree manually using git.
+**ステップ 1a が当てはまらない場合にだけ使ってください** — つまり、ネイティブな worktree ツールが使えない場合です。git を使って手動で worktree を作ります。
 
-#### Directory Selection
+#### ディレクトリの選択
 
-Follow this priority order. Explicit user preference always beats observed filesystem state.
+この優先順位に従ってください。明示的なユーザーの希望は、観察したファイルシステムの状態に常に優先します。
 
-1. **Check your instructions for a declared worktree directory preference.** If the user has already specified one, use it without asking.
+1. **指示の中に、worktree のディレクトリについて表明された希望がないか確認する。** ユーザーがすでに指定していれば、尋ねずにそれを使います。
 
-2. **Check for an existing project-local worktree directory:**
+2. **プロジェクトローカルの既存の worktree ディレクトリがないか確認する:**
    ```bash
    ls -d .worktrees 2>/dev/null     # Preferred (hidden)
    ls -d worktrees 2>/dev/null      # Alternative
    ```
-   If found, use it. If both exist, `.worktrees` wins.
+   見つかればそれを使います。両方あれば `.worktrees` を優先します。
 
-3. **If there is no other guidance available**, default to `.worktrees/` at the project root.
+3. **ほかに手がかりがなければ**、プロジェクトのルートにある `.worktrees/` をデフォルトにします。
 
-#### Safety Verification (project-local directories only)
+#### 安全性の検証（プロジェクトローカルのディレクトリのみ）
 
-**MUST verify directory is ignored before creating worktree:**
+**worktree を作る前に、そのディレクトリが ignore されていることを必ず確認しなければなりません:**
 
 ```bash
 git check-ignore -q .worktrees 2>/dev/null || git check-ignore -q worktrees 2>/dev/null
 ```
 
-**If NOT ignored:** Add to .gitignore, commit the change, then proceed.
+**ignore されていない場合:** .gitignore に追加し、その変更をコミットしてから進みます。
 
-**Why critical:** Prevents accidentally committing worktree contents to repository.
+**なぜ重要か:** worktree の中身を誤ってリポジトリにコミットしてしまうことを防ぎます。
 
-#### Create the Worktree
+#### worktree を作る
 
 ```bash
 # Determine path based on chosen location
@@ -97,11 +97,11 @@ git worktree add "$path" -b "$BRANCH_NAME"
 cd "$path"
 ```
 
-**Sandbox fallback:** If `git worktree add` fails with a permission error (sandbox denial), tell the user the sandbox blocked worktree creation and you're working in the current directory instead. Then run setup and baseline tests in place.
+**サンドボックスへのフォールバック:** `git worktree add` が権限エラー（サンドボックスによる拒否）で失敗したら、サンドボックスが worktree の作成を阻んだこと、代わりに現在のディレクトリで作業することをユーザーに伝えてください。そのうえで、その場でセットアップとベースラインのテストを実行します。
 
-## Step 2: Project Setup
+## ステップ 2: プロジェクトのセットアップ
 
-Auto-detect and run appropriate setup:
+適切なセットアップを自動検出して実行します:
 
 ```bash
 # Node.js
@@ -118,20 +118,20 @@ if [ -f pyproject.toml ]; then poetry install; fi
 if [ -f go.mod ]; then go mod download; fi
 ```
 
-## Step 3: Verify Clean Baseline
+## ステップ 3: クリーンなベースラインを確認する
 
-Run tests to ensure workspace starts clean:
+テストを実行して、ワークスペースがクリーンな状態で始まることを確認します:
 
 ```bash
 # Use project-appropriate command
 npm test / cargo test / pytest / go test ./...
 ```
 
-**If tests fail:** Report failures, ask whether to proceed or investigate.
+**テストが失敗したら:** 失敗を報告し、先に進むか調査するかを尋ねます。
 
-**If tests pass:** Report ready.
+**テストが通ったら:** 準備完了と報告します。
 
-### Report
+### 報告
 
 ```
 Worktree ready at <full-path>
@@ -139,29 +139,29 @@ Tests passing (<N> tests, 0 failures)
 Ready to implement <feature-name>
 ```
 
-## Quick Reference
+## クイックリファレンス
 
-| Situation | Action |
-|-----------|--------|
-| Already in linked worktree | Skip creation (Step 0) |
-| In a submodule | Treat as normal repo (Step 0 guard) |
-| Native worktree tool available | Use it (Step 1a) |
-| No native tool | Git worktree fallback (Step 1b) |
-| `.worktrees/` exists | Use it (verify ignored) |
-| `worktrees/` exists | Use it (verify ignored) |
-| Both exist | Use `.worktrees/` |
-| Neither exists | Check instruction file, then default `.worktrees/` |
-| Directory not ignored | Add to .gitignore + commit |
-| Permission error on create | Sandbox fallback, work in place |
-| Tests fail during baseline | Report failures + ask |
-| No package.json/Cargo.toml | Skip dependency install |
+| 状況 | 対応 |
+|------|------|
+| すでにリンクされた worktree の中にいる | 作成を省略する（ステップ 0） |
+| サブモジュールの中にいる | 通常のリポジトリとして扱う（ステップ 0 の確認） |
+| ネイティブな worktree ツールが使える | それを使う（ステップ 1a） |
+| ネイティブツールがない | git worktree へのフォールバック（ステップ 1b） |
+| `.worktrees/` がある | それを使う（ignore を確認する） |
+| `worktrees/` がある | それを使う（ignore を確認する） |
+| 両方ある | `.worktrees/` を使う |
+| どちらもない | 指示ファイルを確認し、なければデフォルトの `.worktrees/` |
+| ディレクトリが ignore されていない | .gitignore に追加してコミットする |
+| 作成時に権限エラー | サンドボックスへのフォールバック、その場で作業する |
+| ベースラインでテストが失敗 | 失敗を報告して尋ねる |
+| package.json/Cargo.toml がない | 依存関係のインストールを省略する |
 
-## Common Rationalizations
+## よくある自己正当化
 
-| Excuse | Reality |
-|--------|---------|
-| "I'm obviously not in a worktree — no need to check" | Run Step 0. Harness-created isolation and submodules both fool eyeballing; the detection commands settle it. |
-| "`git worktree add` is quicker than hunting for a native tool" | A native tool (e.g. `EnterWorktree`) owns placement, branching, and cleanup. Bypassing it is the #1 mistake — it creates phantom state your harness can't see or manage. |
-| "The worktree directory is surely ignored already" | Run `git check-ignore`. An unignored worktree directory commits the whole tree into the repo. |
-| "Any directory name works" | Explicit instructions beat an existing project-local directory, which beats the `.worktrees/` default. |
-| "The workspace is fresh — baseline tests can wait" | A dirty baseline makes every later failure ambiguous. Run the tests now; proceeding past failures is your human partner's call. |
+| 言い訳 | 現実 |
+|--------|------|
+| 「どう見ても worktree の中にはいないから、確認は不要」 | ステップ 0 を実行してください。ハーネスが作った隔離もサブモジュールも、目視では見誤ります。検出コマンドが決着をつけます。 |
+| 「ネイティブツールを探すより `git worktree add` のほうが速い」 | ネイティブツール（例: `EnterWorktree`）が、配置、ブランチの作成、後片付けを担います。それを迂回するのが最大の間違いです — ハーネスから見えず管理もできない幻の状態が作られます。 |
+| 「worktree のディレクトリは、きっともう ignore されている」 | `git check-ignore` を実行してください。ignore されていない worktree ディレクトリは、ツリー全体をリポジトリにコミットしてしまいます。 |
+| 「ディレクトリ名は何でもいい」 | 明示的な指示は、プロジェクトローカルの既存のディレクトリに優先し、それは `.worktrees/` のデフォルトに優先します。 |
+| 「ワークスペースは新品だから、ベースラインのテストは後回しでいい」 | 汚れたベースラインは、後のすべての失敗をあいまいにします。今テストを実行してください。失敗を無視して進むかどうかは、人間のパートナーが決めることです。 |

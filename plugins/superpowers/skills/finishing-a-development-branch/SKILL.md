@@ -1,31 +1,31 @@
 ---
 name: finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work
+description: 実装が完了し、すべてのテストが通り、作業をどう統合するかを決める必要があるときに使います
 ---
 
-# Finishing a Development Branch
+# 開発ブランチの完了
 
-## Overview
+## 概要
 
-**Core principle:** Verify tests → Detect environment → Present options → Execute choice → Clean up.
+**基本原則:** テストを検証する → 環境を検出する → 選択肢を提示する → 選択を実行する → 後片付けをする。
 
-**Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
+**開始時に宣言する:** 「finishing-a-development-branch スキルを使って、この作業を完了します。」
 
-## Step 1: Verify Tests
+## ステップ 1: テストを検証する
 
-Run the project's full test suite (`npm test` / `cargo test` / `pytest` / `go test ./...`).
+プロジェクトのテストスイート全体を実行します（`npm test` / `cargo test` / `pytest` / `go test ./...`）。
 
-**If tests fail**, report the failures and stop — the menu comes after a green suite:
+**テストが失敗したら**、失敗を報告して止まってください — メニューは、スイートがグリーンになった後に出します:
 
 ```
-Tests failing (<N> failures). Must fix before completing:
+テストが失敗しています（<N> 件）。完了する前に修正が必要です:
 
-[Show failures]
+[失敗を表示]
 ```
 
-**If tests pass:** continue to Step 2.
+**テストが通ったら:** ステップ 2 に進みます。
 
-## Step 2: Detect Environment
+## ステップ 2: 環境を検出する
 
 ```bash
 GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
@@ -35,55 +35,54 @@ GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
 WORKTREE_PATH=$(git rev-parse --show-toplevel)
 ```
 
-This determines which menu to show and how cleanup works:
+これによって、どのメニューを表示するか、後片付けをどう行うかが決まります:
 
-| State | Menu | Cleanup |
-|-------|------|---------|
-| `GIT_DIR == GIT_COMMON` (normal repo) | Standard 3 options | No worktree to clean up |
-| `GIT_DIR != GIT_COMMON`, named branch | Standard 3 options | Provenance-based (see Step 6) |
-| `GIT_DIR != GIT_COMMON`, detached HEAD | Reduced 2 options (no merge) | Externally managed — leave in place |
+| 状態 | メニュー | 後片付け |
+|------|----------|----------|
+| `GIT_DIR == GIT_COMMON`（通常のリポジトリ） | 標準の 3 つの選択肢 | 片付ける worktree はない |
+| `GIT_DIR != GIT_COMMON`、名前付きブランチ | 標準の 3 つの選択肢 | 出どころに基づく（ステップ 6 を参照） |
+| `GIT_DIR != GIT_COMMON`、detached HEAD | 縮小した 2 つの選択肢（マージなし） | 外部で管理されている — そのまま残す |
 
-## Step 3: Determine Base Branch
+## ステップ 3: ベースブランチを特定する
 
-The base branch is whatever this work forked from — usually named in the
-plan, the conversation, or the branch's upstream. If it is not already
-known, ask: "This branch split from <your best guess> - is that correct?"
-Confirm before merging: merging into the wrong base is expensive to undo.
+ベースブランチとは、この作業が分岐した元のブランチです — たいてい、計画書、会話、
+またはブランチの upstream に名前があります。まだ分かっていなければ、次のように尋ねます:
+「このブランチは <最も確からしい推測> から分岐しています - 合っていますか?」
+マージする前に確認してください: 誤ったベースにマージすると、元に戻すのに大きな手間がかかります。
 
-## Step 4: Present Options
+## ステップ 4: 選択肢を提示する
 
-**Normal repo and named-branch worktree — present exactly these 3 options:**
-
-```
-Implementation complete. What would you like to do?
-
-1. Merge back to <base-branch> locally
-2. Push and create a Pull Request
-3. Keep the branch as-is (I'll handle it later)
-
-Which option?
-```
-
-**Detached HEAD — present exactly these 2 options:**
+**通常のリポジトリ、および名前付きブランチの worktree — ちょうどこの 3 つの選択肢を提示します:**
 
 ```
-Implementation complete. You're on a detached HEAD (externally managed workspace).
+実装が完了しました。どうしますか?
 
-1. Push as new branch and create a Pull Request
-2. Keep as-is (I'll handle it later)
+1. <base-branch> にローカルでマージする
+2. push して Pull Request を作成する
+3. ブランチをそのままにする（後で自分で対応します）
 
-Which option?
+どの選択肢にしますか?
 ```
 
-Present the menu exactly as written — concise, with every option coming
-from the list above. Discarding the work happens only in response to your
-human partner explicitly asking for it (see "If your human partner asks to
-discard the work" below). Wait for their answer; the integration decision
-is theirs.
+**detached HEAD — ちょうどこの 2 つの選択肢を提示します:**
 
-## Step 5: Execute Choice
+```
+実装が完了しました。detached HEAD にいます（外部で管理されているワークスペース）。
 
-### Option 1: Merge Locally
+1. 新しいブランチとして push して Pull Request を作成する
+2. そのままにする（後で自分で対応します）
+
+どの選択肢にしますか?
+```
+
+メニューは書かれたとおりに提示してください — 簡潔に、すべての選択肢を上のリストから取ってきます。
+作業の破棄が行われるのは、人間のパートナーが明示的にそれを求めたことへの応答としてだけです
+（下の「人間のパートナーが作業の破棄を求めたとき」を参照）。人間のパートナーの答えを待ってください。
+統合の判断は、人間のパートナーのものです。
+
+## ステップ 5: 選択を実行する
+
+### 選択肢 1: ローカルでマージする
 
 ```bash
 # Get main repo root for CWD safety
@@ -99,18 +98,16 @@ git merge <feature-branch>
 <test command>
 ```
 
-If tests fail on the merged result: stop, leave the worktree and branch in
-place, and investigate — nothing has been pushed, so the merge is local
-and recoverable.
+マージ結果でテストが失敗したら: 止まって、worktree とブランチをそのまま残し、調査してください
+— まだ何も push されていないので、マージはローカルにとどまっており、元に戻せます。
 
-Once the merged result is green: clean up the worktree (Step 6), then
-delete the branch:
+マージ結果がグリーンになったら: worktree を片付け（ステップ 6）、その後ブランチを削除します:
 
 ```bash
 git branch -d <feature-branch>
 ```
 
-### Option 2: Push and Create PR
+### 選択肢 2: push して PR を作成する
 
 ```bash
 git push -u origin <feature-branch>
@@ -118,108 +115,104 @@ git push -u origin <feature-branch>
 # git push origin HEAD:refs/heads/<new-branch>
 ```
 
-Then create the pull/merge request against <base-branch> with the forge's
-tooling — its CLI if one is available, or the creation URL most forges
-print when you push — following the repo's PR template and conventions if
-present, and report the URL to your human partner.
+その後、フォージのツールを使って <base-branch> 宛ての pull/merge request を作成します —
+CLI があればその CLI を、なければ push 時に多くのフォージが表示する作成用 URL を使い、
+リポジトリに PR テンプレートや規約があればそれに従い、URL を人間のパートナーに報告します。
 
-Keep the worktree — your human partner iterates on PR feedback there.
+worktree は残してください — 人間のパートナーは PR のフィードバックへの対応をそこで繰り返し行います。
 
-### Option 3: Keep As-Is
+### 選択肢 3: そのままにする
 
-Report: "Keeping branch <name>. Worktree preserved at <path>."
+報告します: 「ブランチ <name> をそのまま残します。worktree は <path> に保持されています。」
 
-### If your human partner asks to discard the work
+### 人間のパートナーが作業の破棄を求めたとき
 
-This path exists only as a response to an explicit request to throw the
-work away. Confirm first:
+この経路は、作業を捨てるという明示的な依頼への応答としてのみ存在します。まず確認してください:
 
 ```
-This will permanently delete:
-- Branch <name>
-- All commits: <commit-list>
-- Worktree at <path>
+次のものが完全に削除されます:
+- ブランチ <name>
+- すべてのコミット: <commit-list>
+- <path> にある worktree
 
-Type 'discard' to confirm.
+確認するには 'discard' と入力してください。
 ```
 
-Wait for that exact confirmation. When it arrives:
+その正確な確認を待ってください。確認が届いたら:
 
 ```bash
 MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)
 cd "$MAIN_ROOT"
 ```
 
-Then clean up the worktree (Step 6) and force-delete the branch:
+その後、worktree を片付け（ステップ 6）、ブランチを強制削除します:
 
 ```bash
 git branch -D <feature-branch>
 ```
 
-## Step 6: Cleanup Workspace
+## ステップ 6: ワークスペースの後片付け
 
-**Runs for Option 1 and confirmed discards.** Options 2 and 3 always
-preserve the worktree. Both callers have already changed directory to the
-main repo root — worktree removal must run from outside the worktree —
-and use the `GIT_DIR`/`GIT_COMMON`/`WORKTREE_PATH` values captured in
-Step 2, from before that directory change.
+**選択肢 1 と、確認済みの破棄で実行します。** 選択肢 2 と 3 は、常に worktree を保持します。
+どちらの呼び出し元もすでにメインのリポジトリのルートへディレクトリを移動しています —
+worktree の削除は worktree の外から実行しなければなりません — そして、ステップ 2 で
+そのディレクトリ移動より前に取得しておいた `GIT_DIR`/`GIT_COMMON`/`WORKTREE_PATH` の値を使います。
 
-**If `GIT_DIR == GIT_COMMON`:** Normal repo, no worktree to clean up. Done.
+**`GIT_DIR == GIT_COMMON` の場合:** 通常のリポジトリで、片付ける worktree はありません。完了です。
 
-**If `WORKTREE_PATH` is under `.worktrees/` or `worktrees/`:** Superpowers
-created this worktree — we own cleanup:
+**`WORKTREE_PATH` が `.worktrees/` または `worktrees/` の下にある場合:** この worktree は Superpowers が
+作ったものです — 後片付けは私たちの責任です:
 
 ```bash
 git worktree remove "$WORKTREE_PATH"
 git worktree prune  # Self-healing: clean up any stale registrations
 ```
 
-**If removal is refused** (`contains modified or untracked files`): the
-worktree holds files that exist nowhere else — uncommitted plans, notes,
-or scratch work. Never `--force` on your own initiative. Show your human
-partner what is at stake and ask:
+**削除が拒否された場合**（`contains modified or untracked files`）: その worktree には、ほかのどこにも
+存在しないファイルがあります — コミットされていない計画書、メモ、作業用の一時ファイルなどです。
+自分の判断で `--force` を使ってはいけません。何が危うい状態にあるかを人間のパートナーに示し、尋ねてください:
 
 ```bash
 git -C "$WORKTREE_PATH" status --porcelain -uall
 ```
 
 ```
-Worktree removal refused — these files were never committed:
+Worktree の削除が拒否されました — 次のファイルは一度もコミットされていません:
 
 <file list>
 
-1. Commit them to <branch> before cleanup
-2. Move them into <main repo root>
-3. Delete them (unrecoverable)
+1. 後片付けの前に <branch> にコミットする
+2. <main repo root> に移動する
+3. 削除する（元に戻せません）
 
-Which?
+どれにしますか?
 ```
 
-Carry out the choice, then remove the worktree.
+選択を実行してから、worktree を削除します。
 
-**Otherwise:** The host environment owns this workspace — leave it in
-place. If your platform provides a workspace-exit tool, use it.
+**それ以外の場合:** このワークスペースはホスト環境が所有しています — そのまま残してください。
+プラットフォームがワークスペースの退出用ツールを提供しているなら、それを使います。
 
-## Quick Reference
+## クイックリファレンス
 
-| Option | Merge | Push | Keep Worktree | Cleanup Branch |
-|--------|-------|------|---------------|----------------|
-| 1. Merge locally | yes | - | - | yes |
-| 2. Create PR | - | yes | yes | - |
-| 3. Keep as-is | - | - | yes | - |
-| Discard (explicit request only) | - | - | - | yes (force) |
+| 選択肢 | マージ | push | worktree を保持 | ブランチの後片付け |
+|--------|--------|------|-----------------|--------------------|
+| 1. ローカルでマージする | はい | - | - | はい |
+| 2. PR を作成する | - | はい | はい | - |
+| 3. そのままにする | - | - | はい | - |
+| 破棄（明示的な依頼のときのみ） | - | - | - | はい（強制） |
 
-## Common Rationalizations
+## よくある自己正当化
 
-| Excuse | Reality |
-|--------|---------|
-| "Tests passed earlier this session" | Run the suite on the tree you are about to integrate. A green run only proves the tree it ran on. |
-| "They obviously want it merged" | Integration is your human partner's decision. Present the menu and wait. |
-| "They seem done with this feature — I'll offer to discard it" | The menu is complete as written. Discard happens only when your human partner asks for it in so many words. |
-| "'Yeah, get rid of it' counts as confirmation" | Only the typed word `discard` authorizes deletion. |
-| "The PR is up, so the worktree is clutter now" | PR feedback gets fixed in that worktree. It stays until the work lands. |
-| "This other worktree looks stale — I'll clean it too" | Clean up only worktrees under `.worktrees/` or `worktrees/`. Everything else belongs to the host. |
-| "Removal refused — `--force` is just finishing the cleanup" | The refusal means files exist only in that worktree. `--force` destroys them permanently. Show your human partner and ask. |
-| "The merged-result failure is probably flaky" | A failing merged result stops everything. Branch and worktree stay put while you investigate. |
-| "The base branch is obviously main" | Confirm the fork point or ask. Merging into the wrong base is expensive to undo. |
-| "The push was rejected — force-push will fix it" | A rejected push means the remote moved. Investigate; force-push only on your human partner's explicit request. |
+| 言い訳 | 現実 |
+|--------|------|
+| 「このセッションの前の方で、テストは通っていた」 | これから統合するツリーでスイートを実行してください。グリーンの実行が証明するのは、実行したツリーについてだけです。 |
+| 「どう見てもマージしてほしいはずだ」 | 統合は人間のパートナーの判断です。メニューを提示して待ってください。 |
+| 「この機能はもう終わりのようだ — 破棄を提案しよう」 | メニューは書かれたとおりで完全です。破棄が行われるのは、人間のパートナーがはっきりとそう求めたときだけです。 |
+| 「『うん、捨てて』は確認になる」 | 削除を許可するのは、`discard` という語の入力だけです。 |
+| 「PR を出したから、worktree はもう邪魔なだけだ」 | PR のフィードバックは、その worktree の中で直します。作業が取り込まれるまで残します。 |
+| 「この別の worktree は古そうだ — これも片付けよう」 | 片付けてよいのは、`.worktrees/` または `worktrees/` の下にある worktree だけです。それ以外はすべてホストのものです。 |
+| 「削除が拒否された — `--force` は後片付けを終わらせるだけだ」 | 拒否は、その worktree にしかないファイルがあることを意味します。`--force` はそれらを完全に破壊します。人間のパートナーに示して尋ねてください。 |
+| 「マージ結果の失敗は、たぶん不安定なテストだろう」 | マージ結果の失敗は、すべてを止めます。調査する間、ブランチと worktree はそのまま残します。 |
+| 「ベースブランチはどう見ても main だ」 | 分岐点を確認するか、尋ねてください。誤ったベースへのマージは、元に戻すのに大きな手間がかかります。 |
+| 「push が拒否された — force-push すれば直る」 | push の拒否は、リモートが先に進んだことを意味します。調査してください。force-push は、人間のパートナーが明示的に求めたときだけです。 |

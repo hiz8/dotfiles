@@ -1,95 +1,95 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+description: タスクの完了時、主要な機能の実装時、マージ前に、作業が要件を満たしているか検証するために使います
 ---
 
-# Requesting Code Review
+# コードレビューの依頼
 
-Dispatch a code reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history.
+問題が連鎖する前に見つけるため、コードレビュアー subagent をディスパッチします。レビュアーには評価のために精密に整えた文脈を渡します — あなたのセッションの履歴は決して渡しません。
 
-**Core principle:** Review early, review often.
+**基本原則:** 早くレビューし、頻繁にレビューする。
 
-## When to Request Review
+## レビューを依頼するとき
 
-**Mandatory:**
-- After each task in subagent-driven development
-- After completing major feature
-- Before merge to main
+**必須:**
+- subagent-driven development で各タスクの後
+- 主要な機能を完成させた後
+- main にマージする前
 
-**Optional but valuable:**
-- When stuck (fresh perspective)
-- Before refactoring (baseline check)
-- After fixing complex bug
+**必須ではないが有益:**
+- 行き詰まったとき（新鮮な視点を得るため）
+- リファクタリングの前（ベースラインの確認）
+- 複雑なバグを修正した後
 
-## How to Request
+## 依頼の方法
 
-**1. Get git SHAs:**
+**1. git SHA を取得する:**
 ```bash
 BASE_SHA=$(git rev-parse HEAD~1)  # or: git merge-base origin/main HEAD
 HEAD_SHA=$(git rev-parse HEAD)
 ```
 
-**2. Dispatch code reviewer subagent:**
+**2. コードレビュアー subagent をディスパッチする:**
 
-Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md](code-reviewer.md)
+`general-purpose` subagent をディスパッチし、[code-reviewer.md](code-reviewer.md) のテンプレートを埋めて渡します
 
-**Placeholders:**
-- `{DESCRIPTION}` - Brief summary of what you built
-- `{PLAN_OR_REQUIREMENTS}` - What it should do
-- `{BASE_SHA}` - Starting commit
-- `{HEAD_SHA}` - Ending commit
+**プレースホルダ:**
+- `{DESCRIPTION}` - 作ったものの簡潔な要約
+- `{PLAN_OR_REQUIREMENTS}` - それが何をするべきか
+- `{BASE_SHA}` - 開始コミット
+- `{HEAD_SHA}` - 終了コミット
 
-**3. Act on feedback:**
-- Fix Critical issues immediately
-- Fix Important issues before proceeding
-- Note Minor issues for later
-- Push back if reviewer is wrong (with reasoning)
+**3. フィードバックに対応する:**
+- Critical な問題はただちに修正する
+- Important な問題は先に進む前に修正する
+- Minor な問題は後のために記録しておく
+- レビュアーが間違っているなら反論する（理由を添えて）
 
-## Example
+## 例
 
 ```
-[Just completed Task 2: Add verification function]
+[Task 2 を完了した直後: 検証関数を追加]
 
-You: Let me request code review before proceeding.
+あなた: 先に進む前にコードレビューを依頼します。
 
 BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | cut -d' ' -f1)
 HEAD_SHA=$(git rev-parse HEAD)
 
-[Dispatch code reviewer subagent]
-  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+[コードレビュアー subagent をディスパッチ]
+  DESCRIPTION: 4 種類の問題を扱う verifyIndex() と repairIndex() を追加
+  PLAN_OR_REQUIREMENTS: docs/superpowers/plans/deployment-plan.md の Task 2
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
 
-[Subagent returns]:
-  Strengths: Clean architecture, real tests
+[subagent が返す]:
+  Strengths: クリーンなアーキテクチャ、実際のテスト
   Issues:
-    Important: Missing progress indicators
-    Minor: Magic number (100) for reporting interval
-  Assessment: Ready to proceed
+    Important: 進捗表示がない
+    Minor: 報告間隔にマジックナンバー (100)
+  Assessment: 先に進んでよい
 
-You: [Fix progress indicators]
-[Continue to Task 3]
+あなた: [進捗表示を修正]
+[Task 3 に進む]
 ```
 
-## Common Rationalizations
+## よくある自己正当化
 
-| Excuse | Reality |
-|--------|---------|
-| "I'll just review the diff myself instead of dispatching a reviewer" | You're the coordinator — reviewing the diff inline burns the context window you need to keep driving the work. Dispatch a reviewer subagent: the diff and the evaluation live in its context, and only the findings come back to you. |
-| "The reviewer needs my whole session history to understand the change" | Hand it precisely crafted context, never your session's history. That keeps the reviewer on the work product, not your thought process. |
+| 言い訳 | 現実 |
+|--------|------|
+| 「レビュアーをディスパッチせず、diff は自分でレビューすればいい」 | あなたは調整役です — diff をその場でレビューすると、作業を進め続けるために必要なコンテキストウィンドウを消費します。レビュアー subagent をディスパッチしてください。diff と評価はそのコンテキストの中に収まり、あなたには指摘だけが返ってきます。 |
+| 「変更を理解するには、レビュアーにセッション履歴の全体が必要だ」 | 精密に整えた文脈を渡してください。セッションの履歴は決して渡してはいけません。そうすれば、レビュアーはあなたの思考過程ではなく成果物に集中できます。 |
 
-## Red Flags
+## 危険信号
 
-**Never:**
-- Skip review because "it's simple"
-- Ignore Critical issues
-- Proceed with unfixed Important issues
-- Argue with valid technical feedback
+**決してしないこと:**
+- 「単純だから」とレビューを省略する
+- Critical な問題を無視する
+- Important な問題を直さないまま先に進む
+- 妥当な技術的フィードバックに反論する
 
-**If reviewer wrong:**
-- Push back with technical reasoning
-- Show code/tests that prove it works
-- Request clarification
+**レビュアーが間違っているとき:**
+- 技術的な根拠をもって反論する
+- 動作することを証明するコードやテストを示す
+- 説明を求める
 
-See template at: [code-reviewer.md](code-reviewer.md)
+テンプレートはこちら: [code-reviewer.md](code-reviewer.md)

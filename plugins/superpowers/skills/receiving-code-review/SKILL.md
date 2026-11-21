@@ -1,205 +1,205 @@
 ---
 name: receiving-code-review
-description: Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation
+description: コードレビューのフィードバックを受け取ったとき、提案を実装する前に、特にフィードバックが不明確または技術的に疑わしく思えるときに使います - 見せかけの同意や盲目的な実装ではなく、技術的な厳密さと検証を必須とします
 ---
 
-# Code Review Reception
+# コードレビューの受け取り方
 
-## Overview
+## 概要
 
-Code review requires technical evaluation, not emotional performance.
+コードレビューに必要なのは技術的な評価であり、感情的な演技ではありません。
 
-**Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
+**基本原則:** 実装する前に検証する。思い込む前に尋ねる。社交上の心地よさより技術的な正しさ。
 
-## The Response Pattern
-
-```
-WHEN receiving code review feedback:
-
-1. READ: Complete feedback without reacting
-2. UNDERSTAND: Restate requirement in own words (or ask)
-3. VERIFY: Check against codebase reality
-4. EVALUATE: Technically sound for THIS codebase?
-5. RESPOND: Technical acknowledgment or reasoned pushback
-6. IMPLEMENT: One item at a time, test each
-```
-
-## Forbidden Responses
-
-**NEVER:**
-- "You're absolutely right!" (explicit instruction-file violation)
-- "Great point!" / "Excellent feedback!" (performative)
-- "Let me implement that now" (before verification)
-
-**INSTEAD:**
-- Restate the technical requirement
-- Ask clarifying questions
-- Push back with technical reasoning if wrong
-- Just start working (actions > words)
-
-## Handling Unclear Feedback
+## 応答のパターン
 
 ```
-IF any item is unclear:
-  STOP - do not implement anything yet
-  ASK for clarification on unclear items
+コードレビューのフィードバックを受け取ったら:
 
-WHY: Items may be related. Partial understanding = wrong implementation.
+1. 読む: 反応せずに、フィードバックの全体を読む
+2. 理解する: 要件を自分の言葉で言い直す（または尋ねる）
+3. 検証する: コードベースの実態と照らして確認する
+4. 評価する: このコードベースにとって技術的に妥当か
+5. 応答する: 技術的な了承、または根拠のある反論
+6. 実装する: 1 項目ずつ、そのたびにテストする
 ```
 
-**Example:**
-```
-your human partner: "Fix 1-6"
-You understand 1,2,3,6. Unclear on 4,5.
+## 禁止される応答
 
-❌ WRONG: Implement 1,2,3,6 now, ask about 4,5 later
-✅ RIGHT: "I understand items 1,2,3,6. Need clarification on 4 and 5 before proceeding."
-```
+**決してしてはいけません:**
+- 「おっしゃる通りです!」（指示ファイルへの明確な違反）
+- 「いい指摘ですね!」/「素晴らしいフィードバックです!」（見せかけです）
+- 「今すぐ実装します」（検証の前に言うこと）
 
-## Source-Specific Handling
+**代わりに:**
+- 技術的な要件を言い直す
+- 確認のための質問をする
+- 誤りなら、技術的な根拠をもって反論する
+- とにかく作業を始める（言葉より行動）
 
-### From your human partner
-- **Trusted** - implement after understanding
-- **Still ask** if scope unclear
-- **No performative agreement**
-- **Skip to action** or technical acknowledgment
-
-### From External Reviewers
-```
-BEFORE implementing:
-  1. Check: Technically correct for THIS codebase?
-  2. Check: Breaks existing functionality?
-  3. Check: Reason for current implementation?
-  4. Check: Works on all platforms/versions?
-  5. Check: Does reviewer understand full context?
-
-IF suggestion seems wrong:
-  Push back with technical reasoning
-
-IF can't easily verify:
-  Say so: "I can't verify this without [X]. Should I [investigate/ask/proceed]?"
-
-IF conflicts with your human partner's prior decisions:
-  Stop and discuss with your human partner first
-```
-
-**your human partner's rule:** "External feedback - be skeptical, but check carefully"
-
-## YAGNI Check for "Professional" Features
+## 不明確なフィードバックへの対処
 
 ```
-IF reviewer suggests "implementing properly":
-  grep codebase for actual usage
+不明確な項目が 1 つでもあれば:
+  止まる - まだ何も実装しない
+  不明確な項目について説明を求める
 
-  IF unused: "This endpoint isn't called. Remove it (YAGNI)?"
-  IF used: Then implement properly
+理由: 項目どうしは関連しているかもしれません。部分的な理解 = 誤った実装です。
 ```
 
-**your human partner's rule:** "You and reviewer both report to me. If we don't need this feature, don't add it."
-
-## Implementation Order
-
+**例:**
 ```
-FOR multi-item feedback:
-  1. Clarify anything unclear FIRST
-  2. Then implement in this order:
-     - Blocking issues (breaks, security)
-     - Simple fixes (typos, imports)
-     - Complex fixes (refactoring, logic)
-  3. Test each fix individually
-  4. Verify no regressions
+人間のパートナー: 「1〜6 を直して」
+あなたは 1、2、3、6 を理解している。4、5 は不明確。
+
+❌ 誤り: 今 1、2、3、6 を実装し、4、5 は後で尋ねる
+✅ 正しい: 「項目 1、2、3、6 は理解しました。先に進む前に 4 と 5 の説明が必要です。」
 ```
 
-## When To Push Back
+## 出どころごとの対処
 
-Push back when:
-- Suggestion breaks existing functionality
-- Reviewer lacks full context
-- Violates YAGNI (unused feature)
-- Technically incorrect for this stack
-- Legacy/compatibility reasons exist
-- Conflicts with your human partner's architectural decisions
+### 人間のパートナーから
+- **信頼してよい** - 理解したうえで実装する
+- 範囲が不明確なら**それでも尋ねる**
+- **見せかけの同意はしない**
+- **行動に移る**か、技術的な了承を返す
 
-**How to push back:**
-- Use technical reasoning, not defensiveness
-- Ask specific questions
-- Reference working tests/code
-- Involve your human partner if architectural
-
-**If you're uncomfortable pushing back out loud:** Name that tension, then tell your partner about the issue you've seen. They'll appreciate your honesty.
-
-## Acknowledging Correct Feedback
-
-When feedback IS correct:
+### 外部のレビュアーから
 ```
-✅ "Fixed. [Brief description of what changed]"
-✅ "Good catch - [specific issue]. Fixed in [location]."
-✅ [Just fix it and show in the code]
+実装する前に:
+  1. 確認: このコードベースにとって技術的に正しいか
+  2. 確認: 既存の機能を壊さないか
+  3. 確認: 現在の実装には理由があるか
+  4. 確認: すべてのプラットフォーム/バージョンで動くか
+  5. 確認: レビュアーは文脈の全体を理解しているか
 
-❌ "You're absolutely right!"
-❌ "Great point!"
-❌ "Thanks for catching that!"
-❌ "Thanks for [anything]"
-❌ ANY gratitude expression
+提案が誤っていそうなら:
+  技術的な根拠をもって反論する
+
+簡単には検証できないなら:
+  そう伝える: 「[X] がなければこれを検証できません。[調査する/尋ねる/先に進む] べきでしょうか?」
+
+人間のパートナーの過去の決定と衝突するなら:
+  止まって、まず人間のパートナーと話し合う
 ```
 
-**Why no thanks:** Actions speak. Just fix it. The code itself shows you heard the feedback.
+**人間のパートナーのルール:** 「外部からのフィードバック - 懐疑的に、ただし慎重に確認すること」
 
-**If you catch yourself about to write "Thanks":** DELETE IT. State the fix instead.
+## 「本格的な」機能への YAGNI チェック
 
-## Gracefully Correcting Your Pushback
-
-If you pushed back and were wrong:
 ```
-✅ "You were right - I checked [X] and it does [Y]. Implementing now."
-✅ "Verified this and you're correct. My initial understanding was wrong because [reason]. Fixing."
+レビュアーが「きちんと実装する」ことを提案したら:
+  コードベースを grep して実際の使用箇所を調べる
 
-❌ Long apology
-❌ Defending why you pushed back
-❌ Over-explaining
+  使われていなければ: 「このエンドポイントは呼ばれていません。削除しますか (YAGNI)?」
+  使われていれば: ではきちんと実装する
 ```
 
-State the correction factually and move on.
+**人間のパートナーのルール:** 「あなたもレビュアーも、報告先は私です。この機能が要らないなら、追加しないでください。」
 
-## Common Mistakes
+## 実装の順序
 
-| Mistake | Fix |
-|---------|-----|
-| Performative agreement | State requirement or just act |
-| Blind implementation | Verify against codebase first |
-| Batch without testing | One at a time, test each |
-| Assuming reviewer is right | Check if breaks things |
-| Avoiding pushback | Technical correctness > comfort |
-| Partial implementation | Clarify all items first |
-| Can't verify, proceed anyway | State limitation, ask for direction |
-
-## Real Examples
-
-**Performative Agreement (Bad):**
 ```
-Reviewer: "Remove legacy code"
-❌ "You're absolutely right! Let me remove that..."
+複数項目のフィードバックの場合:
+  1. 不明確な点を最初に明確にする
+  2. その後、次の順序で実装する:
+     - ブロッカーとなる問題（破損、セキュリティ）
+     - 単純な修正（タイプミス、import）
+     - 複雑な修正（リファクタリング、ロジック）
+  3. 修正ごとに個別にテストする
+  4. リグレッションがないことを確認する
 ```
 
-**Technical Verification (Good):**
+## 反論するとき
+
+次の場合は反論してください:
+- 提案が既存の機能を壊す
+- レビュアーが文脈の全体を持っていない
+- YAGNI に反する（使われていない機能）
+- このスタックにとって技術的に誤っている
+- レガシー/互換性の理由がある
+- 人間のパートナーのアーキテクチャ上の決定と衝突する
+
+**反論の仕方:**
+- 防御的にならず、技術的な根拠を用いる
+- 具体的な質問をする
+- 動作しているテスト/コードを参照する
+- アーキテクチャに関わるなら人間のパートナーを巻き込む
+
+**声に出して反論するのが気まずいなら:** その緊張を言葉にしたうえで、気づいた問題をパートナーに伝えてください。パートナーはあなたの正直さをありがたく思います。
+
+## 正しいフィードバックを認めるとき
+
+フィードバックが正しいときは:
 ```
-Reviewer: "Remove legacy code"
-✅ "Checking... build target is 10.15+, this API needs 13+. Need legacy for backward compat. Current impl has wrong bundle ID - fix it or drop pre-13 support?"
+✅ 「修正しました。[変更内容の簡潔な説明]」
+✅ 「よく見つけてくれました - [具体的な問題]。[場所] で修正しました。」
+✅ [ただ直して、コードで示す]
+
+❌ 「おっしゃる通りです!」
+❌ 「いい指摘ですね!」
+❌ 「見つけてくれてありがとうございます!」
+❌ 「[何か] をありがとうございます」
+❌ あらゆる感謝の表現
 ```
 
-**YAGNI (Good):**
+**感謝しない理由:** 行動が語ります。ただ直してください。コードそのものが、フィードバックを受け取ったことを示します。
+
+**「ありがとう」と書きそうになったら:** 消してください。代わりに修正内容を述べてください。
+
+## 自分の反論を潔く訂正する
+
+反論したものの、自分が間違っていた場合:
 ```
-Reviewer: "Implement proper metrics tracking with database, date filters, CSV export"
-✅ "Grepped codebase - nothing calls this endpoint. Remove it (YAGNI)? Or is there usage I'm missing?"
+✅ 「おっしゃる通りでした - [X] を確認したところ [Y] になっていました。今実装します。」
+✅ 「検証したところ、あなたが正しいです。最初の理解が誤っていたのは [理由] のためです。修正します。」
+
+❌ 長い謝罪
+❌ 反論した理由の弁明
+❌ 過剰な説明
 ```
 
-**Unclear Item (Good):**
+訂正は事実として述べ、先に進んでください。
+
+## よくある間違い
+
+| 間違い | 対処 |
+|--------|------|
+| 見せかけの同意 | 要件を述べるか、ただ行動する |
+| 盲目的な実装 | まずコードベースと照らして検証する |
+| テストせずにまとめて実装 | 1 つずつ、そのたびにテストする |
+| レビュアーが正しいと決めてかかる | 何かを壊さないか確認する |
+| 反論を避ける | 技術的な正しさ > 心地よさ |
+| 部分的な実装 | 先にすべての項目を明確にする |
+| 検証できないのにそのまま進める | 制約を述べ、方向性を尋ねる |
+
+## 実例
+
+**見せかけの同意（悪い例）:**
 ```
-your human partner: "Fix items 1-6"
-You understand 1,2,3,6. Unclear on 4,5.
-✅ "Understand 1,2,3,6. Need clarification on 4 and 5 before implementing."
+レビュアー: 「レガシーコードを削除して」
+❌ 「おっしゃる通りです! 削除しますね...」
 ```
 
-## GitHub Thread Replies
+**技術的な検証（良い例）:**
+```
+レビュアー: 「レガシーコードを削除して」
+✅ 「確認します... ビルドターゲットは 10.15+ ですが、この API は 13+ が必要です。後方互換のためにレガシーが必要です。現在の実装は bundle ID が誤っています - 直しますか、それとも 13 未満のサポートを打ち切りますか?」
+```
 
-When replying to inline review comments on GitHub, reply in the comment thread (`gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies`), not as a top-level PR comment.
+**YAGNI（良い例）:**
+```
+レビュアー: 「データベース、日付フィルタ、CSV エクスポートを備えた、きちんとしたメトリクス追跡を実装して」
+✅ 「コードベースを grep しましたが、このエンドポイントを呼んでいるものはありません。削除しますか (YAGNI)? それとも、見落としている使用箇所がありますか?」
+```
+
+**不明確な項目（良い例）:**
+```
+人間のパートナー: 「項目 1〜6 を直して」
+あなたは 1、2、3、6 を理解している。4、5 は不明確。
+✅ 「1、2、3、6 は理解しました。実装する前に 4 と 5 の説明が必要です。」
+```
+
+## GitHub のスレッドへの返信
+
+GitHub のインラインのレビューコメントに返信するときは、PR のトップレベルのコメントとしてではなく、コメントのスレッド内で返信してください（`gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies`）。
