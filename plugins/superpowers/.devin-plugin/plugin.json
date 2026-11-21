@@ -1,6 +1,6 @@
 {
   "name": "superpowers",
-  "version": "7.0.2-ja.2",
+  "version": "7.0.2-ja.3",
   "description": "実際に機能する、エージェント向けのスキルフレームワーク兼ソフトウェア開発手法です。計画、TDD、デバッグ、協働のワークフローを備えています。",
   "author": {
     "name": "Jesse Vincent",
