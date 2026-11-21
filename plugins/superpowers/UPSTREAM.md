@@ -46,6 +46,11 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
   - `using-superpowers/references/` の codex / gemini / pi / antigravity / hermes / muse
     各 `*-tools.md`（ファイルごと原文のまま。`claude-code-tools.md` は翻訳する）
 
+### upstream との意図的な差異
+
+- systematic-debugging/SKILL.md: 原文の "see Phase 4.5"（実在しない見出し）は、実体である「フェーズ 4 の手順 5」に補正して訳した。
+  同ファイル内の "step 5 below" も同じ表記「フェーズ 4 の手順 5」にそろえている
+
 ### 書式の扱い
 
 - 見出し・リスト・表・太字・コードフェンスの構造は原文と同じにする。コードフェンス行の数を変えない
