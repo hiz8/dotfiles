@@ -81,7 +81,7 @@ dotfiles/
   指示している箇所の `Task` は訳さない（実装者判断で追記）
 - 他ハーネス向け reference（`using-superpowers/references/` の codex / gemini / pi /
   antigravity / hermes / muse）は原文のまま残す（Claude Code では読まれない。参照切れを避けるため削除しない）
-- 文体: 常体（だ・である調）、簡潔に。subagent / worktree / TDD などの技術用語は英語のまま
+- 文体: 敬体（です・ます調）、簡潔に（2026-11-21 ユーザー決定で常体から変更）。subagent / worktree / TDD などの技術用語は英語のまま
 - 強調・規範語（MUST / NEVER / IMPORTANT 等）は日本語でも同等の強さで表現する
 - 「〜が効く」「〜が効かない」は使わない（ユーザー CLAUDE.md の規則）
 - 最初に用語集を作り（例: "your human partner" の訳語）、全スキルで統一する。用語集は `UPSTREAM.md` に置く

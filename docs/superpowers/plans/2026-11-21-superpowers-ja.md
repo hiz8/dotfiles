@@ -17,7 +17,7 @@
 - プラグイン名は `superpowers` のまま。marketplace 名は `hiz-dotfiles`。プラグイン ID は `superpowers@hiz-dotfiles`
 - 英語のまま残すもの: スキル名・ディレクトリ名・frontmatter の `name`、コード・コマンド・スクリプト・非 md ファイル全般、パス、`<HARD-GATE>` `<EXTREMELY-IMPORTANT>` `<SUBAGENT-STOP>` などのタグ、`superpowers:xxx` 参照、URL、`[HEAD_SHA]` などの角括弧プレースホルダ、エージェント間のステータス語（`DONE` `DONE_WITH_CONCERNS` `BLOCKED` `NEEDS_CONTEXT` `ADDRESSED`）、計画書見出しの `Task` リテラル
 - `using-superpowers/references/` の codex / gemini / pi / antigravity / hermes / muse 各 `*-tools.md` は原文のまま（`claude-code-tools.md` は翻訳する）
-- 文体は常体（だ・である調）で簡潔に。subagent / worktree / TDD などの技術用語は英語のまま
+- 文体は敬体（です・ます調）で簡潔に（2026-11-21 ユーザー決定で常体から変更）。subagent / worktree / TDD などの技術用語は英語のまま
 - MUST / NEVER / IMPORTANT 等の規範語は日本語でも同等の強さで表現する。意味の追加・削除・言い換えによる改変をしない
 - 「〜が効く」「〜が効かない」（「効い」「効か」を含む活用形すべて）を使わない
 - 用語集・翻訳手順は `plugins/superpowers/UPSTREAM.md` に置き、全スキルで従う
