@@ -32,6 +32,10 @@ To add a new dotfile, create a package dir mirroring its `$HOME` location
 important thing to get right: **file paths inside a package are relative to
 `$HOME`, not to the repo root.**
 
+`plugins/` (Claude Code plugins) and `docs/` (design and plan documents) are
+**not** Stow packages. `install.sh` skips them when run without arguments and
+rejects them when named explicitly.
+
 ## The `claude` package is selective
 
 Claude Code keeps real runtime state and secrets in `~/.claude/`. This package
