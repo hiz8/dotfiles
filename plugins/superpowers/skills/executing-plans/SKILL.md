@@ -1,323 +1,229 @@
 ---
 name: executing-plans
-description: Use when executing an implementation plan in the current session as the implementer yourself — your human partner chose inline execution, or no subagent tool is available
+description: 実装計画書を現在のセッションで実装者自身として実行するときに使います — 人間のパートナーがインライン実行を選んだ場合、または subagent ツールがない場合です
 ---
 
-# Executing Plans
+# 計画書の実行
 
-Execute the plan yourself, task by task, in this session: no implementer
-subagent per task, no reviewer per task. One fresh-context review of the
-whole branch at the end.
+計画書は、このセッションで自分自身がタスクごとに実行します。タスクごとの実装者 subagent も、タスクごとのレビュアーもありません。最後にブランチ全体を、新しいコンテキストで 1 回レビューします。
 
-**Why inline:** Subagent-driven development pays for a fresh implementer
-and a fresh reviewer on every task, each re-reading the codebase from zero.
-Inline execution pays for one context (yours) plus one reviewer at the end.
-What it gives up is a fresh context per task and a second pair of eyes per
-task. This skill keeps what those two things bought, by other means: the
-brief is the spec, the ledger is your memory, TDD is the per-task gate, and
-the final reviewer is the second pair of eyes.
+**なぜインラインか:** Subagent-driven development では、タスクごとに新しい実装者と新しいレビュアーの費用を払い、それぞれがコードベースを一から読み直します。インライン実行で払うのは、1 つのコンテキスト（あなたのもの）と、最後のレビュアー 1 人分だけです。手放すのは、タスクごとの新しいコンテキストと、タスクごとの第二の目です。このスキルは、その 2 つが与えていたものを別の手段で保ちます。ブリーフが仕様であり、ledger があなたの記憶であり、TDD がタスクごとの関門であり、最終レビュアーが第二の目です。
 
-**Core principle:** The plan already did the thinking. Execute it exactly,
-prove each step with a test you watched fail and then pass, and leave a
-record that survives your own forgetting.
+**基本原則:** 計画書はすでに考える作業を済ませています。そのとおりに実行し、失敗するのを見届けてから通ったテストで各ステップを証明し、あなた自身が忘れても残る記録を残してください。
 
-**Narration:** between tool calls, narrate at most one short line — the
-ledger and the tool results carry the record.
+**ナレーション:** ツール呼び出しの間にナレーションするのは、多くても短い 1 行までにします。記録は ledger とツールの結果が担います。
 
-**Continuous execution:** Do not pause to check in with your human partner
-between tasks. They chose inline execution to spend less, not to answer
-"should I continue?" after every task. Execute all tasks from the plan
-without stopping.
+**連続実行:** タスクの合間に人間のパートナーへ確認を取るために止まってはいけません。パートナーがインライン実行を選んだのは費用を抑えるためであり、タスクごとに「続けますか?」と答えるためではありません。計画書のすべてのタスクを、止まらずに実行してください。
 
-**Rulings, not stalls.** Conflicts, ambiguities, plan defects — decide them.
-The spec is the binding authority, the plan is its argument, and your
-judgment settles what neither answers. Record every decision in the ledger
-as `Ruling: <what you decided> — <why> — <what it costs if wrong>`, and keep
-going. Deviating from the plan without a ledgered ruling is a decision made
-in secret.
+**止まるのではなく、裁定を下す。** 衝突、曖昧さ、計画書の欠陥 — これらは自分で決めてください。仕様書が拘束力のある権威であり、計画書はその論証であり、どちらも答えていないことはあなたの判断が決めます。下した決定はすべて、ledger に `Ruling: <what you decided> — <why> — <what it costs if wrong>` として記録し、先に進んでください。ledger に裁定を記録せずに計画書から逸脱するのは、密かに下した決定です。
 
-Four things stop you, and only these: an irreversible or destructive
-operation; a security-sensitive action; a side effect outside this worktree
-that norms say you ask about first (a merge, a push to a shared branch, a
-publish); and a plan so broken that every path forward is a guess. For
-those, stop and ask.
+止まるべき場合は次の 4 つだけで、これ以外にはありません。不可逆または破壊的な操作。セキュリティ上重要な操作。慣例として先に確認すべきこの worktree の外への副作用（マージ、共有ブランチへのプッシュ、公開）。そして、どの進み方も当てずっぽうになるほど壊れている計画書。これらの場合は、止まって尋ねてください。
 
-## When to Use
+## 使うとき
 
-- You have a plan from superpowers:writing-plans and your human partner
-  chose inline execution at the handoff.
-- Your harness has no subagent tool (see the per-platform references in
-  `../using-superpowers/references/`). Never fabricate a dispatch; run
-  the plan here.
-- Tasks are mostly independent — the same precondition as
-  superpowers:subagent-driven-development.
+- superpowers:writing-plans で作った計画書があり、引き継ぎの場面で人間のパートナーがインライン実行を選んだ。
+- ハーネスに subagent ツールがない（プラットフォームごとのリファレンスは `../using-superpowers/references/` を参照）。ディスパッチをでっち上げてはいけません。ここで計画書を実行してください。
+- タスクがおおむね独立している — superpowers:subagent-driven-development と同じ前提条件です。
 
-A fully specified plan makes inline execution transcription plus testing:
-it runs well on a mid-tier session model, and the one place the most
-capable model earns its cost is the final review, which this skill
-dispatches separately. Tell your human partner so when they choose inline.
+完全に仕様化された計画書なら、インライン実行は書き写しとテストになります。中位のセッションモデルでうまく機能し、最も高性能なモデルが費用に見合うのは最終レビューだけで、これはこのスキルが別にディスパッチします。インライン実行が選ばれたときは、人間のパートナーにそのことを伝えてください。
 
-Prefer superpowers:subagent-driven-development when your human partner
-wants a review gate on every task, or when the plan is long enough that
-its later tasks would run on a compacted context. Inline execution over a
-long plan still works — the ledger is what makes it recoverable — but the
-last tasks get the least of you.
+人間のパートナーがタスクごとにレビューの関門を求める場合や、計画書が長く、後半のタスクがコンテキスト圧縮後のコンテキストで走ることになる場合は、superpowers:subagent-driven-development を選んでください。長い計画書をインラインで実行することも可能で、ledger があるから復旧できます。ただし、最後のほうのタスクには、あなたの力が最も行き届かなくなります。
 
-## The Process
+## プロセス
 
 ```dot
 digraph process {
     rankdir=TB;
 
     subgraph cluster_per_task {
-        label="Per Task";
-        "task-start: brief + BASE; read the brief" [shape=box];
-        "Work the steps in order: TDD, run every verification, read every output" [shape=box];
-        "Step output matches plan's Expected?" [shape=diamond];
-        "Plan wrong? Rule and ledger. Code wrong? systematic-debugging" [shape=box];
-        "Commit as the plan's commit steps say" [shape=box];
-        "Completion contract met?" [shape=diamond];
-        "task-done: run tests, ledger the result; mark todo complete" [shape=box];
+        label="タスクごと";
+        "task-start: ブリーフと BASE を取得し、ブリーフを読む" [shape=box];
+        "ステップを順に進める: TDD、すべての検証を実行し、すべての出力を読む" [shape=box];
+        "ステップの出力が計画書の Expected と一致するか?" [shape=diamond];
+        "計画書が誤り? 裁定を下して ledger に記録。コードが誤り? systematic-debugging" [shape=box];
+        "計画書のコミットのステップに従ってコミットする" [shape=box];
+        "完了の取り決めを満たしたか?" [shape=diamond];
+        "task-done: テストを実行し、結果を ledger に記録。todo を完了にする" [shape=box];
     }
 
-    "Setup: worktree, workspace + ledger, read plan + spec, pre-flight scan" [shape=box];
-    "More tasks remain?" [shape=diamond];
-    "Final whole-branch review (fresh reviewer if you have one)" [shape=box];
-    "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger" [shape=box];
-    "Final review clean: delete this plan's workspace" [shape=box];
-    "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+    "セットアップ: worktree、ワークスペースと ledger、計画書と仕様書を読む、事前の走査" [shape=box];
+    "残りのタスクがあるか?" [shape=diamond];
+    "ブランチ全体の最終レビュー（可能なら新しいレビュアー）" [shape=box];
+    "グレードを付け直し、その後: Critical/Important → 修正は 1 回だけ、各修正は RED→GREEN とスイートの成功 ; Minor → ledger" [shape=box];
+    "最終レビューが問題なし: この計画書のワークスペースを削除する" [shape=box];
+    "superpowers:finishing-a-development-branch を使う" [shape=box style=filled fillcolor=lightgreen];
 
-    "Setup: worktree, workspace + ledger, read plan + spec, pre-flight scan" -> "task-start: brief + BASE; read the brief";
-    "task-start: brief + BASE; read the brief" -> "Work the steps in order: TDD, run every verification, read every output";
-    "Work the steps in order: TDD, run every verification, read every output" -> "Step output matches plan's Expected?";
-    "Step output matches plan's Expected?" -> "Plan wrong? Rule and ledger. Code wrong? systematic-debugging" [label="no"];
-    "Plan wrong? Rule and ledger. Code wrong? systematic-debugging" -> "Work the steps in order: TDD, run every verification, read every output";
-    "Step output matches plan's Expected?" -> "Commit as the plan's commit steps say" [label="yes, last step"];
-    "Commit as the plan's commit steps say" -> "Completion contract met?";
-    "Completion contract met?" -> "Work the steps in order: TDD, run every verification, read every output" [label="no - finish the task"];
-    "Completion contract met?" -> "task-done: run tests, ledger the result; mark todo complete" [label="yes"];
-    "task-done: run tests, ledger the result; mark todo complete" -> "More tasks remain?";
-    "More tasks remain?" -> "task-start: brief + BASE; read the brief" [label="yes"];
-    "More tasks remain?" -> "Final whole-branch review (fresh reviewer if you have one)" [label="no"];
-    "Final whole-branch review (fresh reviewer if you have one)" -> "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger";
-    "Re-grade, then: Critical/Important → ONE fix pass, each fix RED→GREEN + green suite; Minor → ledger" -> "Final review clean: delete this plan's workspace";
-    "Final review clean: delete this plan's workspace" -> "Use superpowers:finishing-a-development-branch";
+    "セットアップ: worktree、ワークスペースと ledger、計画書と仕様書を読む、事前の走査" -> "task-start: ブリーフと BASE を取得し、ブリーフを読む";
+    "task-start: ブリーフと BASE を取得し、ブリーフを読む" -> "ステップを順に進める: TDD、すべての検証を実行し、すべての出力を読む";
+    "ステップを順に進める: TDD、すべての検証を実行し、すべての出力を読む" -> "ステップの出力が計画書の Expected と一致するか?";
+    "ステップの出力が計画書の Expected と一致するか?" -> "計画書が誤り? 裁定を下して ledger に記録。コードが誤り? systematic-debugging" [label="いいえ"];
+    "計画書が誤り? 裁定を下して ledger に記録。コードが誤り? systematic-debugging" -> "ステップを順に進める: TDD、すべての検証を実行し、すべての出力を読む";
+    "ステップの出力が計画書の Expected と一致するか?" -> "計画書のコミットのステップに従ってコミットする" [label="はい、最後のステップ"];
+    "計画書のコミットのステップに従ってコミットする" -> "完了の取り決めを満たしたか?";
+    "完了の取り決めを満たしたか?" -> "ステップを順に進める: TDD、すべての検証を実行し、すべての出力を読む" [label="いいえ - タスクを終わらせる"];
+    "完了の取り決めを満たしたか?" -> "task-done: テストを実行し、結果を ledger に記録。todo を完了にする" [label="はい"];
+    "task-done: テストを実行し、結果を ledger に記録。todo を完了にする" -> "残りのタスクがあるか?";
+    "残りのタスクがあるか?" -> "task-start: ブリーフと BASE を取得し、ブリーフを読む" [label="はい"];
+    "残りのタスクがあるか?" -> "ブランチ全体の最終レビュー（可能なら新しいレビュアー）" [label="いいえ"];
+    "ブランチ全体の最終レビュー（可能なら新しいレビュアー）" -> "グレードを付け直し、その後: Critical/Important → 修正は 1 回だけ、各修正は RED→GREEN とスイートの成功 ; Minor → ledger";
+    "グレードを付け直し、その後: Critical/Important → 修正は 1 回だけ、各修正は RED→GREEN とスイートの成功 ; Minor → ledger" -> "最終レビューが問題なし: この計画書のワークスペースを削除する";
+    "最終レビューが問題なし: この計画書のワークスペースを削除する" -> "superpowers:finishing-a-development-branch を使う";
 }
 ```
 
-## Setup
+## セットアップ
 
-Ensure the work happens in an isolated workspace: use
-superpowers:using-git-worktrees to create one or verify the existing one.
-Never start implementation on a main/master branch without your human
-partner's explicit consent.
+作業が隔離されたワークスペースで行われるようにします。superpowers:using-git-worktrees を使って作成するか、既存のものを確認してください。人間のパートナーの明示的な同意なしに、main/master ブランチで実装を始めてはいけません。
 
-Conversation memory does not survive compaction. An inline executor that
-loses its place re-implements tasks whose commits already exist — the same
-failure as a controller re-dispatching them, paid for in your own context.
-Track progress in a ledger file, not only in todos. Harness todos are a
-live view; the ledger is the record.
+会話の記憶はコンテキスト圧縮を越えて残りません。現在地を見失ったインライン実行者は、コミットがすでに存在するタスクを再実装してしまいます。コントローラーがタスクを再ディスパッチしてしまうのと同じ失敗で、その費用を自分のコンテキストで払うことになります。進捗は todo だけでなく、ledger ファイルで追跡してください。ハーネスの todo はリアルタイムの表示であり、記録は ledger です。
 
-The workspace and ledger are shared with superpowers:subagent-driven-development
-— same directory, same format — so a plan can change executors mid-flight
-and the new one resumes from the same ledger.
+ワークスペースと ledger は superpowers:subagent-driven-development と共有します — 同じディレクトリ、同じ形式です。そのため、計画書の途中で実行者を替えても、新しい実行者は同じ ledger から再開できます。
 
-- Each plan owns a workspace: at skill start, run
-  `../subagent-driven-development/scripts/sdd-workspace PLAN_FILE` by its
-  absolute path, from the working tree you're executing in — it
-  prints the plan's git-ignored directory
-  (`<repo-root>/.superpowers/sdd/<plan-basename>/`), home to every
-  artifact for THIS plan: ledger, briefs, review packages. Another plan's
-  directory is never yours to read or write.
-- Check for this plan's ledger at `<workspace>/progress.md`. If its first
-  line names your plan file, tasks with a `Task <N>: complete` line are
-  DONE — do not redo them; resume at the first task without one. Their
-  commits exist in git even when your context no longer remembers making
-  them: after compaction, trust the ledger and `git log` over your own
-  recollection. A ledger whose first line names a different plan file is
-  another plan's progress: leave it and start your own, fresh.
-- Create the ledger with its identity as the first line:
-  `# SDD ledger — plan: <plan file path>`.
-- `git clean -fdx` will destroy the workspace (it's git-ignored scratch);
-  if that happens, recover from `git log`.
+- 各計画書は 1 つのワークスペースを持ちます。スキルの開始時に、実行している作業ツリーから、
+  `../subagent-driven-development/scripts/sdd-workspace PLAN_FILE` を絶対パスで
+  実行してください。これは、この計画書の git 管理対象外のディレクトリ
+  （`<repo-root>/.superpowers/sdd/<plan-basename>/`）を出力します。そこには、この計画書に関する
+  すべての成果物 — ledger、ブリーフ、レビューパッケージ — が置かれます。
+  別の計画書のディレクトリは、あなたが読み書きしてよいものではありません。
+- この計画書の ledger が `<workspace>/progress.md` にあるか確認します。最初の行があなたの
+  計画書ファイルを指していれば、`Task <N>: complete` の行があるタスクは完了
+  済み（DONE）です — やり直してはいけません。その行がない最初のタスクから再開してください。それらの
+  コミットは、あなたのコンテキストがそれを作った覚えをもう持っていなくても git に存在します。
+  コンテキスト圧縮の後は、自分の記憶より ledger と `git log` を信頼してください。最初の行が
+  別の計画書ファイルを指している ledger は、別の計画書の進捗です。手を付けず、
+  自分の ledger を新しく作ってください。
+- ledger は、最初の行に自分の識別情報を書いて作ります:
+  `# SDD ledger — plan: <plan file path>`。
+- `git clean -fdx` はワークスペースを破壊します（git 管理対象外の作業用ディレクトリのためです）。
+  そうなったら、`git log` から復旧してください。
 
-Read the plan once, note its context and Global Constraints, and create a
-todo per task. If the plan names a Spec, read that too: the spec is the
-authority the plan argues from, and conflicts inside the plan resolve
-against it. A plan with no reachable spec gets a ledger note saying so —
-rulings made without one are provisional.
+計画書を一度読み、その文脈と Global Constraints を把握して、タスクごとに todo を作ります。計画書が Spec を挙げているなら、それも読んでください。仕様書は計画書が論拠とする権威であり、計画書の内部で衝突があれば仕様書に照らして解決します。到達できる仕様書がない計画書については、その旨を ledger に書き留めます — その状態で下した裁定は暫定です。
 
-**REQUIRED SUB-SKILL:** load superpowers:test-driven-development now,
-before Task 1. It governs every step of every task below; a plan whose
-steps already say "write the failing test first" does not exempt you
-from reading it.
+**必須サブスキル:** Task 1 の前に、superpowers:test-driven-development を今ロードしてください。これは、以下のすべてのタスクのすべてのステップを律します。ステップがすでに「まず失敗するテストを書く」と言っている計画書でも、これを読むことが免除されるわけではありません。
 
-Before Task 1, scan the plan for conflicts between tasks. The plan's
-Interfaces blocks tell you where to look: for every task that consumes
-what an earlier task produces, one ledger row — the two tasks, what one
-produces against what the other consumes, and what you found. Tasks that
-share nothing get no row; a plan whose tasks share nothing gets the single
-line `Pre-flight: no shared interfaces`. Rule on each conflict a row
-surfaces with the spec as the binding authority, record the ruling beside
-its row, and start Task 1. Each task's own text is checked when you read
-its brief, not here.
+Task 1 の前に、計画書を走査してタスク間の衝突を探します。どこを見ればよいかは、計画書の Interfaces ブロックが示しています。先行タスクが生み出したものを使うタスクごとに、ledger に 1 行を書きます — 2 つのタスク、一方が生み出すものと他方が使うものの対比、そして見つけたことです。何も共有しないタスクには行を書きません。タスクが何も共有しない計画書には、`Pre-flight: no shared interfaces` という 1 行だけを書きます。行から見つかった衝突は、仕様書を拘束力のある権威として裁定し、その裁定を該当の行の横に記録して、Task 1 を始めます。各タスク自身の本文は、ここではなく、そのブリーフを読むときに確認します。
 
-## The Task Loop
+## タスクループ
 
-Everything you print, and every tool result, stays resident in your
-context for the rest of the session. Redirect long test output to a file
-in the workspace and read its tail; read a brief, not the whole plan.
+あなたが出力するものとツールの結果はすべて、セッションの残りの間、コンテキストに残り続けます。長いテスト出力はワークスペース内のファイルにリダイレクトして、その末尾を読んでください。読むのはブリーフであり、計画書全体ではありません。
 
-### 1. Take the task
+### 1. タスクを取る
 
-- Run this skill's `scripts/task-start PLAN_FILE N` by its absolute path,
-  from the working tree you're executing in. It prints the brief
-  path and BASE (the commit the task's range is cut from) in one call.
-  Read the brief for every task, including ones you remember from setup:
-  what you remember is a summary, the brief has the exact values,
-  signatures, and test cases.
-- Mark the task's todo in_progress.
+- このスキルの `scripts/task-start PLAN_FILE N` を、実行している作業ツリーから絶対パスで実行します。
+  ブリーフのパスと BASE（そのタスクの範囲を切り出すコミット）を 1 回の呼び出しで出力します。
+  セットアップで覚えているタスクも含め、すべてのタスクでブリーフを読んでください。
+  覚えているのは要約であり、ブリーフに正確な値、シグネチャ、テストケースがあります。
+- そのタスクの todo を in_progress にします。
 
-Every tool call is a turn that re-reads your whole context. Bookkeeping
-rides along with work — a ledger append in the same call as the commit,
-never in a call of its own.
+ツール呼び出しはすべて、コンテキスト全体を読み直すターンです。事務作業は作業に便乗させてください。ledger への追記は、コミットと同じ呼び出しの中で行い、単独の呼び出しにはしません。
 
-### 2. Work the steps
+### 2. ステップを進める
 
-The plan's steps are already in RED-GREEN order; follow them in that
-order under superpowers:test-driven-development, loaded at setup. A test
-step's code is written first and run first. Watching it fail is a step,
-not a formality — a test that passes before the implementation exists is
-a finding about the test.
+計画書のステップはすでに RED-GREEN の順に並んでいます。セットアップでロードした superpowers:test-driven-development のもとで、その順に従ってください。テストのステップのコードは先に書き、先に実行します。失敗するのを見届けることは形式ではなく、1 つのステップです — 実装がまだ存在しないのに通るテストは、そのテストに関する指摘です。
 
-Every step that runs a command has an `Expected:` line. Run the command,
-read its output, and compare. Three outcomes:
+コマンドを実行するステップには、必ず `Expected:` 行があります。コマンドを実行し、その出力を読み、比較してください。結果は次の 3 つです:
 
-- **Matches.** Next step.
-- **The code is wrong.** Use superpowers:systematic-debugging. Find the
-  cause; never patch the symptom to make the step's output match.
-- **The plan is wrong** — a step contradicts the spec, an interface from an
-  earlier task doesn't match what this task consumes, a command that
-  cannot work. Rule on the smallest change that satisfies the spec, ledger
-  it as `Task <N>: Ruling: <finding> — <what you decided and why>`, and
-  continue. The ruling is carried, not remembered: later tasks that touch
-  the same interface read it from the ledger.
+- **一致する。** 次のステップへ進みます。
+- **コードが誤り。** superpowers:systematic-debugging を使います。原因を見つけてください。ステップの出力に合わせるために症状にパッチを当ててはいけません。
+- **計画書が誤り** — ステップが仕様書と矛盾している、先行タスクのインターフェースがこのタスクの使うものと合わない、動作し得ないコマンドがある。仕様書を満たす最小の変更を裁定し、
+  `Task <N>: Ruling: <finding> — <what you decided and why>` として ledger に記録して、
+  続けてください。裁定は記憶ではなく記録として引き継ぎます。同じインターフェースに触れる後続のタスクは、ledger からそれを読みます。
 
-Commit as the plan's commit steps say. A task that spans several commits
-is fine; BASE is what the review range is cut from, never `HEAD~1`.
+計画書のコミットのステップに従ってコミットします。複数のコミットにまたがるタスクでも問題ありません。レビュー範囲を切り出す基点は BASE であり、`HEAD~1` ではありません。
 
-### 3. The completion contract
+### 3. 完了の取り決め
 
-Before a task's ledger line, all of the following are true, with evidence
-in this session — not inferred from the diff looking right:
+タスクの ledger 行を書く前に、次のすべてが真でなければなりません。証拠はこのセッションで得たものであり、diff が正しそうに見えることから推測したものではありません:
 
-- Every test the brief names exists and ran in this task, and you read
-  the output.
-- The final test run for the task passed — `task-done` is that run, and
-  it writes the command and result into the ledger line.
-- Every `Expected:` line in the brief was compared against real output.
-- Every deviation from the brief has a `Ruling:` line in the ledger.
+- ブリーフが挙げるすべてのテストが存在し、このタスクの中で実行され、その出力を読んだ。
+- タスクの最終テスト実行が通った — `task-done` がその実行であり、コマンドと結果を ledger の行に書き込む。
+- ブリーフのすべての `Expected:` 行を、実際の出力と比較した。
+- ブリーフからのすべての逸脱について、ledger に `Ruling:` 行がある。
 
-**REQUIRED SUB-SKILL:** superpowers:verification-before-completion governs
-the claim. If any item is missing, the task is not complete: finish it.
+**必須サブスキル:** 主張については superpowers:verification-before-completion に従います。項目が 1 つでも欠けていれば、そのタスクは完了していません。終わらせてください。
 
-### 4. Complete the task
+### 4. タスクを完了する
 
-Run this skill's `scripts/task-done PLAN_FILE N BASE -- <test command>`
-by its absolute path, from the working tree you're executing in, with the test command the brief names for the whole task. It runs the
-tests, keeps the full output in the workspace, prints the tail, and — only
-if they pass — appends the completion line to the ledger:
+このスキルの `scripts/task-done PLAN_FILE N BASE -- <test command>` を、実行している作業ツリーから絶対パスで実行します。テストコマンドには、ブリーフがタスク全体に対して挙げているものを使ってください。これはテストを実行し、完全な出力をワークスペースに保存し、末尾を表示し、テストが通った場合にだけ、完了の行を ledger に追記します:
 
 `Task <N>: complete (commits <base7>..<head7>, tests: <command> → <result>)`
 
-A failing run records nothing; the task is not complete. When it records,
-mark the todo complete and take the next task.
+失敗した実行は何も記録しません。そのタスクは完了していません。記録されたら、todo を完了にして、次のタスクに進みます。
 
-## Final Review
+## 最終レビュー
 
-Run `../subagent-driven-development/scripts/review-package PLAN_FILE MERGE_BASE HEAD`
-by its absolute path, from the working tree you're executing in (MERGE_BASE = the commit the branch started from, e.g.
-`git merge-base main HEAD`) and review from the file it prints.
+`../subagent-driven-development/scripts/review-package PLAN_FILE MERGE_BASE HEAD` を、
+実行している作業ツリーから絶対パスで実行し（MERGE_BASE = ブランチが始まったコミット。例:
+`git merge-base main HEAD`）、出力されたファイルからレビューします。
 
-**With a subagent tool:** dispatch the reviewer on the most capable
-available model — the whole-branch review is a judgment task — using
-superpowers:requesting-code-review's
-[code-reviewer.md](../requesting-code-review/code-reviewer.md), with the
-package path, the plan and spec paths, the plan's Review Focus section
-verbatim if it has one (the input classes and failure modes the plan's
-tests do not exercise — the reviewer checks each deliberately), and a
-pointer to the ledger's `Ruling:` lines so it can weigh the calls you
-made. Specify the model
-explicitly; an omitted model inherits the session's, which may not be the
-most capable. This is the one fresh context the whole run buys. Do not
-skip it, and do not replace it with your own read of the diff.
+**subagent ツールがある場合:** 利用できる最も高性能なモデルでレビュアーをディスパッチします — ブランチ全体のレビューは判断を要するタスクです。superpowers:requesting-code-review の
+[code-reviewer.md](../requesting-code-review/code-reviewer.md) を使い、
+パッケージのパス、計画書と仕様書のパス、計画書に Review Focus セクションがあればそれをそのまま
+（計画書のテストが検証していない入力の種類と失敗モード — レビュアーはそれぞれを意図的に確認します）、
+そして、あなたが下した判断をレビュアーが評価できるように、ledger の `Ruling:` 行への案内を渡します。
+モデルは明示的に指定してください。モデルを省略すると、セッションのモデルを継承し、それが最も
+高性能とは限りません。これが、この実行全体で得られる新しいコンテキストの 1 回です。
+省略してはいけません。また、あなた自身が diff を読むことで代替してはいけません。
 
-**Without a subagent tool:** read code-reviewer.md and perform that review
-yourself against the package, as a separate pass after the last task's
-ledger line. Write `Final review: self-review (no subagent tool)` to the
-ledger, and say so in your final message: a self-review by the author is
-weaker than a fresh reviewer, and your human partner decides whether that
-is enough before merge.
+**subagent ツールがない場合:** code-reviewer.md を読み、パッケージに対してそのレビューを自分で
+行います。最後のタスクの ledger 行の後の、別個のパスとして行ってください。ledger に
+`Final review: self-review (no subagent tool)` と書き、最終メッセージでもそのことを伝えます。
+作者による自己レビューは新しいレビュアーより弱く、それで足りるかどうかはマージの前に
+人間のパートナーが判断します。
 
-Sort the findings before you act on any of them. The reviewer's severity
-labels are advice; the gate is yours. Its "Declined to judge" list is
-yours too: every line there is a ruling you make and ledger, exactly like
-a plan conflict — `Final: Ruling: <behavior the reviewer set aside> —
+指摘のどれかに対応する前に、まず指摘を仕分けます。レビュアーの重大度ラベルは助言であり、関門を決めるのはあなたです。レビュアーの「判断を見送った事項」（"Declined to judge"）のリストもあなたのものです。そこに並ぶ各行は、計画書の衝突とまったく同じように、あなたが下して ledger に記録する裁定です — `Final: Ruling: <behavior the reviewer set aside> —
 <what a reasonable person using this software gets, and why that stands
-or why it is now a finding> — <cost if wrong>`. Re-grade first, by effect: the
-spec is a vision document, and a finding's grade is what a reasonable
-person using this software gets if it ships, not whether the spec names
-the input that triggers it — a reviewer who set a finding at Minor
-because the spec was silent has graded the spec, not the effect. Then:
+or why it is now a finding> — <cost if wrong>`。まず、影響でグレードを付け直します。
+仕様書はビジョンを示す文書であり、指摘のグレードとは、それが出荷された場合に妥当な人が得るものです。
+それを引き起こす入力を仕様書が挙げているかどうかではありません。仕様書が黙っているからという理由で
+指摘を Minor にしたレビュアーは、影響ではなく仕様書にグレードを付けたのです。そのうえで:
 
-- **Critical and Important** enter the fix pass.
-- **Minor** goes to the ledger as `Final: minor (deferred): <one-liner>`
-  and to your final message under "Deferred minors". Minors never enter
-  the fix pass, and never become rulings — a ruling is a decision about a
-  conflict, not a note that you declined a polish suggestion.
+- **Critical と Important** は修正の対象です。
+- **Minor** は `Final: minor (deferred): <one-liner>` として ledger に、
+  また最終メッセージの「先送りした Minor」の下に記録します。Minor は修正の対象に
+  決してならず、裁定にもなりません — 裁定とは衝突についての決定であり、細かな改善の提案を
+  断ったことの記録ではありません。
 
-Fix the Critical and Important findings yourself — you are the
-implementer here — in ONE pass. Each fix is verified by TDD, not by a
-second reviewer: write the test that reproduces the finding, watch it
-fail, make it pass, then run the whole suite. Record each in the ledger as
-`Final: fixed <finding> — <test name> RED→GREEN, suite <N>/<N>`. A fix
-without a test that failed first is not verified; a suite that is not
-green after the pass means the pass is not over. Do not dispatch a
-re-review: it would re-read a diff whose covering tests already answer
-"addressed" and whose suite run already answers "broke nothing".
+Critical と Important の指摘は、あなた自身が — ここでは実装者です — 1 回の修正で直します。
+各修正は 2 人目のレビュアーではなく、TDD で検証します。指摘を再現するテストを書き、
+失敗するのを見届け、通るようにしてから、スイート全体を実行します。それぞれを ledger に
+`Final: fixed <finding> — <test name> RED→GREEN, suite <N>/<N>` として記録します。
+先に失敗したテストのない修正は、検証されていません。修正の後でスイートが成功していなければ、
+修正はまだ終わっていません。再レビューをディスパッチしてはいけません。それは、対応済みであることを
+カバーするテストがすでに示しており、何も壊れていないことをスイートの実行がすでに示している diff を、
+読み直すだけだからです。
 
-A finding you decide not to fix is a ruling — `Final: Ruling: <finding> —
-<why the code stands> — <cost if wrong>` — and reaches your human partner
-in the rulings list. There is no second fix pass.
+直さないと決めた指摘は裁定です — `Final: Ruling: <finding> —
+<why the code stands> — <cost if wrong>` — そして、裁定の一覧として人間のパートナーに届きます。
+2 回目の修正はありません。
 
-## Finish
+## 完了
 
-Before you delete anything, collect every ledger line containing
-`Ruling:` into your final message under "Rulings I made", in the order you
-made them, each with what it costs if wrong, and every `minor (deferred)`
-line under "Deferred minors". Both lists are exhaustive. Your final
-message is the only place the decisions you took on your human partner's
-behalf — and the findings you chose not to act on — reach them.
+何かを削除する前に、`Ruling:` を含む ledger の行をすべて、最終メッセージの「自分が下した裁定」の
+下に、下した順に、誤っていた場合の費用を添えて集めます。`minor (deferred)` の行もすべて
+「先送りした Minor」の下に集めます。どちらの一覧も網羅的でなければなりません。あなたが
+人間のパートナーに代わって下した決定と、対応しないと選んだ指摘は、あなたの最終メッセージだけが
+パートナーに届ける手段です。
 
-When the final review is clean and its fixes are committed, delete this
-plan's workspace directory — the git history is the record now. Sibling
-directories belong to other plans; leave them alone.
+最終レビューに問題がなく、その修正がコミットされたら、この計画書のワークスペース
+ディレクトリを削除します — 今や記録は git の履歴です。兄弟ディレクトリは別の計画書のものです。
+手を付けないでください。
 
-Use superpowers:finishing-a-development-branch.
+superpowers:finishing-a-development-branch を使います。
 
-## Common Rationalizations
+## よくある自己正当化
 
-| Excuse | Reality |
-|--------|---------|
-| "I remember what Task N says" | You remember a summary. The brief has the exact values. Read it. |
-| "The plan's code is right, skip watching the test fail" | A test you never saw fail proves nothing. It is one step. Run it. |
-| "I'll run the full suite at the end instead of per step" | Per-step runs are how you learn which step broke it. The end-of-task run is the contract, not a substitute. |
-| "The plan is wrong here, I'll just do the right thing" | Do the right thing and ledger the ruling. Unledgered deviation is a decision made in secret. |
-| "I'll write the ledger lines after a few tasks" | Compaction does not wait for a convenient moment. One line per task, in the same message as the commit. |
-| "Let me check in before the next task" | They chose inline to spend less. Progress prompts spend their time instead. Only the four stops stop you. |
-| "I read my own diff carefully; the final reviewer is redundant" | Same author, same blind spots. The reviewer is the only fresh context this run buys. |
-| "Tests should pass, the change was trivial" | "Should" is not evidence. The contract requires the command and its output. |
-| "Subagents are slow and expensive, I'll skip the final review too" | Inline already removed the per-task reviewers. One review of the whole branch is the floor, not the ceiling. |
-| "The reviewer said Minor, so it's Minor" | The label graded the spec's silence. Grade what the person gets. Re-grade, then gate. |
-| "The fix is obvious, no need for a failing test first" | The failing test is the only proof the finding was real and is now gone. Without it you have a diff and a hope. |
-| "I'll fix the minors too while I'm in there" | Every minor you fix is a test, a fix, and a suite run your partner did not ask for. Ledger them; your partner decides. |
+| 言い訳 | 現実 |
+|--------|------|
+| 「Task N に何が書いてあるかは覚えている」 | 覚えているのは要約です。ブリーフに正確な値があります。読んでください。 |
+| 「計画書のコードは正しいから、テストが失敗するのを見るのは省略しよう」 | 失敗するのを見たことがないテストは何も証明しません。それは 1 つのステップです。実行してください。 |
+| 「ステップごとではなく、最後にスイート全体を実行しよう」 | ステップごとの実行は、どのステップが壊したかを知る方法です。タスク終了時の実行は取り決めであり、代わりにはなりません。 |
+| 「ここは計画書が間違っているから、正しいことをやってしまおう」 | 正しいことをして、裁定を ledger に記録してください。記録されない逸脱は、密かに下した決定です。 |
+| 「ledger の行は数タスクの後にまとめて書こう」 | コンテキスト圧縮は都合のよい時を待ってくれません。タスクごとに 1 行、コミットと同じメッセージの中で書いてください。 |
+| 「次のタスクの前に確認を取ろう」 | パートナーがインラインを選んだのは費用を抑えるためです。進捗の確認はパートナーの時間を使わせます。止まるのは、4 つの停止条件のときだけです。 |
+| 「自分の diff は丁寧に読んだから、最終レビュアーは不要だ」 | 同じ作者、同じ死角です。レビュアーは、この実行が得られる唯一の新しいコンテキストです。 |
+| 「テストは通るはずだ、変更は些細だった」 | 「はず」は証拠ではありません。取り決めが求めるのは、コマンドとその出力です。 |
+| 「subagent は遅くて高いから、最終レビューも省略しよう」 | インラインはすでにタスクごとのレビュアーを取り除いています。ブランチ全体の 1 回のレビューは上限ではなく下限です。 |
+| 「レビュアーが Minor と言ったから Minor だ」 | そのラベルは仕様書の沈黙にグレードを付けたものです。人が得るものにグレードを付けてください。グレードを付け直してから、関門を決めます。 |
+| 「修正は明白だから、先に失敗するテストは要らない」 | 失敗するテストだけが、その指摘が本物であり、今はなくなったという証明です。それがなければ、あるのは diff と願いだけです。 |
+| 「ついでに Minor も直しておこう」 | 直した Minor はどれも、パートナーが求めていないテスト、修正、スイート実行になります。ledger に記録してください。判断するのはパートナーです。 |

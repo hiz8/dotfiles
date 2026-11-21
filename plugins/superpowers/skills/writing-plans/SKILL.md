@@ -1,98 +1,93 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: 複数ステップのタスクの仕様や要件があるときに、コードに触れる前に使います
 ---
 
-# Writing Plans
+# 計画書の作成
 
-## Overview
+## 概要
 
-Write implementation plans for an engineer who has not seen this codebase or this spec. Assume they write idiomatic code in the project's language once they know the exact interface and the exact test, and that they will make a reasonable choice wherever the plan leaves one open. What they cannot know is what you decided: which files, which names and signatures, which values from the spec, which tests prove each task. Document those. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+このコードベースも仕様も見ていないエンジニアのために、実装計画書を書きます。そのエンジニアは、正確なインターフェースと正確なテストが分かれば、プロジェクトの言語で慣用的なコードを書けると仮定します。また、計画書が選択を委ねている箇所では、妥当な選択をすると仮定します。そのエンジニアが知り得ないのは、あなたが何を決めたかです。どのファイルか、どの名前とシグネチャか、仕様のどの値か、どのテストが各タスクを証明するか。これらを文書化してください。計画書全体を、小さなタスクに分けて渡します。DRY。YAGNI。TDD。こまめなコミット。
 
-**Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
+**開始時に宣言:** 「writing-plans スキルを使って実装計画書を作成します。」
 
-**Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.
+**文脈:** 隔離された worktree で作業する場合、その worktree は実行時に `superpowers:using-git-worktrees` スキルで作成されているはずです。
 
-**Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
-- (User preferences for plan location override this default)
+**計画書の保存先:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
+- （ユーザーが計画書の置き場所を指定している場合は、そちらがこの既定より優先されます）
 
-## Scope Check
+## スコープの確認
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+仕様が互いに独立した複数のサブシステムにまたがる場合、ブレインストーミングの段階でサブプロジェクトごとの仕様に分割されているはずです。分割されていなければ、サブシステムごとに別々の計画書に分けることを提案してください。各計画書は、それだけで動作しテスト可能なソフトウェアを生み出すものでなければなりません。
 
-## File Structure
+## ファイル構成
 
-Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
+タスクを定義する前に、どのファイルを作成・変更するか、そして各ファイルが何を担当するかを洗い出します。分解に関する判断はここで確定します。
 
-- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
-- You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.
-- Files that change together should live together. Split by responsibility, not by technical layer.
-- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
+- 境界が明確で、インターフェースが十分に定義された単位を設計します。各ファイルの責務は 1 つに絞ります。
+- コンテキストに一度に収められるコードのほうが推論しやすく、ファイルが焦点の定まったものであるほうが編集も確実になります。多くを抱え込んだ大きなファイルより、小さく焦点の定まったファイルを選んでください。
+- 一緒に変更されるファイルは一緒に置きます。技術的なレイヤーではなく、責務で分割します。
+- 既存のコードベースでは、確立されたパターンに従います。コードベースが大きなファイルを使っているなら、一方的に再構成してはいけません。ただし、変更するファイルが扱いきれないほど肥大化している場合は、計画書に分割を含めるのが妥当です。
 
-This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
+この構成がタスク分解の指針になります。各タスクは、それ単独で意味をなす、自己完結した変更を生み出すものにしてください。
 
-## Task Right-Sizing
+## Task の適切な大きさ
 
-A task is the smallest unit that carries its own test cycle and is worth a
-fresh reviewer's gate. When drawing task boundaries: fold setup,
-configuration, scaffolding, and documentation steps into the task whose
-deliverable needs them; split only where a reviewer could meaningfully
-reject one task while approving its neighbor. Each task ends with an
-independently testable deliverable.
+タスクとは、それ自体でテストサイクルを持ち、新しいレビュアーによる関門を通す価値がある最小の単位です。タスクの境界を引くときは、セットアップ、設定、足場作り、ドキュメントのステップを、それを必要とする成果物のタスクに組み込みます。分割するのは、レビュアーが隣のタスクを承認しつつ一方のタスクを差し戻すことに意味がある箇所だけです。各タスクは、単独でテストできる成果物で終わります。
 
-## Step Granularity
+## ステップの粒度
 
-**Each step is one action with a checkable result:**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+**各ステップは、結果を確認できる 1 つの作業です:**
+- 「失敗するテストを書く」 - ステップ
+- 「実行して失敗することを確認する」 - ステップ
+- 「テストを通す最小限のコードを実装する」 - ステップ
+- 「テストを実行して通ることを確認する」 - ステップ
+- 「コミットする」 - ステップ
 
-## Plan Document Header
+## 計画書のヘッダー
 
-**Every plan MUST start with this header:**
+**すべての計画書は、必ずこのヘッダーで始めなければなりません:**
 
 ```markdown
-# [Feature Name] Implementation Plan
+# [機能名] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **エージェント実行者へ:** 必須サブスキル: この計画書をタスクごとに実装するには、superpowers:subagent-driven-development（推奨）または superpowers:executing-plans を使ってください。ステップの追跡にはチェックボックス（`- [ ]`）構文を使います。
 
-**Goal:** [One sentence describing what this builds]
+**Goal:** [これが何を作るのかを 1 文で]
 
-**Architecture:** [2-3 sentences about approach]
+**Architecture:** [アプローチについて 2〜3 文で]
 
-**Tech Stack:** [Key technologies/libraries]
+**Tech Stack:** [主要な技術・ライブラリ]
 
-**Spec:** [path to the spec/design doc this plan implements — the plan
-argues from the spec, so the spec travels with it; executors read both]
+**Spec:** [この計画書が実装する仕様書・設計ドキュメントへのパス — 計画書は
+仕様書を根拠に論じるので、仕様書も一緒に渡します。実行者は両方を読みます]
 
 ## Global Constraints
 
-[The spec's project-wide requirements — version floors, dependency limits,
-naming and copy rules, platform requirements — one line each, with exact
-values copied verbatim from the spec. Every task's requirements implicitly
-include this section.]
+[仕様書にあるプロジェクト全体の要件 — バージョンの下限、依存関係の制約、
+命名と文言のルール、プラットフォーム要件 — を 1 行ずつ、正確な値を仕様書から
+そのまま写して書きます。各タスクの要件には、このセクションが暗黙のうちに
+含まれます。]
 
 ## Review Focus
 
-[The five input classes or failure modes the spec implies but no task's
-tests exercise that are most likely to bite a person using this software
-— one line each, naming the input or condition and the behavior a
-reasonable person would expect, most likely first. The spec is a vision
-document: it says what the software must do, not everything it will
-meet, and its silence on an input is not permission for that input to
-break the program. Write the list here, once, with the spec in front of
-you. Then, for each line, add the test that pins it to the task that
-owns the code, in that task's own step style.]
+[仕様書が暗に示しているものの、どのタスクのテストも検証していない入力の種類や
+失敗モードのうち、このソフトウェアを使う人に最も問題を起こしそうな 5 つを
+1 行ずつ、入力または条件の名前と、妥当な人が期待する動作を添えて、可能性の
+高い順に書きます。仕様書はビジョンを示す文書です。ソフトウェアが何をしなければ
+ならないかを述べるものであり、遭遇し得るすべてを述べるものではありません。
+仕様書がある入力に触れていないことは、その入力でプログラムが壊れてよい
+理由にはなりません。このリストはここに、仕様書を目の前にして一度だけ書きます。
+その上で各行について、そのコードを担当するタスクに、そのタスク自身のステップの
+書き方で、その行を固定するテストを追加します。]
 
 ---
 ```
 
-## Task Structure
+## Task の構造
 
 ````markdown
-### Task N: [Component Name]
+### Task N: [コンポーネント名]
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -100,12 +95,12 @@ owns the code, in that task's own step style.]
 - Test: `tests/exact/path/to/test.py`
 
 **Interfaces:**
-- Consumes: [what this task uses from earlier tasks — exact signatures]
-- Produces: [what later tasks rely on — exact function names, parameter
-  and return types. A task's implementer sees only their own task; this
-  block is how they learn the names and types neighboring tasks use.]
+- Consumes: [このタスクが先行タスクから使うもの — 正確なシグネチャ]
+- Produces: [後続タスクが依存するもの — 正確な関数名、パラメータと戻り値の
+  型。タスクの実装者は自分のタスクしか見ません。隣接するタスクが使う名前や
+  型を知る手段は、このブロックです。]
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1: 失敗するテストを書く**
 
 ```python
 def test_specific_behavior():
@@ -113,23 +108,23 @@ def test_specific_behavior():
     assert result == expected
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Step 2: テストを実行して失敗することを確認する**
 
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: FAIL with "function not defined"
 
-- [ ] **Step 3: Implement `function(input: InputType) -> ResultType` in `exact/path/to/file.py`**
+- [ ] **Step 3: `exact/path/to/file.py` に `function(input: InputType) -> ResultType` を実装する**
 
-One line on the approach when the signature and the test leave a choice
-(which library call, which data structure); a code block only for an
-algorithm they do not determine.
+シグネチャとテストだけでは選択が決まらない場合（どのライブラリ呼び出しか、
+どのデータ構造か）は、アプローチを 1 行で書きます。コードブロックは、それらが
+決めないアルゴリズムの場合にだけ使います。
 
-- [ ] **Step 4: Run test to verify it passes**
+- [ ] **Step 4: テストを実行して通ることを確認する**
 
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: コミットする**
 
 ```bash
 git add tests/path/test.py src/path/file.py
@@ -137,68 +132,68 @@ git commit -m "feat: add specific feature"
 ```
 ````
 
-## What a Step Contains
+## ステップに含めるもの
 
-A step is done when the implementer can write exactly one reasonable thing
-from it. That is the whole requirement: unambiguous, not complete. Each kind
-of step carries what makes it unambiguous and nothing more:
+ステップが完了しているとは、実装者がそれを読んで、妥当な書き方をちょうど 1 つに
+決められる状態です。要件はそれがすべてです。曖昧さがないことであり、網羅して
+いることではありません。各種類のステップには、曖昧さをなくすのに必要なものだけを
+含め、それ以上は含めません:
 
-- **A test step:** the test's name and its assertions, as code, with the
-  spec's exact values in them.
-- **A code step:** the exact signature (name, parameters, return type), the
-  file it lives in, and the specific values the spec pins. The implementer
-  writes the body. A body appears only for an algorithm the signature and
-  tests do not determine, or for exact copy the spec fixes.
-- **A verification step:** the command to run and the output that means it
-  passed.
-- **A reference to another task:** that task's Interfaces block says what
-  to use; the plan does not repeat that task's code.
+- **テストのステップ:** テストの名前とそのアサーションを、仕様書の正確な値を
+  使ったコードとして書きます。
+- **コードのステップ:** 正確なシグネチャ（名前、パラメータ、戻り値の型）、
+  それを置くファイル、仕様書が固定している具体的な値。本体は実装者が書きます。
+  本体を載せるのは、シグネチャとテストが決めないアルゴリズムの場合か、仕様書が
+  固定している正確な文言の場合だけです。
+- **検証のステップ:** 実行するコマンドと、合格を意味する出力。
+- **別のタスクへの参照:** 何を使うかはそのタスクの Interfaces ブロックに書いて
+  あります。計画書でそのタスクのコードを繰り返してはいけません。
 
-A plan is the set of decisions the implementer cannot make alone. A plan
-longer than the code it describes has written the code instead. Lines that
-decide nothing ("TBD", "handle edge cases", "add appropriate validation",
-"write tests for the above", a type or function no task defines) are the
-opposite failure, and the self-review catches both.
+計画書とは、実装者が単独では決められない判断の集まりです。計画書が、それが
+記述するコードより長ければ、コードそのものを書いてしまっています。何も決めない
+行（「TBD」「エッジケースを処理する」「適切なバリデーションを追加する」「上記の
+テストを書く」、どのタスクも定義していない型や関数）はその反対の失敗であり、
+セルフレビューは両方を検出します。
 
-## Self-Review
+## セルフレビュー
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+計画書をすべて書き終えたら、新しい目で仕様書を見直し、計画書を仕様書と突き合わせて確認します。これは自分で実行するチェックリストです — subagent のディスパッチではありません。
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+**1. 仕様のカバレッジ:** 仕様書の各セクション・各要件に目を通します。それを実装するタスクを示せますか。抜けがあれば挙げてください。
 
-**2. Step scan:** Every step must let the implementer write exactly one reasonable thing, and no step may carry more than that: a line that decides nothing is a gap, a function body the signature and tests already determine is a transcript. Fix both.
+**2. ステップの走査:** どのステップも、実装者が妥当な書き方をちょうど 1 つに決められるものでなければならず、それ以上のものを含んではいけません。何も決めない行は抜けであり、シグネチャとテストがすでに決めている関数の本体は書き写しです。両方を直してください。
 
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+**3. 型の一貫性:** 後のタスクで使った型、メソッドのシグネチャ、プロパティ名は、先のタスクで定義したものと一致していますか。Task 3 で `clearLayers()` と呼んでいる関数が Task 7 では `clearFullLayers()` になっていれば、それはバグです。
 
-**4. Review Focus:** For each input class or failure mode the spec implies, is there a task whose tests exercise it? The five uncovered ones most likely to bite a person go in the Review Focus section, and each line there gets its test added to the owning task. An empty section means you checked and found none, not that you skipped the check.
+**4. Review Focus:** 仕様書が暗に示している入力の種類や失敗モードのそれぞれについて、それをテストするタスクはありますか。カバーされていないもののうち、人に最も問題を起こしそうな 5 つを Review Focus セクションに書き、そこに書いた各行のテストを、担当するタスクに追加します。セクションが空なら、確認して該当するものがなかったという意味であり、確認を省略したという意味ではありません。
 
-**5. Proportion:** Compare the plan's length to the spec's. A plan several times longer than the spec it implements is a transcript of the program, not a plan. If code blocks are most of the document, replace bodies with signatures, test names and assertions, and check that each step is still unambiguous.
+**5. 分量のバランス:** 計画書の長さを仕様書の長さと比べます。実装する仕様書の数倍の長さがある計画書は、計画書ではなくプログラムの書き写しです。コードブロックが文書の大半を占めているなら、本体をシグネチャ、テスト名、アサーションに置き換え、各ステップがなお曖昧でないことを確認してください。
 
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+問題が見つかったら、その場で直します。再レビューは不要です。直して先に進んでください。計画書にタスクのない仕様の要件を見つけたら、タスクを追加します。
 
-## Execution Handoff
+## 実行方法の引き継ぎ
 
-After saving and self-reviewing the plan, link it for your human partner
-to read. If they have already explicitly supplied an execution method, ask
-them to review the plan and confirm it captures what they want; wait for that
-review before implementation, then use the preserved method. Otherwise, ask
-them to review the plan and choose an execution method before implementation.
+計画書を保存してセルフレビューを終えたら、人間のパートナーが読めるように
+計画書へのリンクを示します。実行方法がすでに明示的に指定されている場合は、
+計画書をレビューして、望んだ内容が反映されているか確認するよう依頼し、
+実装の前にそのレビューを待ってから、指定された方法を使います。そうでなければ、
+計画書をレビューし、実装の前に実行方法を選ぶよう依頼します。
 
-**When no execution method has already been supplied:**
+**実行方法がまだ指定されていない場合:**
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Please review the plan. Which execution approach would you prefer?**
+**「計画書が完成し、`docs/superpowers/plans/<filename>.md` に保存しました。計画書をレビューしてください。どちらの実行方法にしますか?**
 
-- **Subagent-driven** - A fresh subagent implements each task and a fresh reviewer checks it before the next one starts, then a whole-branch review at the end. Most thorough; costs a fresh context per task and per review.
-- **Native** - I implement every task myself in this session, the way this harness runs work, then one fresh reviewer on the most capable model checks the whole branch. Cheapest and fastest; no independent review until the end. Runs well with a mid-tier session model, since the plan carries the design.
+- **Subagent-driven** - タスクごとに新しい subagent が実装し、次のタスクが始まる前に新しいレビュアーがチェックします。最後にブランチ全体のレビューも行います。最も入念ですが、タスクごと、レビューごとに新しいコンテキストが必要です。
+- **Native** - このハーネスの標準的な作業の進め方で、すべてのタスクをこのセッションで私自身が実装し、その後、最も高性能なモデルの新しいレビュアー 1 人がブランチ全体をチェックします。最も安価で最速ですが、最後まで独立したレビューはありません。計画書が設計を担っているので、中位のセッションモデルでもうまく機能します。
 
-**For this plan I recommend <one of the two>, because <one sentence from the plan: how much the tasks depend on each other's interfaces, how many there are, what a shipped mistake would cost>. Does the plan capture what you want, and which approach should we use?"**
+**この計画書には <2 つのうちの 1 つ> をお勧めします。理由は <計画書に基づく 1 文: タスク同士がインターフェースにどれだけ依存しているか、タスクがいくつあるか、出荷されたミスのコストがどれだけか> です。計画書は望んだ内容を反映していますか。また、どちらの方法にしますか?」**
 
-**When an execution method has already been supplied:**
+**実行方法がすでに指定されている場合:**
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Please review the plan. Does it capture what you want?"**
+**「計画書が完成し、`docs/superpowers/plans/<filename>.md` に保存しました。計画書をレビューしてください。望んだ内容を反映していますか?」**
 
-**If Subagent-driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+**Subagent-driven が選ばれた場合:**
+- **必須サブスキル:** superpowers:subagent-driven-development を使います
 
-**If Native chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
+**Native が選ばれた場合:**
+- **必須サブスキル:** superpowers:executing-plans を使います

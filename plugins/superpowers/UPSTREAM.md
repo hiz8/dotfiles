@@ -128,6 +128,7 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 | review package | レビューパッケージ | |
 | ruling / Rulings I made | 裁定 / 自分が下した裁定 | 最終メッセージの見出し名はどのファイルでも「自分が下した裁定」にそろえる |
 | finding | 指摘 | |
+| Deferred minors / Declined to judge | 先送りした Minor / 判断を見送った事項 | 最終メッセージの見出し。重大度ラベル Critical / Important / Minor は英語のまま |
 | fix loop | 修正ループ | |
 | cap | 上限 | |
 | park | 保留する | ledger 行の `parked` はインラインコードのまま |
