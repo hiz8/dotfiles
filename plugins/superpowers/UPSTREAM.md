@@ -22,7 +22,11 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 - 内容を変えない。意味の追加・削除・言い換えによる改変をしない。訳しにくい箇所も
   省略や要約で済ませず、原文の条件・否定・列挙・例をすべて残す
 - MUST / NEVER / IMPORTANT 等の規範語は日本語でも同等の強さで表現する（下の「規範語」表）
-- 文体は常体（だ・である調）で簡潔に。指示は「〜する」「〜すること」「〜しなければならない」で書く
+- 文体は敬体（です・ます調）で簡潔に（2026-11-21 ユーザー決定で常体から変更）。説明は「〜します」「〜です」、
+  指示は「〜してください」、義務・禁止は「〜しなければなりません」「〜してはいけません」で書く。
+  敬体にしても指示を弱めない（依頼調の「〜していただけますか」「〜してもよいでしょう」などにしない）
+- 見出しと、文になっていない箇条書き（名詞句）は体言止めでよい。文で終わる箇条書き・表のセルは敬体にする。
+  プロンプト雛形などコードフェンス内で訳す地の文も敬体にする
 - subagent / worktree / TDD などの技術用語は英語のまま（下の「英語のまま使う用語」）
 - 「〜が効く」「〜が効かない」（「効い」「効か」「効け」を含む活用形すべて）を使わない。
   「〜に有効」「〜にうまく機能する」「〜にとって重要」などを文脈に応じて使う
@@ -59,6 +63,10 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 - スクリプトやツールの英語出力、外部の英語文書（エラーメッセージ・ログ・Anthropic のドキュメント等）を
   引用している箇所は、引用部分を英語のまま残す。必要なら直後に括弧で訳を添える
 - 全大文字による強調は、日本語では太字で表現してよい（原文が既に太字ならそのまま）
+- 引用されたユーザーの発話やエージェントの思考の例（"Let's build X"、"Fix this bug"、危険信号の表の
+  「考え」列、よくある自己正当化の表の「言い訳」列など）は訳して「」で囲む。英語の引用符 `"..."` は
+  「」に置き換える。これらの例文は敬体にそろえず、話し言葉のまま訳す（例: 「まず情報を集めよう」）。
+  その人がそう考える・言う言葉そのものを示すためで、地の文の敬体とは区別する
 - 段落内の改行位置は原文に合わせなくてよい。ただし文の途中では改行しない
 - frontmatter の `description` は YAML として妥当に保つ。原文が引用符で囲んでいれば囲みを維持する。
   半角の `: ` を含めるときは引用符で囲む
@@ -69,19 +77,24 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 
 | 英語 | 訳語 | 備考 |
 |------|------|------|
-| MUST / must | 〜しなければならない / 必ず〜する | 強調形（MUST, **must**）は「必ず〜しなければならない」 |
-| ABSOLUTELY MUST | 絶対に〜しなければならない | |
-| MUST NOT / NEVER / never | 決して〜してはならない / 〜してはならない | NEVER（全大文字）は「決して〜してはならない」 |
-| Don't / Do not（指示） | 〜しない / 〜してはならない | 箇条書きの禁止は「〜しない」、強調付きは「〜してはならない」 |
-| ALWAYS / always | 常に〜する | |
-| should / should not | 〜すべきだ / 〜すべきでない | must と区別する |
+| MUST / must | 〜しなければなりません / 必ず〜してください | 強調形（MUST, **must**）は「必ず〜しなければなりません」 |
+| ABSOLUTELY MUST | 絶対に〜しなければなりません | |
+| MUST NOT / NEVER / never | 決して〜してはいけません / 〜してはいけません | NEVER（全大文字）は「決して〜してはいけません」 |
+| Don't / Do not（指示） | 〜しないでください / 〜してはいけません | 基本は「〜しないでください」、強調付き（太字・全大文字）は「〜してはいけません」。下の注を参照 |
+| ALWAYS / always | 常に〜してください / 常に〜します | |
+| should / should not | 〜すべきです / 〜すべきではありません | must と区別する |
 | REQUIRED | 必須 | **REQUIRED SUB-SKILL:** → **必須サブスキル:**、**REQUIRED BACKGROUND:** → **必須の前提知識:** |
 | IMPORTANT: | 重要: | EXTREMELY IMPORTANT → 極めて重要 |
 | CRITICAL: | 最重要: | |
-| STOP | 止まれ | 「〜なら止まれ」。見出し「Red Flags - STOP」→「危険信号 - 止まれ」 |
-| No exceptions | 例外なし | |
-| This is not negotiable. | これは交渉の余地がない。 | |
-| Period. | 以上。 | 文末の念押し |
+| STOP | 止まってください | 「〜なら**止まってください**」。見出し「Red Flags - STOP」→「危険信号 - 止まってください」、「Red Flags - STOP and Start Over」→「危険信号 - 止まって最初からやり直してください」 |
+| No exceptions | 例外はありません / 例外なし | 見出し・ラベルでは「例外なし」 |
+| This is not negotiable. | これは交渉の余地がありません。 | |
+| Period. | 以上です。 | 文末の念押し |
+
+注: 箇条書きの Don't / Do not を「〜しない」のような短い言い方（体言止め・終止形）で訳してよいのは、
+直前の見出しやラベル（"NEVER:" "No exceptions:" "Don't:" など）から、その箇条書きが禁止の列挙だと
+明らかな場合に限る。それ以外は「〜しないでください」か「〜してはいけません」で訳す。「〜しません」は
+事実の記述と区別できないので、禁止の意味では使わない。
 
 ### 人・役割
 
@@ -120,16 +133,16 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 | park | 保留する | ledger 行の `parked` はインラインコードのまま |
 | self-review | セルフレビュー | |
 | handoff | 引き継ぎ | |
-| compaction | コンパクション | |
-| spike | スパイク | |
+| compaction | コンテキスト圧縮 | |
+| spike | 試作 | 強調が必要な箇所は「使い捨ての試作」 |
 | checklist / todo | チェックリスト / todo | todo は英語のまま（Claude Code のツール用語） |
 | brainstorm | ブレインストーミングする | |
 | evidence / claim | 証拠 / 主張 | |
 | root cause | 根本原因 | |
 | baseline | ベースライン | |
-| pressure scenario | プレッシャーシナリオ | |
+| pressure scenario | 圧力をかけるテストシナリオ | |
 | loophole | 抜け穴 | |
-| rationalize / rationalization | 自己正当化する / 自己正当化 | 「合理化」は使わない。You cannot rationalize your way out of this → 自己正当化して逃れることはできない |
+| rationalize / rationalization | 自己正当化する / 自己正当化 | 「合理化」は使わない。You cannot rationalize your way out of this → 自己正当化して逃れることはできません |
 | the letter / the spirit (of the rules) | （ルールの）文言 / 精神 | |
 | HARD-GATE | `<HARD-GATE>` タグはそのまま | タグの中身は訳し、強さを保つ |
 
@@ -151,7 +164,7 @@ todo, plan mode, commit・push・merge などの git 操作名はコード中で
 | Common Mistakes | よくある間違い |
 | Common Rationalizations | よくある自己正当化 |
 | Red Flags | 危険信号 |
-| Red Flags - STOP / Red Flags - STOP and Start Over | 危険信号 - 止まれ / 危険信号 - 止まってやり直せ |
+| Red Flags - STOP / Red Flags - STOP and Start Over | 危険信号 - 止まってください / 危険信号 - 止まって最初からやり直してください |
 | The Iron Law | 鉄則 |
 | Core principle | 基本原則 |
 | Real-World Impact | 実際の影響 |
