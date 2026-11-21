@@ -9,8 +9,8 @@
 支えられています:
 
 ```
-1. Every test names the break it catches
-2. Every test exercises the real thing
+1. すべてのテストは、自分が捕まえる破壊に名前を付ける
+2. すべてのテストは、実際のものを動かす
 ```
 
 厳格な TDD は、この両方を自然に生み出します。先に書いて、実際のコードに対して
@@ -62,17 +62,17 @@ expect(buildSearchQuery({ tag: 'urgent' })).toBe('tag:"urgent"');
 ### ゲート関数
 
 ```
-BEFORE writing the test body:
-  Name the production change that would make this test fail.
+テスト本体を書く前に:
+  このテストを失敗させるプロダクションコードの変更を挙げる。
 
-  Cannot name one            → redesign around an observable behavior
-  "The source text changed"  → run the artifact and assert its effects
-  Only intentional decisions → change detector; test the behavior
-                               that depends on the decision
+  挙げられない                → 観測できる振る舞いを軸に設計し直す
+  「ソースのテキストが変わった」 → 成果物を実行して、その効果をアサートする
+  意図的な決定だけ            → 変更検知テスト。その決定に依存する
+                               振る舞いをテストする
 
-  Confirm the expected value is derived without the code under test.
-  IF it reuses the code's logic or helpers:
-    Replace it with a literal or hand-checked fixture
+  期待値が、テスト対象のコードを使わずに導出されていることを確認する。
+  コードのロジックやヘルパーを再利用している場合:
+    リテラルまたは手作業で確認したフィクスチャに置き換える
 ```
 
 ## 原則 2: 実際のものを動かす
@@ -132,16 +132,17 @@ vi.mock('MCPServerManager');
 ### ゲート関数
 
 ```
-BEFORE adding a mock or test helper:
-  List the real method's side effects; keep the ones the test
-  depends on real — mock the slow/external level below them.
+モックやテストヘルパーを追加する前に:
+  実際のメソッドの副作用を挙げる。テストが依存するものは本物の
+  まま残す — それより下の、遅い/外部のレベルをモックする。
 
-  Mock responses mirror the complete real structure.
+  モックのレスポンスは、実際の構造全体を写す。
 
-  A method only tests call lives in test utilities, not production.
+  テストしか呼ばないメソッドは、プロダクションではなく
+  テストユーティリティに置く。
 
-  About to assert on the mock itself?
-    Unmock it or delete the assertion.
+  モックそのものにアサートしようとしている？
+    モックを外すか、アサーションを削除する。
 ```
 
 ## テストは実装と一緒に出荷する

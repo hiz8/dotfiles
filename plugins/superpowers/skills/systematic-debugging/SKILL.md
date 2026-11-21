@@ -14,7 +14,7 @@ description: バグ、テストの失敗、予期しない振る舞いに遭遇�
 ## 鉄則
 
 ```
-NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
+根本原因の調査が先にない限り、修正してはいけません
 ```
 
 フェーズ 1 を完了していなければ、修正を提案してはいけません。
@@ -73,15 +73,15 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 
    **修正を提案する前に、診断用の計装を追加してください:**
    ```
-   For EACH component boundary:
-     - Log what data enters component
-     - Log what data exits component
-     - Verify environment/config propagation
-     - Check state at each layer
+   コンポーネントの境界ごとに:
+     - コンポーネントに入るデータをログに出す
+     - コンポーネントから出るデータをログに出す
+     - 環境/設定が伝わっているか確認する
+     - 各層の状態を確認する
 
-   Run once to gather evidence showing WHERE it breaks
-   THEN analyze evidence to identify failing component
-   THEN investigate that specific component
+   1 回実行して、どこで壊れるかを示す証拠を集める
+   次に、証拠を分析して失敗しているコンポーネントを特定する
+   次に、その特定のコンポーネントを調査する
    ```
 
    **例（多層のシステム）:**

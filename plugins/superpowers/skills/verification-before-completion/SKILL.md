@@ -14,7 +14,7 @@ description: 作業が完了した、修正できた、テストが通ったと�
 ## 鉄則
 
 ```
-NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+新しい検証の証拠がない限り、完了を主張してはいけません
 ```
 
 このメッセージ内で検証コマンドを実行していなければ、通ったと主張してはいけません。
@@ -22,17 +22,17 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 ## ゲート関数
 
 ```
-BEFORE claiming any status or expressing satisfaction:
+どんな状態であれ、主張する前、または満足を表す前に:
 
-1. IDENTIFY: What command proves this claim?
-2. RUN: Execute the FULL command (fresh, complete)
-3. READ: Full output, check exit code, count failures
-4. VERIFY: Does output confirm the claim?
-   - If NO: State actual status with evidence
-   - If YES: State claim WITH evidence
-5. ONLY THEN: Make the claim
+1. 特定: どのコマンドがこの主張を証明するか？
+2. 実行: コマンドの全体を実行する（新しく、完全に）
+3. 読む: 出力の全体を読み、終了コードを確認し、失敗を数える
+4. 検証: 出力は主張を裏付けているか？
+   - いいえ: 実際の状態を、証拠とともに述べる
+   - はい: 主張を、証拠とともに述べる
+5. そこで初めて: 主張する
 
-Skip any step = lying, not verifying
+どの手順を飛ばしても、それは検証ではなく嘘です
 ```
 
 ## よくある失敗
@@ -75,32 +75,32 @@ Skip any step = lying, not verifying
 
 **テスト:**
 ```
-✅ [Run test command] [See: 34/34 pass] "All tests pass"
-❌ "Should pass now" / "Looks correct"
+✅ [テストコマンドを実行] [確認: 34/34 通過] 「全テスト通過」
+❌ 「もう通るはず」 / 「正しそうに見える」
 ```
 
 **リグレッションテスト（TDD の Red-Green）:**
 ```
-✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
-❌ "I've written a regression test" (without red-green verification)
+✅ 書く → 実行（通る） → 修正を戻す → 実行（必ず失敗しなければならない） → 修正を復元 → 実行（通る）
+❌ 「リグレッションテストを書いた」（red-green の検証なし）
 ```
 
 **ビルド:**
 ```
-✅ [Run build] [See: exit 0] "Build passes"
-❌ "Linter passed" (linter doesn't check compilation)
+✅ [ビルドを実行] [確認: 終了コード 0] 「ビルド成功」
+❌ 「リンターは通った」（リンターはコンパイルを確認しない）
 ```
 
 **要件:**
 ```
-✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
-❌ "Tests pass, phase complete"
+✅ 計画書を読み直す → チェックリストを作る → 各項目を検証する → 不足または完了を報告する
+❌ 「テストが通ったので、フェーズ完了」
 ```
 
 **エージェントへの委任:**
 ```
-✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
-❌ Trust agent report
+✅ エージェントが成功を報告 → VCS の diff を確認 → 変更を検証 → 実際の状態を報告
+❌ エージェントの報告を信用する
 ```
 
 ## 適用するとき

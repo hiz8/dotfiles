@@ -31,7 +31,7 @@ description: 機能の実装やバグ修正を行うときに、実装コード�
 ## 鉄則
 
 ```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+失敗するテストが先にない限り、プロダクションコードを書いてはいけません
 ```
 
 テストより先にコードを書きましたか？ 削除してください。最初からやり直してください。
@@ -315,8 +315,8 @@ PASS
 ## 最終ルール
 
 ```
-Production code → test exists and failed first
-Otherwise → not TDD
+プロダクションコード → テストが存在し、しかも先に失敗している
+そうでなければ → TDD ではない
 ```
 
 人間のパートナーの許可なく例外を設けてはいけません。
