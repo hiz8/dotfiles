@@ -1,57 +1,57 @@
 ---
 name: using-superpowers
-description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+description: あらゆる会話を始めるときに使う - スキルの見つけ方と使い方を定め、確認のための質問を含むいかなる応答よりも前にスキルを呼び出すことを必須とする
 ---
 
 <SUBAGENT-STOP>
-If you were dispatched as a subagent to execute a specific task, ignore this skill.
+特定のタスクを実行するために subagent としてディスパッチされたのであれば、このスキルは無視すること。
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+今やっていることにスキルが当てはまる可能性が 1% でもあると思うなら、絶対にそのスキルを呼び出さなければならない。
 
-IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+**タスクにスキルが当てはまるなら、選択の余地はない。必ずそのスキルを使わなければならない。**
 
-This is not negotiable. You cannot rationalize your way out of this.
+これは交渉の余地がない。自己正当化して逃れることはできない。
 </EXTREMELY-IMPORTANT>
 
-## The Rule
+## ルール
 
-**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+**関連するスキルや依頼されたスキルは、いかなる応答や行動よりも前に呼び出す** — 確認のための質問、コードベースの探索、ファイルの確認も含む。状況に合わないと分かったら、そのスキルを使う必要はない。
 
-**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+**plan mode に入る前に:** まだブレインストーミングしていなければ、先に brainstorming スキルを呼び出す。
 
-Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+その後「[purpose] のために [skill] を使う」と宣言し、スキルに正確に従う。スキルにチェックリストがあれば、項目ごとに todo を作る。
 
-## Skill Priority
+## スキルの優先順位
 
-When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+複数のスキルが当てはまるときは、プロセススキルを先に使う — プロセススキルが進め方を決め、その後に実装スキル（frontend-design など）がそれを実行する。brainstorming と systematic-debugging は Superpowers で最もよく使われるプロセススキルだが、このルールはどのプロセススキルにも当てはまる。
 
-- "Let's build X" → superpowers:brainstorming first, then implementation skills.
-- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+- 「X を作ろう」→ まず superpowers:brainstorming、次に実装スキル。
+- 「このバグを直して」→ まず superpowers:systematic-debugging、次にドメインスキル。
 
-## Red Flags
+## 危険信号
 
-These thoughts mean STOP—you're rationalizing:
+次のように考えたら**止まれ**。自己正当化している:
 
-| Thought | Reality |
-|---------|---------|
-| "This is just a simple question" | Questions are tasks. Check for skills. |
-| "I need more context first" | Skill check comes BEFORE clarifying questions. |
-| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
-| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
-| "Let me gather information first" | Skills tell you HOW to gather information. |
-| "This doesn't need a formal skill" | If a skill exists, use it. |
-| "I remember this skill" | Skills evolve. Read current version. |
-| "This doesn't count as a task" | Action = task. Check for skills. |
-| "The skill is overkill" | Simple things become complex. Use it. |
-| "I'll just do this one thing first" | Check BEFORE doing anything. |
-| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
-| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+| 考え | 現実 |
+|------|------|
+| 「これは単純な質問にすぎない」 | 質問もタスクだ。スキルを確認すること。 |
+| 「まずもっと文脈が必要だ」 | スキルの確認は、確認のための質問より**前**に行う。 |
+| 「まずコードベースを探索しよう」 | **どう**探索するかはスキルが教える。先に確認すること。 |
+| 「git やファイルならすぐ確認できる」 | ファイルには会話の文脈がない。スキルを確認すること。 |
+| 「まず情報を集めよう」 | **どう**情報を集めるかはスキルが教える。 |
+| 「これに正式なスキルは要らない」 | スキルが存在するなら、使うこと。 |
+| 「このスキルは覚えている」 | スキルは進化する。現在の版を読むこと。 |
+| 「これはタスクのうちに入らない」 | 行動 = タスク。スキルを確認すること。 |
+| 「このスキルは大げさだ」 | 単純なことも複雑になる。使うこと。 |
+| 「先にこれだけやっておこう」 | 何かをする**前**に確認すること。 |
+| 「生産的に進んでいる気がする」 | 規律のない行動は時間を無駄にする。スキルはそれを防ぐ。 |
+| 「それが何を意味するかは知っている」 | 概念を知っていること ≠ スキルを使うこと。呼び出すこと。 |
 
-## Platform Adaptation
+## プラットフォームへの適応
 
-If your harness appears here, read its reference file for special instructions:
+使っているハーネスが以下にあれば、特別な指示が書かれたそのリファレンスファイルを読むこと:
 
 - Claude Code: `references/claude-code-tools.md`
 - Codex: `references/codex-tools.md`
@@ -60,6 +60,6 @@ If your harness appears here, read its reference file for special instructions:
 - Hermes Agent: `references/hermes-tools.md`
 - Muse: `references/muse-tools.md`
 
-## User Instructions
+## ユーザーの指示
 
-User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+ユーザーの指示（CLAUDE.md、AGENTS.md、GEMINI.md など、および直接の依頼）はスキルより優先され、スキルはデフォルトの振る舞いより優先される。スキルのワークフローや指示を省略してよいのは、人間のパートナーが明示的にそう指示したときだけだ。

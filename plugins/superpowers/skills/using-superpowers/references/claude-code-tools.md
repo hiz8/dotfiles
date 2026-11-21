@@ -1,29 +1,11 @@
-# Claude Code Tool Notes
+# Claude Code ツールに関する注記
 
-Claude Code is the reference harness: skills speak its vocabulary
-(`Agent` for a subagent dispatch, todos, `Skill`). These notes cover the
-one place Claude Code can run a plan cheaper than the skills' default
-shape. It is opt-in by your human partner and changes nothing the skills
-require.
+Claude Code は基準となるハーネスである。スキルは Claude Code の用語（subagent のディスパッチには `Agent`、todo、`Skill`）で書かれている。この注記は、Claude Code がスキルのデフォルトの形より安く計画を実行できる唯一の場面を扱う。これは人間のパートナーが選んだときだけ使う（opt-in）もので、スキルが要求することは何も変えない。
 
-## Cheaper orchestration for subagent-driven development
+## subagent-driven-development のオーケストレーションを安くする
 
-The controller session is the most expensive seat in a
-superpowers:subagent-driven-development run: it reads every dispatch
-result and every report, and it usually runs on the session's most
-capable model. Claude Code supports nested subagents (three layers below
-the main conversation by default; `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`
-adjusts it), so the whole loop can run one layer down.
+superpowers:subagent-driven-development の実行で、コントローラーのセッションは最も高くつく席だ。すべてのディスパッチ結果とすべてのレポートを読み、通常はそのセッションで最も高性能なモデルで動く。Claude Code はネストした subagent をサポートしている（デフォルトではメインの会話から 3 階層下まで。`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` で調整できる）ので、ループ全体を 1 階層下で実行できる。
 
-When your human partner asks for it — or has said the session model is
-too expensive to spend on coordination — dispatch ONE orchestrator
-subagent on a mid-tier model with the plan path and the instruction to
-use superpowers:subagent-driven-development end to end. The orchestrator
-dispatches its own implementers and reviewers per that skill's Model
-Selection; the workspace and ledger live on disk, so nothing is lost to
-the extra layer. Its final message must carry the "Rulings I made" list
-verbatim — that list is how the decisions reach your human partner, and
-you relay it, not summarize it.
+人間のパートナーがそれを求めたとき — あるいは、セッションのモデルは調整作業に使うには高すぎると言ったとき — 中位のモデルで**1 つだけ**オーケストレーター subagent をディスパッチし、計画書のパスと、superpowers:subagent-driven-development を最初から最後まで使えという指示を渡す。オーケストレーターは、そのスキルの「モデル選択」に従って自分で実装者とレビュアーをディスパッチする。ワークスペースと ledger はディスク上にあるので、階層が 1 つ増えても何も失われない。オーケストレーターの最終メッセージには「自分が下した裁定」リストを一字一句そのまま含めなければならない — そのリストが判断を人間のパートナーに届ける手段であり、あなたはそれを要約せず、そのまま中継する。
 
-Do this only for a whole plan. Nesting a single task's dispatch buys
-nothing and adds a seat.
+これは計画全体に対してだけ行う。単一タスクのディスパッチをネストしても得るものはなく、席が 1 つ増えるだけだ。
