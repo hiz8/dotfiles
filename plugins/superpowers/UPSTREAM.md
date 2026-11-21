@@ -148,6 +148,7 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 | rationalize / rationalization | 自己正当化する / 自己正当化 | 「合理化」は使わない。You cannot rationalize your way out of this → 自己正当化して逃れることはできません |
 | the letter / the spirit (of the rules) | （ルールの）文言 / 精神 | |
 | HARD-GATE | `<HARD-GATE>` タグはそのまま | タグの中身は訳し、強さを保つ |
+| bundle / scrub / redaction / analyst / dimension / provenance | バンドル / スクラブ / リダクション / analyst / 観点 / 出所（provenance） | diagnosing-superpowers。analyst は英語のまま（analyst subagent）。provenance のラベル値（historical evidence 等）は英語のまま |
 
 ### 英語のまま使う用語
 

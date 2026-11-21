@@ -1,28 +1,16 @@
-Read `prompts/analyst-common.md` first; it gives your role, inputs,
-context-safety rules, and the return format. This file adds the dimension.
+`prompts/analyst-common.md` を最初に読んでください。あなたの役割、入力、context-safety のルール、返す形式が書かれています。このファイルは観点を追加します。
 
 Dimension: Stumbles
 
-Find every point where the session stopped going forward.
+セッションが前に進まなくなった箇所をすべて見つけてください。
 
-Sources, each using the case file's evidenced record meanings and extraction
-commands to locate line numbers:
-- tool results marked as errors, non-zero exits, or explicit failure records;
-- shell commands that failed (non-zero exit in the result, "command not
-  found", "No such file");
-- retries: the same tool call re-issued within the same turn after an
-  error;
-- reverted edits: an edit followed by an edit that restores the earlier
-  content, or `git checkout`/`git restore`/`git revert`/`git reset` on a
-  file the session touched;
-- backtracking in assistant text ("actually", "let me instead", "that was
-  wrong", "I misread");
-- human corrections: a human prompt that contradicts or corrects the
-  assistant's immediately preceding action;
-- permission denials, hook failures, API errors, rate limits, aborted turns,
-  and context overflow or compaction triggered mid-task.
+情報源。いずれも、case ファイルの証拠のあるレコードの意味と抽出コマンドを使って、行番号を特定します。
+- エラー、0 以外の終了コード、明示的な失敗レコードが付いた tool result
+- 失敗したシェルコマンド（result の 0 以外の終了、「command not found」、「No such file」）
+- リトライ: エラーの後、同じターン内で再発行された同じ tool call
+- 取り消された edit: 以前の内容に戻す edit が続いた edit、またはセッションが触れたファイルに対する `git checkout`/`git restore`/`git revert`/`git reset`
+- アシスタントのテキストでの後戻り（"actually"、"let me instead"、"that was wrong"、"I misread"）
+- 人間による訂正: アシスタントの直前の行動と矛盾する、またはそれを訂正する人間のプロンプト
+- 権限の拒否、hook の失敗、API エラー、レート制限、中断されたターン、作業の途中で発生したコンテキストのオーバーフローまたは compaction
 
-For each stumble report the line, the turn, what failed, and what happened
-next (recovered in the same turn / recovered later at line N / never
-recovered). Group identical repeated failures into one finding with a
-count.
+つまずきごとに、行、ターン、何が失敗したか、その後に何が起きたかを報告してください（同じターンで回復した / 後で行 N で回復した / 回復しなかった）。同一の失敗が繰り返された場合は、回数を添えて 1 つの指摘にまとめてください。

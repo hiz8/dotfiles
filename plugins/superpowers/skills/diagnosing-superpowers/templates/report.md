@@ -5,13 +5,11 @@ Written: <ISO timestamp>
 
 ## 1. Problem statement (REQUIRED)
 
-<Copied from the case file.>
+<case ファイルからコピーする。>
 
 ## 2. Triage verdict (REQUIRED)
 
-<What the evidence shows happened around the reported problem. Prose, with
-`path:line` after every claim. State confidence: high / medium / low, and
-what would raise it. No statement about what superpowers should do.>
+<報告された問題の前後で、証拠から何が起きたと言えるか。散文で書き、すべての主張の後に `path:line` を付ける。確信度を high / medium / low で述べ、何があればそれが上がるかも述べる。superpowers が何をすべきかについては述べない。>
 
 ## 3. Environment (REQUIRED)
 
@@ -23,35 +21,32 @@ what would raise it. No statement about what superpowers should do.>
 - Other plugins, extensions, MCP servers:
 - Instruction files present (paths only):
 
-Label every environment field and skill observation as historical evidence,
-unverified snapshot, current observation, or unknown, and record its
-supporting evidence location.
+すべての環境フィールドとスキルの観測に、historical evidence、unverified snapshot、current observation、unknown のいずれかのラベルを付け、裏付けとなる証拠の位置を記録します。
 
 ## 4. Sessions examined (REQUIRED)
 
 | Role | Session id | Absolute path | Lines | Bytes |
 |---|---|---|---|---|
 
-Rejected candidates: <id — path — why>, or "none".
+Rejected candidates: <id — path — 理由>、または "none"。
 
 ## 5. Timeline (REQUIRED)
 
-One row per human-typed prompt. Events column lists skills invoked,
-subagents dispatched, compaction, errors, resumes, aborts.
+人間が入力したプロンプトごとに 1 行。Events 列には、呼び出されたスキル、ディスパッチされた subagent、compaction、エラー、再開、中断を列挙します。
 
 | Turn | Line | Time | Request (one line) | Events |
 |---|---|---|---|---|
 
 ## 6. Findings (REQUIRED, one subsection per dimension)
 
-Each finding:
+各指摘:
 ```
-- finding: <one sentence>
-  evidence: <path:line> — "<short quote>"
+- finding: <1 文>
+  evidence: <path:line> — "<短い引用>"
   turns: <first>–<last>
   confidence: high | medium | low
 ```
-A dimension with nothing to report says `none found — checked: <what was checked>`.
+報告すべきことがない観点には `none found — checked: <確認したこと>` と書きます。
 
 ### 6.1 Skill timeline
 ### 6.2 Plan adherence
@@ -66,15 +61,14 @@ A dimension with nothing to report says `none found — checked: <what was check
 
 not indicated | possible | likely
 
-Evidence lines: <path:line list>. This section states involvement only. It
-does not name a defect and does not propose a change.
+Evidence lines: <path:line の一覧>。このセクションは関与の有無だけを述べます。欠陥を名指ししたり、変更を提案したりしてはいけません。
 
 ## 8. Coverage notes (REQUIRED)
 
-- Not read: <ranges, files, and why>
-- Harness features unavailable: <list or none>
+- Not read: <範囲、ファイル、その理由>
+- Harness features unavailable: <一覧、または none>
 - Session was in progress at read time: yes/no
-- For your human partner to double-check: <list or none>
+- For your human partner to double-check: <一覧、または none>
 
 ## 9. Similar sessions (only when requested)
 

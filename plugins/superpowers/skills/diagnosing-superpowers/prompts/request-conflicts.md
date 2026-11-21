@@ -1,20 +1,11 @@
-Read `prompts/analyst-common.md` first; it gives your role, inputs,
-context-safety rules, and the return format. This file adds the dimension.
+`prompts/analyst-common.md` を最初に読んでください。あなたの役割、入力、context-safety のルール、返す形式が書かれています。このファイルは観点を追加します。
 
 Dimension: Request conflicts
 
-1. List every human prompt with line and turn. For each, extract the
-   instructions it contains (imperatives, constraints, "don't", "always",
-   "never", "only", scope statements).
-2. Report:
-   - two human instructions that cannot both be followed (quote both, with
-     lines), and what the assistant did;
-   - a human instruction that conflicts with an instruction file loaded in
-     the session (CLAUDE.md, AGENTS.md, GEMINI.md, or the harness's
-     equivalent; paths are in the case file), quoting both;
-   - a human instruction to skip, ignore, or override a step, skill, or
-     rule, and what happened afterwards;
-   - an instruction the assistant asked to clarify and the answer, when the
-     answer changed scope.
-3. Do not judge whether your human partner was right. Report the conflict
-   and the assistant's resolution.
+1. すべての人間のプロンプトを、行とターンとともに挙げてください。それぞれについて、含まれる指示（命令、制約、「don't」「always」「never」「only」、範囲の指定）を抽出します。
+2. 次を報告してください。
+   - 両立できない 2 つの人間の指示（両方を行とともに引用し、アシスタントが何をしたかを述べる）
+   - セッションに読み込まれた instruction ファイル（CLAUDE.md、AGENTS.md、GEMINI.md、またはハーネスの同等のもの。パスは case ファイルにある）と矛盾する人間の指示（両方を引用する）
+   - ステップ、スキル、ルールをスキップ、無視、または上書きするという人間の指示と、その後に何が起きたか
+   - アシスタントが確認を求めた指示と、その答え（答えが範囲を変えた場合）
+3. 人間のパートナーが正しかったかどうかを判断してはいけません。矛盾と、アシスタントによる解決を報告してください。

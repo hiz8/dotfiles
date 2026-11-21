@@ -1,22 +1,14 @@
-# Context safety for session transcripts
+# セッションのトランスクリプトに対するコンテキストの安全
 
-One transcript record can exceed a megabyte or embed a whole history. Printing
-one whole record can overflow the context of the session doing the diagnosis.
-Every reader of a session file, controller or subagent, follows these rules for
-every file, every time.
+トランスクリプトの 1 レコードが 1 メガバイトを超えたり、履歴全体を埋め込んでいたりすることがあります。レコードを丸ごと 1 つ出力すると、診断を行っているセッションのコンテキストがあふれるおそれがあります。セッションファイルを読む者は、コントローラーでも subagent でも、すべてのファイルについて毎回、次のルールに従ってください。
 
-1. **Measure before reading.**
+1. **読む前に測る。**
 
    ```bash
    wc -lc "$F"
    awk '{ if (length($0) > 100000) print NR, length($0) }' "$F"   # long lines
    ```
 
-2. **Never `cat` or `grep` for content.** Get line numbers and counts
-   first (`grep -n … | cut -d: -f1`, `jq -r '.type' | sort | uniq -c`),
-   then small fields from specific lines (`sed -n Np | jq -c '{…}'` or
-   `| cut -c1-500`). Use the field-extraction commands established during
-   discovery for the source in front of you.
-3. **Narrow anything over 500 characters.** If a command returns more than
-   500 characters for one record, tighten the field or the slice.
-4. **Read-only.** Never modify, move, or delete a session file.
+2. **内容を `cat` や `grep` で取得してはいけません。** まず行番号と件数を取得し（`grep -n … | cut -d: -f1`、`jq -r '.type' | sort | uniq -c`）、次に特定の行から小さなフィールドを取り出します（`sed -n Np | jq -c '{…}'` または `| cut -c1-500`）。目の前のソースに対しては、discovery（特定）の段階で確立したフィールド抽出コマンドを使います。
+3. **500 文字を超えるものは絞る。** コマンドが 1 レコードについて 500 文字を超える出力を返すなら、フィールドかスライスを絞ってください。
+4. **読み取り専用。** セッションファイルを変更・移動・削除してはいけません。

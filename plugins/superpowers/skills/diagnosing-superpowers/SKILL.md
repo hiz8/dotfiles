@@ -1,120 +1,58 @@
 ---
 name: diagnosing-superpowers
-description: Use when a superpowers session went wrong and your human partner wants to know why — repeated work, ignored plans, stumbles, poor results, a skill that didn't fire, "it took too long", "why is it so expensive", "what is it doing" — or wants to build a bug report for the superpowers maintainers, for the current session or a past one identified by id or path, on any harness.
+description: superpowers のセッションがうまくいかなかった理由を人間のパートナーが知りたいとき（重複した作業、無視された計画、つまずき、質の低い結果、発動しなかったスキル、「時間がかかりすぎた」「なぜこんなに高いのか」「いま何をしているのか」など）、または superpowers のメンテナー向けにバグレポートを作りたいときに使います。現在のセッションでも、id やパスで指定した過去のセッションでも、どのハーネスでも対象にできます。
 ---
 
 # Diagnosing Superpowers
 
-## Overview
+## 概要
 
-Pin down with your human partner what went wrong in a session, read the
-transcripts on disk, and report what happened with evidence. You report;
-you do not diagnose superpowers. Whoever triages the bundle or the issue
-decides whether superpowers changes.
+セッションで何がうまくいかなかったのかを人間のパートナーと一緒に絞り込み、ディスク上のトランスクリプトを読み、何が起きたかを証拠付きで報告します。報告するのであって、superpowers を診断するのではありません。バンドルや issue をトリアージする人が、superpowers を変更するかどうかを決めます。
 
-**Core principle:** Every finding cites `path:line`. No citation, no
-finding. Every number comes from the transcript or from a command you ran,
-never from memory.
+**基本原則:** すべての指摘は `path:line` を引用します。引用がなければ、指摘ではありません。数値はすべてトランスクリプトまたは自分が実行したコマンドから得たものとし、記憶から書いてはいけません。
 
-## Workflow
+## ワークフロー
 
-Create a todo per step. Steps 5–7 run only on their stated condition.
+ステップごとに todo を作成してください。ステップ 5〜7 は、記載された条件を満たすときだけ実行します。
 
-1. **Problem intake.** Ask one question at a time until you can write a
-   statement naming the session(s), the turn range if known, what your
-   partner expected, what happened, and the observable they care about
-   (wall-clock, tokens, repeated actions, one specific action). "It took
-   too long" is a complaint, not a problem statement. Note whether the
-   goal is a superpowers bug report.
-2. **Locate.** Resolve each session to verified absolute filesystem paths using
-   `references/session-discovery.md`. Confirm a past session by quoting its
-   first prompt and timestamp, and list every candidate you rejected with the
-   reason, or "none". Enumerate subagent transcripts. Create
-   `~/.superpowers/diagnosing-superpowers/<session-id>/`, tell your
-   partner the path, and fill `templates/case.md` there, following its
-   provenance rules for environment and skill observations.
-3. **Triage.** Read the region around the reported problem yourself. Then
-   dispatch one analyst subagent per dimension in parallel, each given the
-   case file path, `prompts/analyst-common.md`, and one dimension file from
-   `prompts/`: `skill-timeline.md`,
-   `plan-adherence.md`, `repeated-work.md`, `stumbles.md`,
-   `quality-evidence.md`, `request-conflicts.md`, `cost-and-time.md`.
-   Split a dimension by turn range when the transcript is long. Discard
-   any returned finding without `path:line`.
-4. **Report.** Fill every section of `templates/report.md` in order, write
-   it to the workspace, show it, and give the path. Check what cited content
-   actually proves and preserve the supporting case; a symlink alias is not a
-   redundant copy.
-5. **GitHub issues** — when report §7 says possible or likely, or your
-   partner asks. Search open and closed issues for the symptoms per
-   `references/github-issues.md`. Show matches and suggest adding the
-   report to the closest. If none match, fill `templates/issue.md`, write
-   it to the workspace, show the exact text, and create the issue only
-   after approval. `gh` cannot attach files; if a bundle exists, give
-   your partner its path to attach in the browser.
-6. **Export** — only when your partner asks for a bundle; never build one
-   unprompted. If the intake goal was a bug report, say once that a
-   scrubbed bundle is available on request, then wait. Ask the redaction
-   level, stating what each includes: skeleton (no tool-result bodies),
-   evidence (bodies only for cited events), full. Build the bundle per
-   `templates/bundle-README.md`, dispatch `prompts/scrub.md`, then
-   `prompts/scrub-audit.md`, repeating both until the audit returns CLEAN.
-   Complete the bundle template's evidence check and reconciliation before
-   showing the final scrub log, file list, and privacy and evidence outcomes.
-   Archive (`zip -r` or `tar -czf`) only after approval. With the archive
-   path, state what it contains, point at the scrub log for replacements, and
-   say scrubbing can miss things: they must review every file before sharing.
-7. **Similar sessions** — when asked. Turn confirmed findings into a
-   signature, list candidates by mtime and size, find marker line numbers,
-   dispatch `prompts/similar-session.md` per candidate in parallel, and
-   append report §9.
+1. **問題の聞き取り。** セッション、判明していればターンの範囲、パートナーが期待していたこと、実際に起きたこと、パートナーが気にしている観測対象（実時間、トークン、繰り返された操作、特定の 1 つの操作）を示す記述を書けるようになるまで、1 回に 1 つずつ質問します。「時間がかかりすぎた」は不満であって、問題の記述ではありません。目的が superpowers のバグレポートかどうかを記録します。
+2. **特定。** `references/session-discovery.md` を使って、各セッションを検証済みの絶対ファイルシステムパスに解決します。過去のセッションは、最初のプロンプトとタイムスタンプを引用して確認します。却下した候補はすべて理由付きで列挙し、なければ「none」と書きます。subagent のトランスクリプトを列挙します。`~/.superpowers/diagnosing-superpowers/<session-id>/` を作成してそのパスをパートナーに伝え、そこで `templates/case.md` を埋めます。環境とスキルの観測については、case.md の出所（provenance）のルールに従います。
+3. **トリアージ。** 報告された問題の前後の範囲を自分で読みます。そのうえで、観点（dimension）ごとに analyst subagent を 1 つずつ並列にディスパッチします。それぞれに、case ファイルのパス、`prompts/analyst-common.md`、`prompts/` の観点ファイルを 1 つ渡します。観点ファイルは `skill-timeline.md`、`plan-adherence.md`、`repeated-work.md`、`stumbles.md`、`quality-evidence.md`、`request-conflicts.md`、`cost-and-time.md` です。トランスクリプトが長いときは、観点をターンの範囲で分割します。返ってきた指摘のうち `path:line` のないものは破棄します。
+4. **報告。** `templates/report.md` のすべてのセクションを順番に埋め、ワークスペースに書き出し、内容を表示して、パスを伝えます。引用した内容が実際に何を証明しているかを確認し、裏付けとなる case を保存します。symlink のエイリアスは冗長なコピーではありません。
+5. **GitHub issues** — レポートの §7 が possible または likely のとき、またはパートナーが求めたときに実行します。`references/github-issues.md` に従い、症状で open と closed の issue を検索します。一致したものを示し、最も近い issue にレポートを追加することを提案します。一致するものがなければ、`templates/issue.md` を埋めてワークスペースに書き出し、正確な文面を表示し、承認を得てからでなければ issue を作成しません。`gh` はファイルを添付できません。バンドルがある場合は、ブラウザで添付できるようにそのパスをパートナーに伝えます。
+6. **エクスポート** — パートナーがバンドルを求めたときだけ実行します。求められていないのにバンドルを作ってはいけません。聞き取りの目的がバグレポートだった場合は、スクラブ済みバンドルを依頼があれば作れることを 1 回だけ伝えて、待ちます。リダクションレベルをたずね、それぞれに何が含まれるかを示します。skeleton（tool result の本文なし）、evidence（引用したイベントの本文だけ）、full です。`templates/bundle-README.md` に従ってバンドルを作成し、`prompts/scrub.md` をディスパッチし、続いて `prompts/scrub-audit.md` をディスパッチします。監査が CLEAN を返すまで両方を繰り返します。最終的なスクラブログ、ファイル一覧、プライバシーと証拠の結果を示す前に、バンドルテンプレートの証拠チェックと整合確認を完了します。アーカイブ（`zip -r` または `tar -czf`）は、承認を得てからでなければ作成しません。アーカイブのパスを伝えるとき、含まれるものを説明し、置換内容についてはスクラブログを参照するよう案内し、スクラブは見落とすことがあるので共有する前にすべてのファイルを確認しなければならないと伝えます。
+7. **類似セッション** — 求められたときに実行します。確認済みの指摘をシグネチャにし、mtime とサイズで候補を列挙し、マーカーの行番号を見つけ、候補ごとに `prompts/similar-session.md` を並列にディスパッチして、レポートの §9 に追記します。
 
-## Quick reference
+## クイックリファレンス
 
-All seven analysts always run. This table says which region to read
-yourself in step 3 and which findings to lead with in the verdict.
+analyst 7 つは常にすべて実行します。この表は、ステップ 3 で自分でどの範囲を読むか、そして判定でどの指摘を先頭に置くかを示します。
 
-| Complaint | Read first, lead with |
+| 不満 | 最初に読む・先頭に置く |
 |---|---|
-| "It took too long" | cost-and-time, stumbles |
-| "Why did it do this extra work?" | repeated-work, plan-adherence |
-| "Why is it so expensive?" | cost-and-time |
-| "What the hell is it doing?" (still running) | skill-timeline; note in-progress in coverage |
-| "It ignored the plan" | plan-adherence, compaction lines first |
-| "Skill X never fired" | skill-timeline |
+| 「時間がかかりすぎた」 | cost-and-time、stumbles |
+| 「なぜ余計な作業をしたのか」 | repeated-work、plan-adherence |
+| 「なぜこんなに高いのか」 | cost-and-time |
+| 「一体何をしているんだ」（まだ実行中） | skill-timeline。カバレッジに実行中だったことを記載する |
+| 「計画を無視した」 | plan-adherence。まず compaction の行 |
+| 「スキル X が発動しなかった」 | skill-timeline |
 
-## Hard rules
+## 厳守するルール
 
-- **Context safety.** One transcript line can be a megabyte. Follow
-  `references/context-safety.md` on every session file, every time.
-- **Read-only.** Never modify, move, or delete a session file.
-- **Exact paths to subagents.** A subagent's "current session" is its
-  own. Pass absolute paths and ids.
-- **Human prompts only.** Hook output, system reminders, and tool results
-  are not your partner's words. In a subagent transcript, "user" is the
-  parent agent.
-- **No superpowers diagnosis.** Report §7 states involvement and stops.
-  Never name a defect in a skill or propose a change. Your partner
-  pressing for a fix does not waive this; point at the issue step and
-  mention that a bundle is available on request. No advice to your
-  partner either.
-- **Approval gates.** No archive before your partner has seen the scrub
-  log and file list. No issue or comment before they approve the exact
-  text, and none with a placeholder summary.
-- **Intake before analysis.** Nothing in steps 2–7 starts until your
-  partner has answered. If they are away, write the questions and stop.
-  A statement you reconstructed for them is not an answer. An
-  already-scoped request — one specific event, what is running now, or
-  the analysis to run — is itself the statement: answer it, then ask.
-  A whole-session "why" is a complaint.
+- **コンテキストの安全。** トランスクリプトの 1 行が 1 メガバイトになることがあります。すべてのセッションファイルに対して、毎回、`references/context-safety.md` に従ってください。
+- **読み取り専用。** セッションファイルを変更・移動・削除してはいけません。
+- **subagent には正確なパスを渡す。** subagent にとっての「現在のセッション」は、その subagent 自身のセッションです。絶対パスと id を渡してください。
+- **人間のプロンプトだけ。** hook の出力、システムリマインダー、tool result は、パートナーの言葉ではありません。subagent のトランスクリプトでは、「user」は親エージェントです。
+- **superpowers を診断しない。** レポートの §7 は関与の有無を述べるだけで止まります。スキルの欠陥を名指ししたり、変更を提案したりしてはいけません。パートナーが修正を求めても、この禁止は解除されません。issue のステップを示し、バンドルは依頼があれば作れると伝えてください。パートナーへの助言もしてはいけません。
+- **承認ゲート。** パートナーがスクラブログとファイル一覧を見るまでは、アーカイブを作成してはいけません。パートナーが正確な文面を承認するまでは、issue もコメントも投稿してはいけません。プレースホルダの要約が残ったままの投稿も禁止です。
+- **分析の前に聞き取り。** パートナーが答えるまで、ステップ 2〜7 は何も始めてはいけません。パートナーが不在なら、質問を書き出して止まってください。こちらで再構成した記述は、答えではありません。すでに範囲が決まっている依頼（特定の 1 つのイベント、いま実行中のもの、実行すべき分析）は、それ自体が記述です。その場合は答えてから質問します。セッション全体にわたる「なぜ」は不満です。
 
-## Red Flags
+## 危険信号
 
-| Thought | Reality |
+| 考え | 現実 |
 |---------|---------|
-| "The problem is obvious, skip intake" | The problem statement scopes everything. Ask. |
-| "They're away, so I'll reconstruct the statement" | You cannot reconstruct what they wanted. Write the questions and stop. |
-| "I'll sweep everything now and ask at the end" | An unscoped sweep spends their budget on the wrong question. Ask first. |
-| "They want a bug report, so I'll build the bundle now" | The bundle is their session data, packaged. Build it only when they ask for it. |
-| "Small, targeted edit, no restructuring needed" | Not your call, however small. Report the evidence; the triager decides. |
-| "The price per token is well known" | Numbers you did not compute from the transcript are invented. Cite or drop. |
+| 「問題は明らかだから、聞き取りは飛ばそう」 | 問題の記述がすべての範囲を決めます。質問してください。 |
+| 「パートナーは不在だから、記述を再構成しよう」 | パートナーが何を望んでいたかは再構成できません。質問を書き出して止まってください。 |
+| 「まず全部調べて、最後に質問しよう」 | 範囲を決めずに全体を調べると、見当違いの問いにパートナーの予算を使ってしまいます。先に質問してください。 |
+| 「バグレポートが欲しいのだから、いまバンドルを作ろう」 | バンドルは、パートナーのセッションデータをまとめたものです。パートナーが求めたときだけ作ってください。 |
+| 「小さな的を絞った修正で、構造の変更は要らない」 | どれだけ小さくても、あなたが決めることではありません。証拠を報告してください。決めるのはトリアージ担当者です。 |
+| 「トークン単価は周知の事実だ」 | トランスクリプトから計算していない数値は、でっち上げです。引用するか、捨ててください。 |

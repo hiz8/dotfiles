@@ -1,26 +1,11 @@
-Read `prompts/analyst-common.md` first; it gives your role, inputs,
-context-safety rules, and the return format. This file adds the dimension.
+`prompts/analyst-common.md` を最初に読んでください。あなたの役割、入力、context-safety のルール、返す形式が書かれています。このファイルは観点を追加します。
 
 Dimension: Quality evidence
 
-Judge the process against its own claims. This is not a code review; do
-not evaluate the code the session produced.
+プロセスを、プロセス自身の主張に照らして判断してください。これはコードレビューではありません。セッションが生成したコードを評価してはいけません。
 
-1. Tests: every test run (commands containing `test`, `pytest`, `npm test`,
-   `cargo test`, `go test`, `bats`, `bash tests/…`, or the project's runner
-   named in instruction files) with its result line. Report runs that
-   failed and what the assistant did next.
-2. Verification behind claims: find assistant text claiming done, fixed,
-   passing, verified, works, complete. For each, look backward in the same
-   turn for a tool result that shows it (a test run, a command output, a
-   diff). Report claims with no supporting result in that turn.
-3. Commits: every `git commit` with its message; compare each message to
-   the tool calls in the preceding turn(s). Report commits whose message
-   claims work that no tool call performed, and work performed that was
-   never committed when the agreed plan said it would be.
-4. Review feedback: where a reviewer (human or subagent) raised points,
-   find the response. Report points acknowledged but not acted on, and
-   points dismissed without a stated reason.
-5. Acceptance criteria: if the case file's problem statement or the
-   agreed plan states criteria, report each as met / not met /
-   not checked with the evidence line.
+1. テスト: テストの実行（コマンドに `test`、`pytest`、`npm test`、`cargo test`、`go test`、`bats`、`bash tests/…` が含まれるもの、または instruction ファイルに書かれたプロジェクトのランナー）をすべて、結果の行とともに挙げてください。失敗した実行と、その後にアシスタントが何をしたかを報告してください。
+2. 主張の裏付けとなる検証: アシスタントのテキストで、done（完了）、fixed（修正）、passing（成功）、verified（検証済み）、works（動作する）、complete（完了）を主張しているものを見つけてください。それぞれについて、同じターン内で遡り、それを示す tool result（テスト実行、コマンド出力、diff）を探します。そのターンに裏付けとなる result がない主張を報告してください。
+3. コミット: `git commit` をすべて、メッセージとともに挙げてください。各メッセージを、直前のターンの tool call と比較します。メッセージが主張しているのに、どの tool call も行っていない作業と、合意された計画ではコミットされるはずだったのに一度もコミットされていない、実行済みの作業を報告してください。
+4. レビューのフィードバック: レビュアー（人間または subagent）が指摘を挙げた箇所について、その対応を見つけてください。認めたが対応しなかった指摘と、理由を述べずに退けた指摘を報告してください。
+5. 受け入れ基準: case ファイルの問題の記述または合意された計画が基準を述べている場合は、それぞれを met / not met / not checked として、証拠の行とともに報告してください。

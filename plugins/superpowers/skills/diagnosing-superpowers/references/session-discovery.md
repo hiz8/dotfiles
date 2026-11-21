@@ -1,31 +1,13 @@
-# Discover the session history
+# セッション履歴の特定
 
-Resolve the session your human partner named using the tools and information
-available in this environment. Your knowledge can suggest where to look; verify
-the result against the actual history.
+人間のパートナーが指定したセッションを、この環境で利用できるツールと情報を使って特定します。自分の知識は探す場所の手がかりになりますが、結果は実際の履歴と照合して確かめてください。
 
-Use the harness's exposed session tools, configured storage, local help,
-documentation, or bounded filesystem inspection. Measure files before reading
-their content and follow context-safety.md. Inspect archives or indexes when the
-environment points to them. A supplied usable path does not need another search.
+ハーネスが公開しているセッションツール、設定済みのストレージ、ローカルのヘルプ、ドキュメント、または範囲を限定したファイルシステムの調査を使います。内容を読む前にファイルのサイズを測り、context-safety.md に従います。環境がアーカイブやインデックスを指している場合は、それらを調べます。使えるパスが与えられている場合は、改めて検索する必要はありません。
 
-Confirm identity using the available session id, working directory, timestamps,
-and matching conversation content. Recency alone is not confirmation. Distinguish
-the requested session from its children and unrelated candidates. Ask for a
-missing identifying fact when the available evidence cannot distinguish them.
+セッション id、作業ディレクトリ、タイムスタンプ、一致する会話内容で、同一性を確認します。新しいというだけでは確認になりません。要求されたセッションを、その子セッションや無関係な候補と区別します。手元の証拠では区別できないときは、足りない識別情報をたずねてください。
 
-For each filesystem source, obtain its full absolute path from the environment,
-with home-directory shorthand and variables expanded. Use that same path in the
-case record and in the discovery answer you give your human partner.
+ファイルシステム上の各ソースについて、環境から完全な絶対パスを取得します。ホームディレクトリの省略記法や変数は展開します。case の記録と、人間のパートナーに返す特定結果の回答には、同じパスを使います。
 
-Establish the record meanings needed for the requested investigation from
-observed records or documentation. Distinguish human messages from injected
-messages, tool results, and a parent agent's dispatch. Match tool calls to their
-results. Establish usage-counter semantics before calculating totals. Do not
-infer a format from another harness or turn a missing field into a zero.
+要求された調査に必要なレコードの意味を、観察したレコードまたはドキュメントから確立します。人間のメッセージを、注入されたメッセージ、tool result、親エージェントのディスパッチと区別します。tool call とその result を対応付けます。合計を計算する前に、使用量カウンタの意味を確立します。別のハーネスの形式から推測してはいけません。欠けているフィールドをゼロとして扱ってはいけません。
 
-Record the exact sources, relevant field meanings, supporting record locations,
-associated sessions, rejected plausible candidates, and unresolved information
-in the case file. Subsequent readers use that record rather than repeating
-discovery. If history is missing, inaccessible, or ambiguous, state the specific
-limitation and ask for the missing path, export, or identifying detail.
+正確なソース、関連するフィールドの意味、裏付けとなるレコードの位置、関連するセッション、却下したもっともらしい候補、未解決の情報を case ファイルに記録します。以降の読み手は、特定をやり直さずにこの記録を使います。履歴が欠けている、アクセスできない、または曖昧な場合は、具体的な制約を述べ、足りないパス、エクスポート、識別情報を求めてください。

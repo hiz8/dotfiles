@@ -1,17 +1,15 @@
 # GitHub issues
 
-Use `gh` when it is installed and authenticated; it handles auth, rate
-limits, and JSON. Fall back to the public API with curl, then to a URL
-your partner opens.
+`gh` がインストールされ認証済みであれば、`gh` を使います。認証、レート制限、JSON を処理してくれるためです。使えない場合は curl による公開 API に切り替え、それも使えない場合はパートナーが開く URL を渡します。
 
-## Search
+## 検索
 
 ```bash
 gh search issues --repo obra/superpowers --limit 10 "<terms>" \
   --json number,state,title --jq '.[] | "\(.number)\t\(.state)\t\(.title)"'
 ```
 
-Without `gh` (unauthenticated, 10 requests a minute):
+`gh` がない場合（未認証、1 分あたり 10 リクエスト）:
 
 ```bash
 curl -s -H "Accept: application/vnd.github+json" \
@@ -19,29 +17,23 @@ curl -s -H "Accept: application/vnd.github+json" \
   | jq -r '.items[] | "\(.number)\t\(.state)\t\(.title)"'
 ```
 
-Without curl, hand over `https://github.com/obra/superpowers/issues?q=<terms>`.
+curl もない場合は、`https://github.com/obra/superpowers/issues?q=<terms>` を渡します。
 
-## File
+## 作成
 
-Write the filled `templates/issue.md` to the workspace and show the exact
-text. After approval:
+埋め終えた `templates/issue.md` をワークスペースに書き出し、正確な文面を表示します。承認を得たら次を実行します。
 
 ```bash
 gh issue create --repo obra/superpowers --title "<title>" --body-file <path> \
   --label bug --label automated-issue-report
 ```
 
-GitHub drops labels silently when the reporter lacks push access, so the
-labels land only for collaborators; the template footer still marks the
-issue as skill-filed. `gh` cannot attach files: give your partner the
-bundle path to attach through the browser after the issue exists.
+報告者に push 権限がないと、GitHub はラベルを黙って捨てます。そのためラベルが付くのはコラボレーターだけです。それでも、テンプレートのフッターによって、スキルが作成した issue であることは分かります。`gh` はファイルを添付できません。issue が作成された後に、ブラウザで添付できるよう、バンドルのパスをパートナーに伝えます。
 
-Without `gh`, hand over a prefilled link on the `bug_report.md` template,
-which applies the `bug` label for any reporter:
+`gh` がない場合は、`bug_report.md` テンプレートであらかじめ内容を入力したリンクを渡します。このテンプレートは、どの報告者に対しても `bug` ラベルを付与します。
 
 ```
 https://github.com/obra/superpowers/issues/new?template=bug_report.md&title=<url-encoded title>&body=<url-encoded body>
 ```
 
-GitHub rejects URLs over about 8,000 characters; past that, send the link
-with the title only and tell your partner to paste the body from the file.
+GitHub は約 8,000 文字を超える URL を拒否します。それを超える場合は、タイトルだけを含むリンクを送り、本文はファイルから貼り付けるようパートナーに伝えます。

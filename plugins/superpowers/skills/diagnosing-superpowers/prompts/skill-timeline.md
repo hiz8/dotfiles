@@ -1,30 +1,16 @@
-Read `prompts/analyst-common.md` first; it gives your role, inputs,
-context-safety rules, and the return format. This file adds the dimension.
+`prompts/analyst-common.md` を最初に読んでください。あなたの役割、入力、context-safety のルール、返す形式が書かれています。このファイルは観点を追加します。
 
 Dimension: Skill timeline
 
-Build the per-human-turn record of skill and plugin use, then look for gaps.
+人間のターンごとに、スキルとプラグインの使用の記録を作り、抜けを探してください。
 
-1. List the human prompts with line numbers and timestamps.
-2. Using the skill-invocation and attribution meanings established in the case
-   file, list every explicit invocation, active-skill attribution, or read of a
-   file named `SKILL.md`. Record the line, the skill name, and the human turn it
-   happened in.
-3. List every non-superpowers plugin, skill, agent type, MCP server, or
-   hook used. Use only the evidenced tool, attribution, agent-dispatch, MCP,
-   and hook meanings recorded in the case file; identify values associated
-   with something other than `superpowers`.
-4. For each human turn, compare the request text against the trigger
-   descriptions of the superpowers skills installed (read
-   `<install root>/skills/*/SKILL.md` frontmatter `description` lines; the
-   install root is in the case file). Report as findings:
-   - a skill invoked, with the request that preceded it (one finding per
-     invocation is fine when there are few; group by skill when many);
-   - a turn whose request matches a skill's trigger description with no
-     invocation in that turn (state which description matched and quote
-     the request);
-   - a skill invoked one or more turns after the matching request (late);
-   - each non-superpowers plugin/skill/tool used, with where.
+1. 人間のプロンプトを、行番号とタイムスタンプとともに挙げてください。
+2. case ファイルで確立されたスキル呼び出しと帰属の意味を使い、明示的な呼び出し、アクティブなスキルへの帰属、`SKILL.md` という名前のファイルの読み込みをすべて挙げてください。行、スキル名、それが起きた人間のターンを記録します。
+3. superpowers 以外のプラグイン、スキル、エージェントタイプ、MCP サーバー、hook で、使われたものをすべて挙げてください。case ファイルに記録された、証拠のあるツール、帰属、エージェントのディスパッチ、MCP、hook の意味だけを使い、`superpowers` 以外のものに関連付けられた値を特定してください。
+4. 人間のターンごとに、リクエストのテキストを、インストールされている superpowers スキルのトリガー説明と比較します（`<install root>/skills/*/SKILL.md` の frontmatter の `description` 行を読みます。install root は case ファイルにあります）。次を指摘として報告してください。
+   - 呼び出されたスキルと、その前にあったリクエスト（呼び出しが少ない場合は 1 呼び出しにつき 1 つの指摘でよい。多い場合はスキルごとにまとめる）
+   - リクエストがスキルのトリガー説明に一致するのに、そのターンで呼び出しがないターン（どの説明が一致したかを述べ、リクエストを引用する）
+   - 一致するリクエストから 1 ターン以上遅れて呼び出されたスキル（遅延）
+   - 使われた superpowers 以外のプラグイン/スキル/ツールと、その場所
 
-Do not say whether a missed or late trigger was wrong. Report the match
-and the absence; the reader decides.
+見落とされたトリガーや遅れたトリガーが間違いだったかどうかは述べないでください。一致と不在を報告してください。判断するのは読み手です。

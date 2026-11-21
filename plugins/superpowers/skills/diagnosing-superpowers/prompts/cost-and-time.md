@@ -1,28 +1,12 @@
-Read `prompts/analyst-common.md` first; it gives your role, inputs,
-context-safety rules, and the return format. This file adds the dimension.
+`prompts/analyst-common.md` を最初に読んでください。あなたの役割、入力、context-safety のルール、返す形式が書かれています。このファイルは観点を追加します。
 
 Dimension: Cost and time
 
-Account for where tokens and wall-clock went.
+トークンと実時間がどこに使われたかを集計してください。
 
-1. Tokens. Use only the usage records and counter meanings established in the
-   case file. State whether each counter is incremental or cumulative before
-   calculating totals; difference cumulative observations without turning a
-   missing observation into zero. Report the five turns with the largest
-   supported totals and the supported totals per associated session.
-2. Wall-clock. Use the evidenced timestamp fields, event boundaries, and units
-   recorded in the case file. Report the five longest supported turns and any
-   gap longer than ten minutes between consecutive events (idle, waiting on an
-   associated session, or waiting on your human partner; say which only when
-   the records show it).
-3. Largest tool results: use the case file's evidenced tool-result records to
-   report the ten largest results with their tool and turn. Measure records
-   before extracting bounded content.
-4. Compactions: count and locate records whose meaning as compaction events was
-   established during discovery. Report available before/after counters and
-   what the session was doing when each fired; mark unsupported fields absent.
-5. Associated sessions: count them and report supported usage, duration, and
-   dispatching turn for each.
-6. Report the turns, subagents, tools, or repeats that dominate the
-   totals, with numbers. Do not speculate about why a
-   turn was expensive beyond what the transcript shows.
+1. トークン。case ファイルで確立された使用量レコードとカウンタの意味だけを使います。合計を計算する前に、各カウンタが増分か累積かを明記してください。累積値の観測は差分を取り、欠けている観測をゼロにしてはいけません。裏付けのある合計が最大の 5 ターンと、関連するセッションごとの裏付けのある合計を報告してください。
+2. 実時間。case ファイルに記録された、証拠のあるタイムスタンプのフィールド、イベントの境界、単位を使います。裏付けのある最長の 5 ターンと、連続するイベント間で 10 分を超えるギャップを報告してください（アイドル、関連するセッションの待機、人間のパートナーの待機のいずれかは、レコードが示しているときに限って明記します）。
+3. 最大の tool result: case ファイルの証拠のある tool-result レコードを使い、最大の 10 件をツールとターンとともに報告してください。範囲を限定した内容を抽出する前に、レコードのサイズを測ってください。
+4. compaction: 特定の段階で compaction イベントとしての意味が確立されたレコードを数え、位置を示してください。利用できる前後のカウンタと、それぞれが発生したときにセッションが何をしていたかを報告してください。裏付けのないフィールドは、存在しないものとして記載します。
+5. 関連するセッション: 数を数え、それぞれについて、裏付けのある使用量、所要時間、ディスパッチしたターンを報告してください。
+6. 合計を支配しているターン、subagent、ツール、繰り返しを、数値とともに報告してください。あるターンがなぜ高くついたかについて、トランスクリプトが示す以上の推測をしてはいけません。

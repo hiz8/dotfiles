@@ -4,17 +4,11 @@ Title: <skill or symptom>: <one-line observable> (<harness>)
 
 ## Who's filing this report? (required)
 
-<model and harness of this session>, filing on behalf of <how your
-partner wants to be named, or "my human partner">, who asked: "<their
-request from this session that led to the diagnosis or the issue,
-scrubbed>"
+<このセッションのモデルとハーネス>, filing on behalf of <パートナーが名乗りたい名前、または "my human partner">, who asked: "<診断または issue につながった、このセッションでのパートナーの依頼。スクラブ済みのもの>"
 
 ## Human-authored summary (required, under 200 words)
 
-<Your partner's own words on what went wrong and what should have
-happened, pasted as written. Ask for them; a placeholder here means the
-issue is not ready to file. If they run long, ask them to trim rather
-than editing their words.>
+<何がうまくいかなかったか、何が起きるべきだったかについての、パートナー自身の言葉を、書かれたとおりに貼り付ける。パートナーにたずねること。ここがプレースホルダのままなら、issue は提出できる状態ではない。長すぎる場合は、パートナーの言葉を編集せず、パートナーに短くするよう頼む。>
 
 ## Environment (required)
 
@@ -32,30 +26,27 @@ than editing their words.>
 - [ ] I confirmed this issue does not occur without Superpowers installed
 
 How I verified that this issue does not reproduce without Superpowers:
-<"Not tried", or what your partner ran without superpowers and what
-happened, with the transcript path if there is one. Tick the box above
-only when a transcript shows the problem did not recur.>
+<"Not tried"、または、パートナーが superpowers なしで何を実行して何が起きたか（トランスクリプトがあればそのパスも）。上のチェックボックスにチェックを入れるのは、問題が再発しなかったことをトランスクリプトが示している場合だけ。>
 
 Evidence for involvement is below; it does not establish cause.
 
 ## What happened?
 
-<Problem statement, then the triage verdict, with `path:line` citations
-rewritten as `transcript line <n>`.>
+<問題の記述、続けてトリアージの判定。`path:line` の引用は `transcript line <n>` に書き換える。>
 
 ## Steps to reproduce
 
-1. <first human prompt, scrubbed>
-2. <the turns leading to the problem, one line each>
-3. <the observable>
+1. <スクラブ済みの、最初の人間のプロンプト>
+2. <問題に至るまでのターン。1 ターン 1 行>
+3. <観測された事象>
 
 ## Expected behavior
 
-<from the problem statement>
+<問題の記述から>
 
 ## Actual behavior
 
-<from the triage verdict>
+<トリアージの判定から>
 
 ## Debug log or conversation transcript
 

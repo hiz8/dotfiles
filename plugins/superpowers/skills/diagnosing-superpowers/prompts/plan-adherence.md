@@ -1,29 +1,15 @@
-Read `prompts/analyst-common.md` first; it gives your role, inputs,
-context-safety rules, and the return format. This file adds the dimension.
+`prompts/analyst-common.md` を最初に読んでください。あなたの役割、入力、context-safety のルール、返す形式が書かれています。このファイルは観点を追加します。
 
 Dimension: Plan adherence
 
-Recover the plan the session agreed to, then map each plan step to what
-happened. "Plan" here means any agreed course of action, not git commits.
+セッションが合意した計画を復元し、計画の各ステップを実際に起きたことに対応付けてください。ここでの「計画」とは、合意された行動方針のことで、git のコミットではありません。
 
-1. Find the agreed plan: a design or plan agreed in chat (look for the
-   assistant text preceding a human "yes/ok/go ahead"), a spec or plan file
-   written during the session (tool calls that write under `docs/`,
-   `plans/`, `specs/`, or any file the human named), a todo-list record whose
-   meaning was established in the case file, or any numbered checklist in
-   assistant text. Quote each plan step with its `path:line`.
-2. Mark structural events between the plan and its execution: compaction
-   events identified during discovery, resumes, aborted turns, and associated
-   session dispatches. Note their line numbers; plan drift right after one of
-   these is a distinct finding.
-3. For each plan step, find the tool calls and assistant text that
-   executed it, or establish that none did. Report:
-   - steps skipped (no execution found; quote the plan step);
-   - steps executed out of order (line numbers show the order);
-   - steps silently changed (execution differs from the plan step in a
-     way the assistant never announced; quote both);
-   - steps invented (work done that no plan step covers);
-   - drift immediately after a structural event (cite the event line and
-     the first divergent action).
-4. If there is no recoverable plan, say so as the only finding, with
-   the lines you checked.
+1. 合意された計画を見つけます。チャットで合意した設計や計画（人間の「yes/ok/go ahead」の直前のアシスタントのテキストを探す）、セッション中に書かれた仕様書や計画書のファイル（`docs/`、`plans/`、`specs/` 配下、または人間が名指ししたファイルへの書き込みを行う tool call）、case ファイルで意味が確立された todo リストのレコード、アシスタントのテキスト中の番号付きチェックリストなどです。計画の各ステップを、`path:line` とともに引用してください。
+2. 計画とその実行の間にある構造的なイベントに印を付けます。特定の段階で識別された compaction イベント、再開、中断されたターン、関連するセッションのディスパッチです。それらの行番号を記録してください。これらの直後に起きた計画からの逸脱は、独立した指摘になります。
+3. 計画の各ステップについて、それを実行した tool call とアシスタントのテキストを見つけるか、実行したものがないことを確認します。次を報告してください。
+   - スキップされたステップ（実行が見つからないもの。計画のステップを引用する）
+   - 順序を入れ替えて実行されたステップ（行番号で順序が分かる）
+   - 黙って変更されたステップ（アシスタントが告知しないまま実行内容が計画のステップと異なるもの。両方を引用する）
+   - 作り出されたステップ（どの計画のステップにも含まれない作業）
+   - 構造的なイベントの直後の逸脱（イベントの行と、最初に逸脱した操作を引用する）
+4. 復元できる計画がない場合は、それだけを指摘として述べ、確認した行を添えてください。
