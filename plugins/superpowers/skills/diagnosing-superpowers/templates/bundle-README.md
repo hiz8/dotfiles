@@ -5,35 +5,51 @@ Harness: <name> <version> (<provenance label>)    Superpowers: <version> (<sha o
 Redaction level: skeleton | evidence | full
 Built: <ISO timestamp>
 
-ヘッダーのバージョンフィールドは、historical evidence、unverified snapshot、current observation、unknown のいずれかとして区別して記載します。`environment.json` は、すべての環境フィールドとその裏付けとなる位置について、同じ出所（provenance）の区別を持ちます。
+Qualify header version fields as historical evidence, unverified snapshot,
+current observation, or unknown. `environment.json` carries the same
+provenance distinctions for every environment field and its supporting
+location.
 
 ## What this is
 
-superpowers がインストールされた状態でうまくいかなかった、コーディングエージェントのセッションを、スクラブした記録です。その場にいなかったエージェントや人が、superpowers が影響したかどうか、影響したなら何を変えるべきかを判断できるようにします。同梱のレポートは、起きたことを `path:line` の証拠付きで述べています。設計上、superpowers の診断も修正案も含みません。それは読み手の仕事です。
+A scrubbed record of a coding-agent session that had superpowers installed
+and went wrong. It lets an agent or person who was not present decide
+whether superpowers contributed and, if so, what to change. The report
+inside states what happened with `path:line` evidence. By design it
+contains no diagnosis of superpowers and no proposed fix; that is the
+reader's job.
 
 ## Files
 
-- `report.md` — 診断レポート（問題の記述、判定、環境、セッション、タイムライン、指摘、関与、カバレッジノート）。
-- `case.md` — analyst が作業の元にした case ファイル。
-- `environment.json` — 環境セクションの機械可読コピー。
-- `timeline.md` — ターンごとのタイムライン。
-- `findings/<dimension>.md` — 観点ごとの analyst の生の指摘。
-- `transcripts/<session-id>.md` — 調査した各セッションをターンごとに圧縮した表現（生の JSONL は含まない）。レベルごとの tool result の本文:
+- `report.md` — the diagnosis report (problem statement, verdict,
+  environment, sessions, timeline, findings, involvement, coverage notes).
+- `case.md` — the case file the analysts worked from.
+- `environment.json` — machine-readable copy of the environment section.
+- `timeline.md` — the per-turn timeline.
+- `findings/<dimension>.md` — raw analyst findings per dimension.
+- `transcripts/<session-id>.md` — condensed per-turn rendering of each
+  examined session (never the raw JSONL). Tool-result bodies by level:
 
   | Level | Tool-result bodies |
   |---|---|
-  | skeleton | 意図的に制限する。`[tool result: <tool>, <bytes> bytes, exit <code>]` に置き換える |
-  | evidence | 引用したイベントについては残す。指摘の裏付けに必要なコマンドと結果を含む |
-  | full | すべて残す |
-- `scrub-log.md` — 使用したすべてのプレースホルダとそのカテゴリ（元の値は決して含まない）。
+  | skeleton | intentionally limited; replaced by `[tool result: <tool>, <bytes> bytes, exit <code>]` |
+  | evidence | kept for cited events, including the commands and results needed to support findings |
+  | full | all kept |
+- `scrub-log.md` — every placeholder used and its category (never the
+  original value).
 
 ## How to read it
 
-`report.md` の §1〜2 から読み始め、次に §7（関与）とそれが引用する証拠行、さらに `transcripts/` の該当するターンを読みます。`path:line` の参照は報告者のマシン上の元のファイルを指します。同じ行番号は、圧縮したトランスクリプトに `[L<n>]` マーカーとして保持されています。
+Start with `report.md` §1–2, then §7 (involvement) and the evidence lines
+it cites, then the matching turns in `transcripts/`. `path:line` references
+point at the original files on the reporter's machine; the same line
+numbers are preserved in the condensed transcripts as `[L<n>]` markers.
 
 ## Redaction
 
-プレースホルダは `<EMAIL-1>`、`<PERSON-2>`、`<SECRET-3>`、`<HOST-4>`、`<REPO-5>`、`<ORG-6>`、`<PROPRIETARY-7>` のような形をしています。ホームパスは `~/…` に書き換えられます。このバンドル内では、同じプレースホルダは常に同じ元の値を指します。
+Placeholders look like `<EMAIL-1>`, `<PERSON-2>`, `<SECRET-3>`, `<HOST-4>`,
+`<REPO-5>`, `<ORG-6>`, `<PROPRIETARY-7>`; home paths are rewritten to `~/…`. The same placeholder
+always refers to the same original value within this bundle.
 
 ## Producer instructions
 
