@@ -150,6 +150,28 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 | HARD-GATE | `<HARD-GATE>` タグはそのまま | タグの中身は訳し、強さを保つ |
 | bundle / scrub / redaction / analyst / dimension / provenance | バンドル / スクラブ / リダクション / analyst / 観点 / 出所（provenance） | diagnosing-superpowers。analyst は英語のまま（analyst subagent）。provenance のラベル値（historical evidence 等）は英語のまま |
 
+### 訳語の統一（スキル間で表記を揺らさない）
+
+| 英語 | 訳語 | 備考 |
+|------|------|------|
+| contract（完了・ディスパッチの取り決め） | 取り決め | completion contract → 完了の取り決め。報告の形を指すとき（report contract）は「報告の形式」。API・インターフェースの contract だけ「契約」 |
+| gate（名詞） | ゲート | 「関門」は使わない。動詞の gate は「どの指摘を修正の対象にするか決める」のように言い換える |
+| cost | コスト | 「費用」は使わない |
+| clean（レビュー・スキャンの結果） | クリーン | 「問題なし」は使わない。`CLEAN` ステータス語は英語のまま |
+| Narration / Continuous execution | ナレーション / 連続実行 | 「語り」「継続実行」は使わない |
+| pre-flight | プリフライトスキャン | 「事前の走査」「プリフライトレビュー」は使わない。`Pre-flight:` の ledger 行はインラインコードのまま |
+| produces / consumes | 生み出す / 使う | 「生成する」「消費する」は使わない |
+| secret decision | 密かに下した決定 | 「秘密裏に下された決定」は使わない |
+| self-review | セルフレビュー | 「自己レビュー」は使わない |
+| gitignored | git 管理対象外 | 「git 無視された」は使わない |
+| whole-branch review | ブランチ全体のレビュー | 「whole-branch レビュー」は使わない |
+| reasonable person | 常識的な人 | 「妥当な人」「合理的な人」は使わない。対象が明らかなら「常識的な利用者」でよい |
+| grade（動詞・名詞） | グレード / グレードを付ける | 「等級づけ」は使わない |
+| they（単数・人間のパートナー） | パートナー | 「彼ら」は使わない |
+| arbitrary（遅延・タイムアウト） | 決め打ちの | 「任意の」はオプションと誤読されるため使わない |
+| ask | 尋ねる | 「たずねる」は使わない |
+| seat / lens / phantom / breakage | 直訳しない | 文脈に応じて「役割」「どこに注意を向けるか」「把握も管理もできない状態」「壊れ方」などと言い換える |
+
 ### 英語のまま使う用語
 
 subagent, worktree, TDD, YAGNI, DRY, RED, GREEN, REFACTOR（Red-Green-Refactor も英語のまま）,
