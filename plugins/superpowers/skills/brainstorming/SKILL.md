@@ -1,316 +1,168 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, modifying behavior, or planning anything new, in software or out of it (a talk, a business, a renovation)."
+description: "創造的な作業の前には必ずこれを使わなければなりません - 機能の作成、コンポーネントの構築、機能の追加、振る舞いの変更、新しいことの計画のすべてが対象で、ソフトウェアの内外を問いません（講演、事業、改装なども含みます）。"
 ---
 
-# Brainstorming
+# ブレインストーミング
 
-You are very good at building. You build what you believe your human
-partner wants, and that belief is usually thinner than it feels. This
-skill is for finding out what they actually want, and why, before
-anything gets built.
+あなたは作ることがとても得意です。人間のパートナーが望んでいると信じるものを作りますが、その信念は感じているより薄いことが多いものです。このスキルは、何かを作る前に、相手が本当に何を望んでいるのか、そしてそれはなぜかを見つけるためのものです。
 
-People often haven't finished working out what they want. Good questions
-help them think it through. When you understand the why, you make the
-hundred decisions they never mention the way they would have made them.
+人は、自分が何を望んでいるのかを考え終えていないことがよくあります。よい質問は、考えを整理する助けになります。理由を理解すれば、相手が口にしない無数の判断を、相手ならそうしたであろう形で下せます。
 
-## First: What Do You Actually Know?
+## まず: 実際に何を知っているか
 
-Before you reply, ask yourself: what do I know about what they want, and
-why?
+返信する前に、自問してください。相手が何を望んでいるか、そしてなぜなのかについて、自分は何を知っているか。
 
-- **Everything that matters is in the request** ("make the icon cornflower
-  blue"). This is a quick, clear task. Do it, and say what you did.
-- **Something non-trivial is missing.** Start the conversation.
+- **重要なことがすべて依頼に含まれている**（「アイコンをコーンフラワーブルーにして」）。これは明確で手早いタスクです。実行し、何をしたかを伝えてください。
+- **重要な何かが欠けている。** 会話を始めてください。
 
-Before you start implementing, you must, in order:
+実装を始める前に、次を順に行わなければなりません。
 
-1. Lay out the approaches in a message of their own, and have your
-   human partner pick one (see Lay out the approaches).
-2. Write the design doc, short or full (see Size the Work).
-3. Get their approval of that doc.
-4. Invoke the superpowers:writing-plans skill.
+1. アプローチを単独のメッセージで並べ、人間のパートナーに 1 つ選んでもらいます（「アプローチを並べる」を参照）。
+2. 設計ドキュメントを書きます。短いものでも完全なものでも構いません（「作業の規模を見積もる」を参照）。
+3. そのドキュメントの承認を得ます。
+4. superpowers:writing-plans スキルを呼び出します。
 
-If nothing is open when you write your first message and there's one
-sensible way, steps 1 to 3 happen in that message (see Your First
-Message).
+最初のメッセージを書く時点で未解決のことが何もなく、妥当な方法が 1 つしかないなら、ステップ 1〜3 はそのメッセージの中で行います（「最初のメッセージ」を参照）。
 
-Two things aren't implementing: a spike they said yes to (see Spike to
-feel things out), and doing what they asked once they've opted out of
-the questions.
+実装に当たらないものが 2 つあります。相手が了承した試作（「試作で手応えを探る」を参照）と、相手が質問を省くことを選んだ後に、頼まれたことを行うことです。
 
-## Look Before You Ask
+## 質問する前に調べる
 
-In an existing project, or when they've given you context (a spec, a plan,
-a handoff, files they pointed at, earlier conversation), dig in before your
-first message. Read what they referred to and the code or material it
-connects to, and keep reading until you can explain how the relevant
-parts work today and what this change would touch. Never ask what the
-project or their context already answers, or reopen what they've
-already decided.
+既存のプロジェクトの中にいるとき、または相手が文脈（仕様書、計画書、引き継ぎ、示されたファイル、それまでの会話）を渡してくれているときは、最初のメッセージの前に掘り下げてください。参照されたものと、それにつながるコードや資料を読み、関連する部分が現在どう動いているか、そしてこの変更が何に触れるかを説明できるようになるまで読み続けます。プロジェクトや相手の文脈がすでに答えていることを尋ねてはいけません。相手がすでに決めたことを蒸し返してもいけません。
 
-## Your First Message
+## 最初のメッセージ
 
-Move the work forward, with one of these:
+次のいずれかで、作業を前に進めてください。
 
-- **They've already said what they want** (a spec, a plan, a detailed
-  request): aim for about 200 words for the whole message. Echo their
-  request back in your own words, so they can see whether you've got its
-  shape: what they want, who it's for, and why, as far as they've said.
-  Add what you found that bears on it: how the relevant parts work today
-  and what the change would touch. If you found something they may not
-  have considered that would change what they're asking for or how it
-  has to be built, like a constraint, a conflict, or a cheaper path, say
-  so plainly. How to build it comes later, once you understand what they
-  want (see Lay out the approaches). End with one line inviting
-  corrections. Then, if they haven't told you why they want it, even if
-  you can guess, ask about that: one open question in their own terms,
-  with nothing to pick from. If they have told you, and their request
-  and the project leave open something whose answer would change what
-  gets built, ask about the one that would change it most; when its
-  choices can be named, sketch each concretely, with what it trades off
-  and which you'd pick. If nothing like that is open, there's one
-  sensible way: end with the short design itself (the approach, a line on
-  why the others don't fit, and the design in a few lines) and ask them
-  to approve it. Their approval covers the approach and the design: write
-  the short design doc as approved and go on to the plan.
-  Specs are often incomplete, so confirm before you build on one.
-- **They haven't:** one open question, in their own terms, about the
-  biggest thing their request leaves unsettled. Say why you're asking:
-  what the answer would change about what you build. For "a website for
-  my bakery": "If it's mostly for people deciding whether to stop by,
-  I'd lead with hours and what's in the case today; taking orders is a
-  different site. What do you want someone to do when they land on it?"
+- **相手がすでに望むことを述べている**（仕様書、計画書、詳細な依頼）: メッセージ全体で 200 語程度を目安にします。相手の依頼を自分の言葉で言い返し、その全体像を捉えられているかを相手が確かめられるようにします。相手が述べた範囲で、何を望んでいるか、誰のためか、なぜかを含めてください。それに関わる調査結果を加えます。関連する部分が現在どう動いているか、変更が何に触れるかです。相手が依頼している内容や作り方を変えてしまうのに、相手が考えていないかもしれないこと（制約、衝突、より安価な道筋など）を見つけたら、率直に伝えてください。どう作るかは、相手の望みを理解してから扱います（「アプローチを並べる」を参照）。訂正を促す 1 行で締めます。そのうえで、なぜそれを望むのかを相手が話していなければ、推測できる場合でも、それについて尋ねます。相手自身の言葉で答えられる、選択肢のない自由回答の質問を 1 つ尋ねます。すでに話してくれていて、かつ依頼とプロジェクトが、答え次第で作るものが変わる点を未解決のまま残しているなら、最も大きく変わる点について尋ねます。選択肢に名前を付けられるなら、それぞれを具体的に描き、何とのトレードオフになるか、自分ならどれを選ぶかを添えます。そのような未解決の点がなく、妥当な方法が 1 つなら、短い設計そのもの（アプローチ、他が合わない理由の一言、数行の設計）で締めて、承認を求めます。承認はアプローチと設計の両方に及びます。短い設計ドキュメントを承認済みとして書き、計画に進みます。
+  仕様書は不完全なことが多いので、それを土台に作る前に確認してください。
+- **相手が述べていない:** 相手の依頼が最も大きく未解決のまま残している点について、相手自身の言葉で答えられる自由回答の質問を 1 つします。なぜ尋ねるのか、つまり答え次第で作るものの何が変わるのかを伝えてください。「パン屋のウェブサイト」なら、こうです。「主に、立ち寄るかどうかを決める人のためのものなら、営業時間と今日ケースに並んでいるものを最初に出します。注文を受けるのは別のサイトになります。サイトを開いた人に何をしてほしいですか。」
 
-How the message ends depends on whether their message asked for
-brainstorming:
+メッセージの締め方は、相手のメッセージがブレインストーミングを求めていたかどうかで決まります。
 
-- **They asked for it** (by name, by invoking it, or by asking for a
-  design discussion): end there. They want this conversation.
-- **They didn't:** they may not want a conversation at all. End with a
-  light, one-line offer to just get going instead, like
-  "Or if you'd rather I just dive in, say so." If they take you up on
-  it, this skill is done: state any significant how-it-gets-made choice
-  (platform, language, medium) in one plain line, then do what they
-  asked through the normal workflow.
+- **相手が求めた**（名指しで、呼び出して、または設計の議論を求めて）: そこで終えます。相手はこの会話を望んでいます。
+- **相手が求めていない:** そもそも会話を望んでいないかもしれません。代わりにすぐ取りかかる提案を、軽く 1 行で添えて締めます。たとえば「すぐに取りかかってほしければ、そう言ってください。」です。相手がその提案に乗ったら、このスキルはここで終わりです。作り方についての重要な選択（プラットフォーム、言語、媒体）を平易な 1 行で述べてから、通常のワークフローで頼まれたことを行ってください。
 
-That's the whole message.
+メッセージはこれがすべてです。
 
-## The Conversation
+## 会話
 
-Ask a question only when the answer would change what gets built and
-neither the request nor the project answers it. Otherwise, state your
-call and your reason as a proposal they can correct, and move the work
-forward. Process steps are always your calls: writing things up, where
-files go, looking further, how to show something. Do them and say so.
-Ask one at a time. Use plain language, pitched just a little above where
-your human partner is. Match their vocabulary; never use process jargon.
-You never need to quote this skill to your human partner.
+質問してよいのは、答え次第で作るものが変わり、かつ依頼もプロジェクトも答えていないときだけです。それ以外は、自分の判断とその理由を、相手が訂正できる提案として述べ、作業を前に進めてください。プロセスの手順は常に自分が判断することです。内容をまとめること、ファイルの置き場所、さらに調べること、何かをどう見せるかがそうです。それらを行い、行ったことを伝えてください。質問は 1 つずつします。平易な言葉で、人間のパートナーの水準より少しだけ上に合わせてください。相手の語彙に合わせ、プロセス用語は決して使わないでください。このスキルを人間のパートナーに引用する必要は一切ありません。
 
-Be clear and concise. Lead with what matters. Avoid jargon. When you
-report what you found, give them the most important findings and offer
-the rest.
+明快で簡潔にします。大事なことから述べてください。専門用語を避けます。調べたことを報告するときは、最も重要な発見を伝え、残りは求められれば出すと申し出てください。
 
-**Get them describing.** Until you know why they want it, ask open
-questions, with no example answers attached. Their own words carry
-intent that your options can't. Once you know why, when a decision has
-choices you can name, sketch each concretely, with what it trades off
-and which you'd pick. When they say "just guess" or "what do you think?",
-propose something concrete.
+**相手に描写してもらう。** なぜそれを望むのかが分かるまでは、例となる答えを添えない自由回答の質問をします。相手自身の言葉には、こちらの選択肢にはない意図が含まれています。理由が分かった後で、判断に名前を付けられる選択肢があるなら、それぞれを具体的に描き、何とのトレードオフになるか、自分ならどれを選ぶかを添えます。相手が「適当に決めて」や「どう思う?」と言ったら、具体的な案を示してください。
 
-**How it gets made.** Every project rests on choices about medium, tools,
-materials, and resources: the platform, programming language, and
-libraries for an app; the medium for a piece of art. Read from how they
-talk which of those choices they want to make. Someone who raises the how
-or asks about trade-offs wants the options with your pick. Someone who
-talks about outcomes is handing you the how: make those calls and state
-each in a line. When there's existing work, build on what it already
-uses. Any choice you make goes in the design as your call, never as
-something they agreed to.
+**どう作るか。** どのプロジェクトも、媒体、ツール、素材、資源についての選択の上に成り立っています。アプリならプラットフォーム、プログラミング言語、ライブラリで、美術作品なら媒体です。そのうちどれを自分で選びたいのかを、相手の話し方から読み取ってください。どう作るかを話題にする人やトレードオフを尋ねる人は、選択肢と自分の推しを求めています。成果について話す人は、どう作るかをこちらに任せています。その判断を自分で下し、それぞれを 1 行で述べてください。既存の成果物があるときは、すでに使われているものの上に作ります。自分が行った選択はどれも、設計の中に自分の判断として書きます。相手が同意したことにしてはいけません。
 
-**Ground to cover.** This is territory, not a script. Never read these
-out as questions:
+**扱う範囲。** これは範囲であり、台本ではありません。これらを質問として読み上げてはいけません。
 
-- what kind of thing this is, and what makes it special
-- why now, and what success looks like to them
-- goals, non-goals, and anti-goals (what would make this a failure even
-  if it technically works)
-- prior art: what they've seen elsewhere, loved or hated
-- current state: what exists now, what they've tried
-- the details they care about
+- これがどんな種類のものか、何が特別なのか
+- なぜ今なのか、相手にとって成功とはどういうものか
+- ゴール、ノンゴール、アンチゴール（技術的には動いても失敗になること）
+- 先行事例: 他で見たもので、気に入ったもの、嫌いだったもの
+- 現状: 今あるもの、試したこと
+- 相手が気にする細部
 
-**Make every question specific** to their project and what they've told
-you. Ask Socratically, the way a sharp colleague would: build each
-question on their last answer or on something you found, so it helps
-them think through a consequence or a case they may have missed
-("Voting closes before the meeting, and two members joined this month.
-Does someone who joins mid-round get a vote?"). When the reason isn't
-already plain, say what you're hoping to learn or what the answer would
-change. A proposal they can correct, plus your reason for it, often
-beats a question.
+**質問は相手のプロジェクトと、相手が話したことに即して具体的にする。** 鋭い同僚がするように、ソクラテス式に尋ねます。それぞれの質問を相手の直前の答えや自分が見つけたことの上に組み立て、相手が見落としているかもしれない帰結やケースを考える助けにしてください（「投票は会議の前に締め切られ、今月は 2 人のメンバーが加わりました。ラウンドの途中で加わった人には投票権がありますか?」）。理由がまだ明らかでないときは、何を知りたいのか、答え次第で何が変わるのかを伝えます。相手が訂正できる提案と、その理由のほうが、質問より優れていることがよくあります。
 
-**Do recon.** Once you have a bit of grounding and looking further
-would help, go look: deeper into their codebase or project, their own
-files and data, or the web. Say what you looked for and what you found.
+**下調べをする。** ある程度の土台ができ、さらに調べると役立つなら、調べに行ってください。相手のコードベースやプロジェクトの奥、相手自身のファイルやデータ、ウェブなどです。何を探したか、何を見つけたかを伝えてください。
 
-**Lay out the approaches.** Once you understand what they want, and
-before you write anything up, put the ways of building it in a message
-of its own. Come up with several real alternatives and drop the weak
-ones, including any that work against why they want it and any the
-existing work rules out. Sketch the two or three that remain concretely
-enough to picture, grounded in what the project actually does, with what
-each trades off. Recommend one and say why, then ask which way they want
-to go; if they've handed you the how, say you'll go with your pick
-instead. When there's genuinely one sensible way, say so in that
-message and explain why the others don't fit; the design comes in the
-next one. This is for how it gets built; for what they want, get them
-describing first.
+**アプローチを並べる。** 相手が何を望んでいるかを理解したら、何かを書きまとめる前に、作り方の選択肢を単独のメッセージにして出します。現実的な代替案をいくつか考え、弱いものは捨てます。相手がそれを望む理由に反するもの、既存の成果物によって除外されるものも捨てます。残った 2 つか 3 つを、思い描ける程度に具体的に、プロジェクトが実際にしていることに根ざして、それぞれが何とのトレードオフになるかとともに描きます。1 つを推奨して理由を述べ、どの方向で進めたいかを尋ねます。相手がどう作るかを任せてくれているなら、代わりに自分の選択で進めると伝えます。妥当な方法が本当に 1 つしかないときは、そのメッセージでそう述べ、他が合わない理由を説明します。設計は次のメッセージで出します。これは、どう作るかのためのものです。相手が何を望むかについては、まず相手に描写してもらってください。
 
-**Show, don't tell.** Whenever seeing would help more than reading,
-sketch it in text: a few lines of what they'd see. Offer the visual
-companion (below) when the look itself is theirs to decide:
+**見せる、語らない。** 読むより見たほうが役立つときはいつでも、テキストで描いてください。相手が目にするものを数行で示します。見た目そのものを相手が決めるべきときは、ビジュアルコンパニオン（後述）を提案します。
 
-- something they'll look at: a screen, a page, a printout, a sign
-- a layout or arrangement: of a screen, a room, a schedule
-- a flow or a sequence of steps
-- options that would look different from each other
-- a structure that's easier to see than read: a diagram, a timeline, a map
+- 相手が目にするもの: 画面、ページ、印刷物、看板
+- レイアウトや配置: 画面、部屋、スケジュールのもの
+- フローや一連のステップ
+- 互いに見た目が異なる選択肢
+- 読むより見たほうが分かりやすい構造: 図、タイムライン、地図
 
-Once they've accepted, use it for mockups to react to, side-by-side
-options, and throwaway prototypes they can click.
+相手が受け入れた後は、反応を見るためのモックアップ、並べて比べる選択肢、クリックできる使い捨てのプロトタイプに使います。
 
-**Spike to feel things out.** Agentic work is waterfall, but very, very
-fast. A quick throwaway build is often the cheapest way to learn what
-they want or whether something works. Offer one when it would help.
-When they just want to spike, get out of the way. Spikes get no tests
-or minimal ones, aren't bulletproof, and skip the plan, implementation,
-and review process. Bring what the spike taught you back into the
-conversation.
+**試作で手応えを探る。** エージェントの仕事はウォーターフォールですが、非常に、非常に高速です。手早く作る使い捨ての試作は、相手が何を望むのか、あるいは何かがうまくいくのかを知る、最も安価な方法であることがよくあります。役立つときは提案してください。相手がただ試作を望むなら、邪魔をしないでください。試作にはテストを付けないか、最小限にとどめ、堅牢にはせず、計画、実装、レビューのプロセスは省きます。試作で学んだことを会話に持ち帰ってください。
 
-## Play It Back
+## 言い返して確認する
 
-Play back as you go. As soon as you understand one part well enough to
-describe it (what it's for and who it serves, say, or how one piece
-behaves), describe that part back in about 200-300 words, then return to
-questions about the next part. Playback and questions alternate through
-the whole conversation; the last chunk covers whatever is left.
+進めながら言い返してください。ある部分を、それが何のためで誰に役立つか、あるいは 1 つの要素がどう振る舞うかのように、説明できるほど十分に理解したらすぐに、その部分を 200〜300 語程度で相手に言い返し、それから次の部分についての質問に戻ります。言い返しと質問は、会話全体を通じて交互に行います。最後のまとまりは、残りのすべてを扱います。
 
-Only what they said goes in as theirs. Anything you filled in goes in
-as your proposal, with your reason. End each chunk by asking what's wrong
-or missing.
+相手が言ったことだけを、相手のものとして入れてください。自分が補ったものは、理由とともに自分の提案として入れます。各まとまりは、何が違うか、何が足りないかを尋ねて締めます。
 
-Before you send a chunk, check it: does it describe something they'll
-look at, like a page, a screen, a schedule, or a printout? If so, put a
-text sketch next to the description. If the look itself is theirs to
-decide and they haven't seen the visual companion offer yet, send the
-offer instead (its own message, below) and hold the chunk for the next
-message. Once they've accepted, put a mockup next to the description.
+まとまりを送る前に確認してください。ページ、画面、スケジュール、印刷物のような、相手が目にするものを説明していないか。そうなら、説明の隣にテキストのスケッチを置きます。見た目そのものを相手が決めるべきで、まだビジュアルコンパニオンの提案を見ていないなら、代わりにその提案を送り（単独のメッセージ、後述）、そのまとまりは次のメッセージまで保留します。相手が受け入れた後は、説明の隣にモックアップを置きます。
 
-## Size the Work
+## 作業の規模を見積もる
 
-Once you understand what they want and they've picked an approach, say
-how big the work is in plain words. They can override it.
+相手が何を望むかを理解し、相手がアプローチを選んだら、作業の大きさを平易な言葉で伝えてください。相手はそれを上書きできます。
 
-| Size | The design doc |
+| 規模 | 設計ドキュメント |
 |------|----------------|
-| A small change | a short one: what you already covered together, written down |
-| A project | the full written design (below) |
+| 小さな変更 | 短いもの: すでに一緒に扱ったことを書き留めたもの |
+| プロジェクト | 完全な文書化された設計（後述） |
 
-Short or full, the design doc has an **Approaches** part: the two or
-three ways you considered building it, what each trades off, which one
-they picked, and why. They pick in the conversation, before you write
-the doc.
+短くても完全でも、設計ドキュメントには**アプローチ**の項があります。作り方として検討した 2 つか 3 つの方法、それぞれが何とのトレードオフになるか、相手がどれを選んだか、そしてその理由です。相手は、ドキュメントを書く前に、会話の中で選びます。
 
-If it grows mid-task, stop, say so, and step up a size.
+作業中に大きくなったら、止まって、そう伝え、規模を 1 段階上げてください。
 
-If this is really several independent projects, say so, agree on an
-order, and brainstorm them one at a time.
+実際には複数の独立したプロジェクトなら、そう伝えて順序に合意し、1 つずつブレインストーミングします。
 
-## The Written Design
+## 文書化された設計
 
-Write a plain document a talented builder in the domain could plan
-from without going back to your human partner. Cover:
+その分野の腕のよいビルダーが、人間のパートナーに戻らずに計画を立てられる、平易なドキュメントを書いてください。次を含めます。
 
-- intent and the why
-- goals, non-goals, anti-goals
-- constraints
-- approaches (above)
-- the parts of the how they decided, as they decided them
-- what's left to the builder
+- 意図と、その理由
+- ゴール、ノンゴール、アンチゴール
+- 制約
+- アプローチ（前述）
+- どう作るかのうち、相手が決めた部分を、相手が決めたとおりに
+- ビルダーに任せるもの
 
-For a small change, the short design covers the same points in a line
-or two each and goes straight to your human partner, without the
-builder check.
+小さな変更では、短い設計が同じ点を各 1〜2 行で扱い、ビルダーチェックなしで、そのまま人間のパートナーに渡します。
 
-**Where it goes:** in a software repo,
-`docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`, committed.
-Otherwise, pick a sensible place and say where. Your human partner's
-preferences override both.
+**置き場所:** ソフトウェアのリポジトリでは `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` で、コミットします。それ以外では、妥当な場所を選び、どこかを伝えてください。人間のパートナーの好みは、どちらよりも優先されます。
 
-**Builder check** (for a project): dispatch a fresh subagent with
-`builder-check-prompt.md` in this directory. When you tell your human
-partner you're writing it up, say a reviewer will read it first and you
-may come back once with a few questions. Don't hand over the document
-until the check is back. Sort what the builder asks into three piles:
+**ビルダーチェック**（プロジェクトの場合）: このディレクトリの `builder-check-prompt.md` を使って、新しい subagent をディスパッチします。人間のパートナーに書いていることを伝えるときは、レビュアーが先に読むこと、そして数個の質問で一度戻ってくるかもしれないことを伝えてください。チェックが返ってくるまで、ドキュメントを渡してはいけません。ビルダーの質問を 3 つの山に仕分けます。
 
-- **Answered already** by the conversation or the project: put the answer
-  in the document.
-- **Minor:** a sensible builder could settle it without changing what gets
-  built. Settle it yourself and mark it in the document as your call.
-- **Theirs:** only your human partner can answer it, and the answer changes
-  what gets built.
+- **すでに答えがある:** 会話やプロジェクトに答えがあるもの。答えをドキュメントに入れます。
+- **軽微:** 分別のあるビルダーなら、作るものを変えずに決められるもの。自分で決め、ドキュメントに自分の判断として記します。
+- **相手のもの:** 人間のパートナーだけが答えられ、その答え次第で作るものが変わるもの。
 
-Bring the "theirs" pile in one message, most important first. Update the
-document with their answers, then hand it over with a short list of the
-calls you made so they can check those while reading. That's the only
-round of questions the check produces. Without a subagent tool, read the
-document as that builder yourself.
+「相手のもの」の山は、重要なものから順に 1 つのメッセージにまとめて持ち出します。相手の答えでドキュメントを更新し、それから、読みながら確認できるように、自分が下した判断の短い一覧を添えて渡します。これが、チェックによって生じる唯一の質問の機会です。subagent ツールがないときは、自分でそのビルダーとしてドキュメントを読んでください。
 
 <HARD-GATE>
-Nothing gets built until your human partner approves the design doc:
-the short one for a small change, the full one for a project.
-Building includes writing product code, scaffolding, installing
-dependencies, creating projects, and invoking an implementation skill.
-Reading and exploring are fine.
+人間のパートナーが設計ドキュメントを承認するまで、何も作ってはいけません。
+小さな変更なら短いもの、プロジェクトなら完全なものです。
+作ることには、プロダクトコードを書くこと、足場作り、依存関係のインストール、プロジェクトの作成、実装スキルの呼び出しが含まれます。
+読むことと探索することは構いません。
 
-Two exceptions. If they opted out of the questions, the skill is done
-and the gate goes with it. A spike they said yes to may be built; it
-stays labeled throwaway, and keeping what it produced is a new request
-that comes back through this gate.
+例外は 2 つです。相手が質問を省くことを選んだなら、このスキルは終わりで、ゲートもなくなります。
+相手が了承した試作は作ってよいですが、使い捨てのままラベルを付けておきます。
+その成果物を残すのは新しい依頼であり、このゲートを通り直します。
 
-After the design doc is approved, the next step is the plan: invoke
-superpowers:writing-plans and no other skill.
+設計ドキュメントが承認された後の次のステップは計画です。superpowers:writing-plans を呼び出し、他のスキルは呼び出さないでください。
 </HARD-GATE>
 
-## Red Flags
+## 危険信号
 
-| Thought | Reality |
-|---------|---------|
-| "I'll offer a menu of what they might want" | Options steer. Ask them to describe it first. |
-| "I'll fill in sensible defaults" | Good. Say them out loud. A default they never heard is one they couldn't reject. |
-| "I've answered their questions, so I'll write the doc" | Lay out the approaches first, in a message of their own (or, when nothing was open from the start, in your first message's short design). |
-| "I should explain the process first" | Ask your question. The process shows itself. |
-| "They said 'sounds good' to the idea" | Approval covers what you showed them. A design doc you haven't written isn't approved. |
-| "The spike works, I'll keep building on it" | Keeping it is a new request. Back through the gate. |
+| 考え | 現実 |
+|------|------|
+| 「相手が望みそうなものの選択肢を並べよう」 | 選択肢は誘導します。まず、相手に描写してもらってください。 |
+| 「妥当なデフォルトは自分で埋めよう」 | それでよいのです。声に出して伝えてください。相手が聞いていないデフォルトは、相手が却下できなかったものです。 |
+| 「質問には答えたから、ドキュメントを書こう」 | 先に、単独のメッセージでアプローチを並べてください（最初から未解決のことが何もなかったなら、最初のメッセージの短い設計の中で）。 |
+| 「先にプロセスを説明すべきだ」 | 質問してください。プロセスは自然に見えてきます。 |
+| 「相手は案に『いいね』と言った」 | 承認は、見せたものにしか及びません。書いていない設計ドキュメントは承認されていません。 |
+| 「試作がうまくいったから、このまま作り続けよう」 | 残すのは新しい依頼です。ゲートを通り直してください。 |
 
-## Visual Companion
+## ビジュアルコンパニオン
 
-A browser tab for showing mockups, diagrams, and prototypes. It's a
-tool, not a mode: accepting it doesn't send every question to the
-browser.
+モックアップ、図、プロトタイプを見せるためのブラウザタブです。これはツールであって、モードではありません。受け入れても、すべての質問がブラウザに移るわけではありません。
 
-**Offer it just-in-time.** Offer it the first time one of the moments
-above comes up, never upfront. The offer is its own message with nothing
-else in it:
+**ちょうどよいときに提案する。** 上記の場面のいずれかが初めて出てきたときに提案します。最初から提案してはいけません。提案は、ほかに何も入れない単独のメッセージにします。
 
-> "This might be easier if I show you. Want me to open a browser tab with some mockups?"
+> 「見せたほうが分かりやすいかもしれません。モックアップをいくつか載せたブラウザタブを開きましょうか?」
 
-If they decline, stay in text and don't offer again unless they raise it.
+相手が断ったら、テキストのままにし、相手が持ち出さない限り再び提案しないでください。
 
-**Per question, ask: would they understand this better by seeing it?**
-Mockups, layouts, diagrams, and side-by-side designs go in the browser.
-Requirements, scope, tradeoffs, and conceptual choices stay in text. A
-question about a UI topic isn't automatically a visual question.
+**質問ごとに自問する: 見たほうが相手はよく理解できるか?** モックアップ、レイアウト、図、並べた設計はブラウザに出します。要件、スコープ、トレードオフ、概念的な選択はテキストのままにします。UI の話題についての質問が、自動的に視覚的な質問になるわけではありません。
 
-If they accept, read `visual-companion.md` in this directory before
-starting the server.
+相手が受け入れたら、サーバーを起動する前に、このディレクトリの `visual-companion.md` を読んでください。
