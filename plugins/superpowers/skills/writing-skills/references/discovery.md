@@ -1,6 +1,6 @@
 # 発見されやすい SKILL.md の書き方
 
-superpowers:writing-skills の一部です。SKILL.md のテンプレートと、エージェントがスキルを見つけて読むように、スキルに名前を付け、説明し、サイズを決める方法を扱います。
+superpowers:writing-skills の一部です。SKILL.md のテンプレートと、エージェントがスキルを見つけて読むように、スキルの名前・説明（description）・サイズの決め方を扱います。
 
 ## SKILL.md の構造
 
@@ -177,13 +177,13 @@ wc -w skills/path/SKILL.md
 # Other frequently-loaded: aim for <200 total
 ```
 
-**自分が何をするか、または核心の洞察で名付ける:**
+**そのスキルで何をするか、または核心となる洞察で名付ける:**
 - ✅ `condition-based-waiting` > `async-test-helpers`
 - ✅ `using-skills`（`skill-usage` ではなく）
 - ✅ `flatten-with-flags` > `data-structure-refactoring`
 - ✅ `root-cause-tracing` > `debugging-techniques`
 
-**動名詞（-ing）はプロセスにうまく機能します:**
+**プロセスの命名には動名詞（-ing）が適しています:**
 - `creating-skills`、`testing-skills`、`debugging-with-logs`
 - 能動的で、あなたが取る行動を表す
 

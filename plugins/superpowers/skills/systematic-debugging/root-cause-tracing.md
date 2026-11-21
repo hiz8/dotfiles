@@ -138,11 +138,11 @@ digraph principle {
     "発生源で直す" [shape=box];
     "各層に検証を追加する" [shape=box];
     "バグは不可能になった" [shape=doublecircle];
-    "症状だけを直しては決していけない" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+    "決して症状だけを直してはいけない" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
 
     "直接の原因を見つけた" -> "1 段上へたどれる？";
     "1 段上へたどれる？" -> "後ろ向きにたどる" [label="はい"];
-    "1 段上へたどれる？" -> "症状だけを直しては決していけない" [label="いいえ"];
+    "1 段上へたどれる？" -> "決して症状だけを直してはいけない" [label="いいえ"];
     "後ろ向きにたどる" -> "これが発生源か？";
     "これが発生源か？" -> "後ろ向きにたどる" [label="いいえ - さらに続く"];
     "これが発生源か？" -> "発生源で直す" [label="はい"];
