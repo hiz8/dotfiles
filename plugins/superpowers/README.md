@@ -41,6 +41,8 @@ claude plugin list                                           # hiz-dotfiles 版�
 
 3. Claude Code を再起動する（`update` は再起動で適用されます）
 
+この更新手順は `--help` の出力から導いたもので、実機ではまだ実行していません。
+
 ## GitHub Copilot CLI（未検証）
 
 実機では試していません。反映されるのは push 済みの内容のみです。
@@ -62,14 +64,15 @@ devin plugins install hiz8/dotfiles#plugins/superpowers
 devin plugins update superpowers
 ```
 
-Devin はルート直下の `hooks.json` しか読まないため、SessionStart フックによる
-`using-superpowers` の注入は行われません。スキル自体は使えます（セッション開始時に
+Devin はルート直下の `hooks.json` しか読まず、`hooks/hooks.json` は読まないと見込まれるため、
+SessionStart フックによる `using-superpowers` の注入は行われないと見込まれます。スキル自体は使えます（セッション開始時に
 スキル名と説明が渡されます）。
 
 ## 翻訳の検査
 
-upstream の参照コピーと突き合わせ、構造（見出し・コードフェンス・タグ・参照など）の
-乖離と禁止表現を検査します。
+upstream の参照コピーと突き合わせ、構造（コードフェンス数・`<TAG>`・
+`[PLACEHOLDER]`・ステータス語・`Task` 見出し数・スキル参照・URL・リンクなど）の乖離と
+禁止表現を検査します。
 
 ```sh
 UPSTREAM="${TMPDIR:-/tmp}/superpowers-v7.0.2"
