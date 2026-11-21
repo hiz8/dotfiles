@@ -8,7 +8,7 @@ Dimension: Stumbles
 - エラー、0 以外の終了コード、明示的な失敗レコードが付いた tool result
 - 失敗したシェルコマンド（result の 0 以外の終了、「command not found」、「No such file」）
 - リトライ: エラーの後、同じターン内で再発行された同じ tool call
-- 取り消された edit: 以前の内容に戻す edit が続いた edit、またはセッションが触れたファイルに対する `git checkout`/`git restore`/`git revert`/`git reset`
+- 取り消された edit: 後から元の内容に戻された edit、またはセッションが触れたファイルに対する `git checkout`/`git restore`/`git revert`/`git reset`
 - アシスタントのテキストでの後戻り（"actually"、"let me instead"、"that was wrong"、"I misread"）
 - 人間による訂正: アシスタントの直前の行動と矛盾する、またはそれを訂正する人間のプロンプト
 - 権限の拒否、hook の失敗、API エラー、レート制限、中断されたターン、作業の途中で発生したコンテキストのオーバーフローまたは compaction

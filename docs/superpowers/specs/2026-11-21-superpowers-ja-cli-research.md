@@ -28,7 +28,7 @@ copilot plugin install hiz8/dotfiles:plugins/superpowers
 - 旧形式プラグインのファイル配置表に `hooks.json` または `hooks/hooks.json` が
   載っており、Copilot CLI が `hooks/hooks.json` を読むことは公式リファレンスで確認済み
 - `marketplace add` は `owner/repo`、`owner/repo#ref`、URL、ローカルパスを受け付ける。
-  marketplace の名前は `marketplace.json` の `name` が登録キーになる
+  `marketplace.json` の `name` が marketplace の登録キー（名前）になる
 - `marketplace.json` の探索順は `marketplace.json`、`.plugin/marketplace.json`、
   `.github/plugin/marketplace.json`、`.claude-plugin/marketplace.json`。
   推奨は `.github/plugin/` だが、`.claude-plugin/` も読む

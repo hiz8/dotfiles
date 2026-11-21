@@ -63,7 +63,7 @@ git diff   # 取り込んだ内容が期待どおりか確認する
 
 ## プラグイン
 
-`plugins/` 配下に Stow の対象ではない Claude Code プラグインを置いている。
+Stow の対象外である `plugins/` 配下に、Claude Code プラグインを置いている。
 リポジトリ直下の `.claude-plugin/marketplace.json` が marketplace `hiz-dotfiles` を定義する。
 
 | プラグイン    | 内容                                 |

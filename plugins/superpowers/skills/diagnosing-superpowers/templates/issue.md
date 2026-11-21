@@ -8,7 +8,7 @@ Title: <skill or symptom>: <one-line observable> (<harness>)
 
 ## Human-authored summary (required, under 200 words)
 
-<何がうまくいかなかったか、何が起きるべきだったかについての、パートナー自身の言葉を、書かれたとおりに貼り付ける。パートナーにたずねること。ここがプレースホルダのままなら、issue は提出できる状態ではない。長すぎる場合は、パートナーの言葉を編集せず、パートナーに短くするよう頼む。>
+<何がうまくいかなかったか、何が起きるべきだったかについての、パートナー自身の言葉を、書かれたとおりに貼り付けてください。パートナーに尋ねてください。ここがプレースホルダのままなら、issue は提出できる状態ではありません。長すぎる場合は、パートナーの言葉を編集せず、パートナーに短くするよう頼んでください。>
 
 ## Environment (required)
 
@@ -26,13 +26,13 @@ Title: <skill or symptom>: <one-line observable> (<harness>)
 - [ ] I confirmed this issue does not occur without Superpowers installed
 
 How I verified that this issue does not reproduce without Superpowers:
-<"Not tried"、または、パートナーが superpowers なしで何を実行して何が起きたか（トランスクリプトがあればそのパスも）。上のチェックボックスにチェックを入れるのは、問題が再発しなかったことをトランスクリプトが示している場合だけ。>
+<"Not tried"、または、パートナーが superpowers なしで何を実行して何が起きたか（トランスクリプトがあればそのパスも）。上のチェックボックスにチェックを入れるのは、問題が再発しなかったことをトランスクリプトが示している場合だけです。>
 
 Evidence for involvement is below; it does not establish cause.
 
 ## What happened?
 
-<問題の記述、続けてトリアージの判定。`path:line` の引用は `transcript line <n>` に書き換える。>
+<問題の記述、続けてトリアージの判定。`path:line` の引用は `transcript line <n>` に書き換えてください。>
 
 ## Steps to reproduce
 

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** superpowers v7.0.2 の全 15 スキルを内容を変えずに日本語訳したプラグインを、dotfiles の `plugins/superpowers/` に作り、元プラグインと置き換える。
+**Goal:** superpowers v7.0.2 の全 15 スキルを、内容は変えずに日本語訳したプラグインを、dotfiles の `plugins/superpowers/` に作り、元プラグインと置き換える。
 
 **Architecture:** upstream v7.0.2 を必要なファイルだけ英語のままコピーしてコミットし（ベースライン）、その後スキル単位で翻訳する。翻訳の機械的な正しさ（ファイル構成・非 md の同一性・参照・プレースホルダ・プロトコル語の保持）は検査スクリプト `check-translation.py` で upstream と突き合わせて確認し、意味と強さの忠実さはレビューで確認する。リポジトリ直下の `.claude-plugin/marketplace.json` でローカル marketplace にする。
 
@@ -27,7 +27,7 @@
 ## Review Focus
 
 - **description の翻訳でスキルが呼び出されなくなる**: 日本語の依頼に対し、該当スキルが従来どおり自動で呼び出されること。Task 11 の headless 呼び出し確認で検証する
-- **エージェント間プロトコル語やプレースホルダの訳出**: implementer が `DONE` の代わりに「完了」と返すとコントローラが判定できない。`check-translation.py` の保持検査（Task 2）で全ファイルを検査する
+- **エージェント間プロトコル語やプレースホルダの訳出**: implementer が `DONE` の代わりに「完了」と返すとコントローラーが判定できない。`check-translation.py` の保持検査（Task 2）で全ファイルを検査する
 - **コードブロック内のプロンプトテンプレート**: `builder-check-prompt.md` などはコードブロック内の英文が翻訳対象である一方、同じブロック内のプレースホルダは保持が必要。保持検査はコードブロック内も対象にする
 - **`./install.sh` 引数なし実行で `plugins/` `docs/` が `$HOME` に stow される**: Task 2 で除外を実装し、実行して確認する
 - **英語版と日本語版の同時有効化**: Task 11 で `enabledPlugins` を確認し、セッション開始時の注入が日本語版 1 回だけであることを確認する

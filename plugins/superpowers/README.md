@@ -31,15 +31,15 @@ claude plugin list                                           # hiz-dotfiles 版�
 へコピーされた版です。リポジトリを編集しただけでは反映されません。
 
 1. `.claude-plugin/plugin.json`（プラグイン直下）と、リポジトリ直下の
-   `.claude-plugin/marketplace.json` の `version` を上げる（例: `7.0.2-ja.2`）
-2. 更新する
+   `.claude-plugin/marketplace.json` の `version` を上げます（例: `7.0.2-ja.2`）
+2. 更新します
 
    ```sh
    claude plugin marketplace update hiz-dotfiles
    claude plugin update superpowers@hiz-dotfiles
    ```
 
-3. Claude Code を再起動する（`update` は再起動で適用されます）
+3. Claude Code を再起動します（`update` は再起動で適用されます）
 
 この更新手順は `--help` の出力から導いたもので、実機ではまだ実行していません。
 
@@ -64,8 +64,8 @@ devin plugins install hiz8/dotfiles#plugins/superpowers
 devin plugins update superpowers
 ```
 
-Devin はルート直下の `hooks.json` しか読まず、`hooks/hooks.json` は読まないと見込まれるため、
-SessionStart フックによる `using-superpowers` の注入は行われないと見込まれます。スキル自体は使えます（セッション開始時に
+Devin はルート直下の `hooks.json` しか読まず、`hooks/hooks.json` は読まないとみられるため、
+SessionStart フックによる `using-superpowers` の注入は行われない見込みです。スキル自体は使えます（セッション開始時に
 スキル名と説明が渡されます）。
 
 ## 翻訳の検査

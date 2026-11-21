@@ -31,7 +31,7 @@ Session still running at read time: yes | no (mtime <ISO>, lines <N>)
 | Skill / source path | sha1 or unavailable | Provenance | Supporting location |
 |---|---|---|---|
 
-環境とスキルの観測には、historical evidence、unverified snapshot、current observation、unknown のいずれかのラベルを付けます。過去の情報が利用できないと宣言する前に、渡された出所（provenance）のメモ、アーカイブ、取得済みのスキル本文を確認してください。元のパスが失われていても、保持されているコピーがなくなるわけではありません。現在のバージョンや mtime は、過去のバージョンを立証しません。取得したスキル本文が 1 つあっても、インストール全体を認証することにはなりません。
+環境とスキルの観測には、historical evidence、unverified snapshot、current observation、unknown のいずれかのラベルを付けます。過去の情報が利用できないと宣言する前に、渡された出所（provenance）のメモ、アーカイブ、取得済みのスキル本文を確認してください。元のパスが失われていても、保持されているコピーがなくなるわけではありません。現在のバージョンや mtime は、過去のバージョンを立証しません。取得したスキル本文が 1 つあっても、インストール全体を裏付けることにはなりません。
 
 - Other plugins / extensions / MCP servers configured: <一覧、または "none found">
 - Instruction files present (paths only): <一覧>

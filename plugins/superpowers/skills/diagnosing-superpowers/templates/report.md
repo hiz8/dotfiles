@@ -5,11 +5,11 @@ Written: <ISO timestamp>
 
 ## 1. Problem statement (REQUIRED)
 
-<case ファイルからコピーする。>
+<case ファイルからコピーしてください。>
 
 ## 2. Triage verdict (REQUIRED)
 
-<報告された問題の前後で、証拠から何が起きたと言えるか。散文で書き、すべての主張の後に `path:line` を付ける。確信度を high / medium / low で述べ、何があればそれが上がるかも述べる。superpowers が何をすべきかについては述べない。>
+<報告された問題の前後で、証拠から何が起きたと言えるか。散文で書き、すべての主張の後に `path:line` を付けてください。確信度を high / medium / low で述べ、何があればそれが上がるかも述べてください。superpowers が何をすべきかについては述べないでください。>
 
 ## 3. Environment (REQUIRED)
 
