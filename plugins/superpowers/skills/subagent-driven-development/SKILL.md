@@ -271,7 +271,7 @@ ledger の更新、次のレビューのパッケージ化、レポートの読�
 
 ### 4. 修正ループ
 
-レビューが仕様 ❌、Critical または Important の指摘、あるいは実際の不足だと確認した ⚠️ 項目を
+レビューが仕様 ❌、Critical または Important の指摘、あるいはあなたが実際の不足だと確認した ⚠️ 項目を
 報告したとき、ループが発動します。
 
 発動したら、[references/fix-loop.md](references/fix-loop.md) を読んで、それに従ってください。

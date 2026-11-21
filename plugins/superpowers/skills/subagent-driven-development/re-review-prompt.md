@@ -76,7 +76,7 @@ Subagent (general-purpose):
 
     ### Finding Verdicts
 
-    The Findings Under Verification の各指摘について、順番に:
+    「検証対象の指摘」の各指摘について、順番に:
     - **[指摘の 1 行要約]** — ADDRESSED | NOT ADDRESSED、file:line の証拠つき。
       「試みた」は対処済みではありません: その具体的な欠陥がもう存在しないことが必要です。
 
