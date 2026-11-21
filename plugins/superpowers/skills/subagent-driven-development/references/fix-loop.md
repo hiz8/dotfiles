@@ -1,77 +1,68 @@
-# The Fix Loop
+# 修正ループ
 
-Part of superpowers:subagent-driven-development. The task review reported
-spec ❌, a Critical or Important finding, or a ⚠️ item you confirmed as a real
-gap.
+superpowers:subagent-driven-development の一部です。タスクレビューが、仕様 ❌、Critical または
+Important の指摘、あるいは実際の不足だとあなたが確認した ⚠️ 項目を報告しました。
 
-Before the loop starts, two routes leave it immediately:
+ループが始まる前に、2 つの経路は即座にループを抜けます。
 
-- Record Minor findings in the progress ledger as you go
-  (`Task <N>: minor (deferred): <one-liner>`), and point the final
-  whole-branch review at that list so it can triage which must be fixed
-  before merge. A roll-up nobody reads is a silent discard. Minor findings
-  never enter the loop.
-- A finding labeled plan-mandated — or any finding that conflicts with
-  what the plan's text requires — is yours to rule on: weigh the finding
-  against the plan text, decide with the spec as the binding authority, and
-  ledger the ruling before you act on it. Do not dismiss the finding because
-  the plan mandates it, and do not dispatch a fix that contradicts the plan
-  without a recorded ruling.
-Everything else enters the loop. A fix round is one fix dispatch plus one
-scoped re-review. Five rounds maximum per task:
+- Minor の指摘は、進めながら進捗の ledger に記録してください
+  （`Task <N>: minor (deferred): <one-liner>`）。そして最終の whole-branch レビューにこのリストを
+  指し示し、マージ前に修正が必要なものを振り分けられるようにしてください。誰も読まない
+  まとめは、黙って捨てているのと同じです。Minor の指摘がループに入ることは決してありません。
+- plan-mandated とラベルづけされた指摘、または計画書の記述が要求することと衝突する指摘は、
+  あなたが裁定します。指摘を計画書の記述と照らし合わせて比較し、仕様書を拘束力を持つ権威として
+  決定し、行動する前に裁定を ledger に記録してください。計画書が義務づけているからといって
+  指摘を退けてはいけません。また、記録された裁定なしに、計画書と矛盾する修正をディスパッチしては
+  いけません。
+それ以外はすべてループに入ります。修正ラウンドとは、修正のディスパッチ 1 回とスコープ付き再レビュー
+1 回です。1 タスクにつき最大 5 ラウンドです。
 
-**Rounds 1-3 — resume the original implementer.** Send it the open findings
-verbatim. Its context is intact: it knows the task, the code, and its own
-choices. If your harness cannot send another message to a live subagent,
-dispatch a fresh implementer carrying the brief path, the report-file path,
-and the findings — the report file is the persistent memory either way.
+**ラウンド 1〜3 — 元の実装者を再開します。** 未解決の指摘をそのまま送ってください。実装者の
+コンテキストは保たれています。タスクもコードも、自分の選択も知っています。ハーネスが生きている
+subagent にさらにメッセージを送れないなら、ブリーフのパス、レポートファイルのパス、指摘を渡して
+新しい実装者をディスパッチしてください — どちらにしても、レポートファイルが永続的な記憶です。
 
-**Rounds 4-5 — dispatch a fresh implementer on a more capable model** (per
-SKILL.md's Model Selection), with the brief path, the report-file path, the open
-findings, and this framing: "A prior implementer attempted this task
-[N] times; you own it now. Read the report file for what was tried." A loop
-that survives three resumes usually means the implementer cannot see its
-own problem — fresh eyes and a capability bump in one move.
+**ラウンド 4〜5 — より高性能なモデルで新しい実装者をディスパッチします**
+（SKILL.md のモデル選択に従います）。ブリーフのパス、レポートファイルのパス、未解決の指摘、そして
+次の枠組みを渡してください。「以前の実装者がこのタスクを [N] 回試みました。これからはあなたが
+このタスクの担当です。何を試したかはレポートファイルを読んでください。」 3 回の再開を経ても
+続くループは、たいてい実装者が自分の問題を見られないことを意味します — 新しい視点と能力の
+引き上げを 1 度に行います。
 
-**Every round, either way:** the implementer fixes, re-runs the tests
-covering the amended code, appends its fix report to the same report file,
-and returns the short contract. Before re-dispatching the reviewer, confirm
-the fix report contains the covering tests, the command run, and the
-output; dispatch the re-review once all three are present. Name the
-covering test files in the fix message — a one-line fix does not need the
-whole suite.
+**どのラウンドでも:** 実装者は修正し、修正した部分をカバーするテストを再実行し、同じレポートファイルに
+修正レポートを追記して、短い契約の形式で返します。レビュアーを再ディスパッチする前に、修正レポートに
+カバーするテスト、実行したコマンド、出力が含まれていることを確認してください。3 つがそろったら
+再レビューをディスパッチします。修正メッセージには、カバーするテストファイルを名指ししてください —
+1 行の修正にスイート全体は不要です。
 
-**The re-review is scoped.** Run `bash scripts/review-package PLAN_FILE FIX_BASE HEAD`
-by its absolute path, from the working tree you're executing in, where FIX_BASE is the head the previous review saw, and dispatch
-[re-review-prompt.md](../re-review-prompt.md) with the findings list, the
-brief, the report file, and the printed diff path. The re-reviewer verdicts
-each finding ADDRESSED or NOT ADDRESSED and flags new breakage in the fix
-diff only. New Critical/Important breakage in the fix diff joins the open
-findings list. Out-of-scope observations go to the ledger as deferred
-minors — they never extend the loop.
+**再レビューはスコープ付きです。** `bash scripts/review-package PLAN_FILE FIX_BASE HEAD` を
+絶対パスで、実行中の作業ツリーから実行します（FIX_BASE は前回のレビューが見たヘッドです）。そして
+指摘リスト、ブリーフ、レポートファイル、出力された diff のパスを添えて
+[re-review-prompt.md](../re-review-prompt.md) をディスパッチしてください。再レビュアーは、各指摘に
+ADDRESSED または NOT ADDRESSED の判定を下し、修正 diff 内の新たな破綻だけを指摘します。修正 diff に
+新たな Critical/Important の破綻があれば、未解決の指摘リストに加わります。スコープ外の所見は、
+先送りした Minor として ledger に記録します — ループが延びることは決してありません。
 
-**After each round,** append to the ledger:
+**各ラウンドの後に**、ledger に次を追記してください。
 `Task <N>: fix round <R>/5 (<X> addressed, <Y> open — <finding one-liners>; commits <a7>..<b7>)`
 
-Never fix findings yourself in the controller session — your context stays
-clean for coordination, and controller fixes skip review.
+コントローラーのセッションで自分で指摘を修正してはいけません — コンテキストを調整用にきれいに
+保つためであり、コントローラーによる修正はレビューを経ません。
 
-**The breaker.** When round 5's re-review still leaves findings open, stop
-dispatching. Adjudicate each open finding yourself — you hold the plan and
-the cross-task context the reviewer lacks:
+**ブレーカー。** ラウンド 5 の再レビューでもなお指摘が残っているなら、ディスパッチを止めてください。
+未解決の指摘をそれぞれ自分で裁定してください — レビュアーにはない計画書とタスク横断の文脈を
+持っているのは、あなたです。
 
-- **The reviewer is wrong, or the point is contestable:** park it —
-  `Task <N>: parked — <finding> — Ruling: <why the code stands>`. The final
-  review sees both sides.
-- **Real, but nothing downstream builds on it:** park it the same way, with
-  a ruling that says it's real and deferred.
-- **Real and load-bearing** — a later task builds on it, or it reveals a
-  plan defect: rule on the smallest change that unblocks the dependent work,
-  ledger it as `Task <N>: Ruling: <finding> — <what you decided and why>`,
-  and carry it into the next task's dispatch. Parking a structural failure
-  silently lets every dependent task build on it. Stop only when the defect
-  leaves every path forward a guess.
+- **レビュアーが間違っている、または議論の余地がある場合:** 保留します —
+  `Task <N>: parked — <finding> — Ruling: <why the code stands>`。最終レビューは両方の言い分を見ます。
+- **実際の問題だが、後続で何もそれに依存しない場合:** 同じ方法で保留します。裁定には、それが実際の
+  問題であり先送りであることを書きます。
+- **実際の問題で、かつ重要な場合** — 後のタスクがそれに依存する、または計画書の欠陥を明らかにする:
+  依存する作業を進められるようにする最小の変更について裁定し、
+  `Task <N>: Ruling: <finding> — <what you decided and why>` として ledger に記録し、
+  次のタスクのディスパッチに持ち越してください。構造的な失敗を黙って保留すると、依存する
+  すべてのタスクがその上に積み上がってしまいます。止まるのは、その欠陥によってどの道を進んでも
+  当て推量になるときだけです。
 
-Adjudicate only at the cap. Adjudicating earlier to end a loop is
-pre-judging with a different name. Every adjudication is a ledger entry —
-a silent discard is forbidden.
+裁定するのは上限に達したときだけです。ループを終わらせるために早く裁定するのは、名前を変えた
+事前判断（pre-judging）にすぎません。すべての裁定は ledger の記録です — 黙って捨てることは禁止です。

@@ -1,11 +1,11 @@
-# Batching Small Same-Shape Work
+# 小さな同型作業のバッチ化
 
-Part of superpowers:subagent-driven-development.
+superpowers:subagent-driven-development の一部です。
 
-**Batch small same-shape work.** When the plan lists several tasks that are
-each a small, independent edit of the same kind — the same one-line fix,
-constant change, or field addition repeated across files — do not dispatch
-one subagent per task. Compose ONE dispatch brief listing every file and
-its change, send the whole batch to a single subagent, and review its diff
-as one unit. Reserve one-dispatch-per-task for work that needs its own
-judgment, its own tests, or its own review surface.
+**小さな同型作業はバッチ化してください。** 計画書に、どれも小さく独立した同じ種類の編集
+（複数のファイルにわたって繰り返される同じ 1 行の修正、定数の変更、フィールドの追加など）を
+行うタスクが複数並んでいるときは、タスクごとに 1 つの subagent をディスパッチしてはいけません。
+すべてのファイルとその変更を列挙したディスパッチ用ブリーフを **1 つ**作り、バッチ全体を
+単一の subagent に送り、その diff を 1 つの単位としてレビューしてください。
+タスクごとに 1 回ディスパッチするのは、独自の判断、独自のテスト、独自のレビュー対象を必要とする
+作業に限ってください。

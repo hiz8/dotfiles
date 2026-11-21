@@ -1,15 +1,15 @@
-# Handling a Report That Isn't DONE
+# DONE ではない報告の扱い
 
-Part of superpowers:subagent-driven-development.
+superpowers:subagent-driven-development の一部です。
 
-**DONE_WITH_CONCERNS:** The implementer completed the work but flagged doubts. Read the concerns before proceeding. If the concerns are about correctness or scope, address them before review. If they're observations (e.g., "this file is getting large"), note them and proceed to review.
+**DONE_WITH_CONCERNS:** 実装者は作業を完了しましたが、懸念を挙げています。進める前に懸念を読んでください。懸念が正しさやスコープに関するものであれば、レビューの前に対処してください。観察（例: 「このファイルが大きくなってきている」）であれば、それを記録してレビューに進んでください。
 
-**NEEDS_CONTEXT:** The implementer needs information that wasn't provided. Provide the missing context and re-dispatch.
+**NEEDS_CONTEXT:** 実装者は、提供されていなかった情報を必要としています。足りない文脈を提供して、再ディスパッチしてください。
 
-**BLOCKED:** The implementer cannot complete the task. Assess the blocker:
-1. If it's a context problem, provide more context and re-dispatch with the same model
-2. If the task requires more reasoning, re-dispatch with a more capable model
-3. If the task is too large, break it into smaller pieces
-4. If the plan itself is wrong, rule on the correction, ledger it, and re-dispatch with the ruling carried in the dispatch
+**BLOCKED:** 実装者はタスクを完了できません。ブロッカーを見極めてください。
+1. 文脈の問題なら、文脈を追加して同じモデルで再ディスパッチする
+2. タスクにより深い推論が必要なら、より高性能なモデルで再ディスパッチする
+3. タスクが大きすぎるなら、小さく分割する
+4. 計画書自体が誤っているなら、修正について裁定し、ledger に記録し、その裁定をディスパッチに載せて再ディスパッチする
 
-**Never** ignore an escalation or force the same model to retry without changes. If the implementer said it's stuck, something needs to change.
+実装者からのエスカレーションを無視したり、何も変えずに同じモデルに再試行を強いたりしては**いけません**。実装者が行き詰まっていると言っているなら、何かを変える必要があります。

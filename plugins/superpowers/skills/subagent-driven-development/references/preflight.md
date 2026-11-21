@@ -1,26 +1,22 @@
-# The Pre-flight Scan
+# プリフライトスキャン
 
-Part of superpowers:subagent-driven-development. Run it once, before
-dispatching Task 1.
+superpowers:subagent-driven-development の一部です。Task 1 をディスパッチする前に、1 回だけ実行します。
 
-Before dispatching Task 1, scan the plan once for conflicts, writing down
-what you checked as you check it:
+Task 1 をディスパッチする前に、計画書を 1 回スキャンして矛盾を探し、確認したことをその場で書き留めてください。
 
-- tasks that contradict each other or the plan's Global Constraints
-- anything the plan explicitly mandates that the review rubric treats as a
-  defect (a test that asserts nothing, verbatim duplication of a logic block)
+- 互いに矛盾するタスク、または計画書の Global Constraints と矛盾するタスク
+- 計画書が明示的に義務づけているが、レビューの基準では欠陥とされるもの
+  （何も検証しないテスト、ロジックブロックの逐語的な重複）
 
-The scan's output is a table, not a verdict. One row for every pair of tasks
-that share a file or an interface: the two tasks, what one produces against
-what the other consumes, and what you found. One row for every task: whether
-its own text agrees with itself — the tests it specifies against the code it
-specifies, the files it creates against the files it later touches. "The scan
-is clean" without those rows is not a scan you ran.
+スキャンの出力は、結論ではなく表です。ファイルまたはインターフェースを共有するタスクのペアごとに 1 行:
+2 つのタスク、一方が生成するものと他方が消費するものの対応、そして見つけたこと。さらに、タスクごとに
+1 行: そのタスク自身の記述が自己矛盾していないか — 指定しているテストと指定しているコード、
+作成するファイルと後で変更するファイルが食い違っていないか。これらの行がない「スキャンはクリーンです」は、
+あなたが実行したスキャンではありません。
 
-Write the table to the ledger. Rule on everything you find before execution
-begins — each finding against the plan text that mandates it — and record
-each ruling in the ledger. If the scan is clean, proceed without comment.
-Rule on each conflict it surfaces — the spec is the binding authority, the
-plan is its argument — record the ruling beside its row, and dispatch
-Task 1. The review loop remains the net for conflicts that only emerge from
-implementation.
+表を ledger に書いてください。実行を始める前に、見つけたすべてについて裁定してください — それぞれの
+指摘を、それを義務づけている計画書の記述と照らし合わせます。各裁定は ledger に記録してください。
+スキャンがクリーンなら、何も言わずに進めてください。
+スキャンで見つかった矛盾にはそれぞれ裁定してください — 仕様書が拘束力を持つ権威であり、計画書は
+その論拠です — 裁定を該当する行の横に記録し、Task 1 をディスパッチしてください。
+レビューループは、実装を通じて初めて表面化する矛盾に対する最後の網として残ります。

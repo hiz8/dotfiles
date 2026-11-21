@@ -1,116 +1,112 @@
-# Scoped Re-Review Prompt Template
+# スコープ付き再レビュー プロンプトテンプレート
 
-Use this template when dispatching a re-review after a fix round. The
-re-reviewer verifies the findings were addressed and checks the fix diff for
-new breakage. It is not a fresh review — the full review already happened.
+修正ラウンドの後に再レビューをディスパッチするときに、このテンプレートを使います。
+再レビュアーは、指摘が対処されたことを検証し、修正 diff に新たな破綻がないか確認します。
+新規のレビューではありません — 完全なレビューはすでに行われています。
 
-**Purpose:** Verify each finding from the previous review was addressed, and
-that the fix itself broke nothing.
+**目的:** 前回のレビューの各指摘が対処されたこと、そして修正自体が何も壊していないことを検証する
 
 ```
 Subagent (general-purpose):
-  description: "Re-review Task N fix round R"
-  model: [MODEL — REQUIRED: choose per SKILL.md Model Selection; an omitted
-         model silently inherits the session's most expensive one]
+  description: "Task N 修正ラウンド R を再レビューする"
+  model: [MODEL — 必須: SKILL.md のモデル選択に従って選ぶこと。モデルを省略すると、
+         セッションで最も高価なモデルが暗黙のうちに継承される]
   prompt: |
-    You are re-reviewing one task's fix round. A previous review produced
-    findings; an implementer has attempted to fix them. Your job is to
-    verdict each finding and inspect the fix diff — nothing else.
+    あなたは 1 つのタスクの修正ラウンドを再レビューします。前回のレビューが指摘を出し、
+    実装者がそれを修正しようとしました。あなたの仕事は、各指摘に判定を下し、修正 diff を
+    調べることです — それ以外はしません。
 
-    ## The Task
+    ## タスク
 
-    Read the task brief: [BRIEF_FILE]
+    タスクブリーフを読んでください: [BRIEF_FILE]
 
-    ## The Findings Under Verification
+    ## 検証対象の指摘
 
     [FINDINGS]
 
-    ## The Fix
+    ## 修正
 
-    Read the implementer's report (fix reports are appended at the end):
+    実装者のレポートを読んでください（修正レポートは末尾に追記されています）:
     [REPORT_FILE]
 
-    **Fix base:** [FIX_BASE_SHA] (the head the previous review saw)
+    **Fix base:** [FIX_BASE_SHA]（前回のレビューが見たヘッド）
     **Head:** [HEAD_SHA]
     **Diff file:** [DIFF_FILE]
 
-    Read the diff file once — it contains the fix commits, a stat summary,
-    and the fix diff with surrounding context. Do not re-run git commands.
-    If the diff file is missing, fetch the diff yourself:
-    `git diff --stat [FIX_BASE_SHA]..[HEAD_SHA]` and
-    `git diff [FIX_BASE_SHA]..[HEAD_SHA]`.
+    diff ファイルを 1 回読んでください — 修正のコミット、stat のサマリ、周辺の文脈つきの修正 diff
+    が入っています。git コマンドを再実行しないでください。diff ファイルがなければ、
+    自分で diff を取得してください:
+    `git diff --stat [FIX_BASE_SHA]..[HEAD_SHA]` と
+    `git diff [FIX_BASE_SHA]..[HEAD_SHA]`。
 
-    Your review is read-only on this checkout. Do not mutate the working
-    tree, the index, HEAD, or branch state in any way.
+    このチェックアウトに対するあなたのレビューは読み取り専用です。作業ツリー、インデックス、HEAD、
+    ブランチの状態を、いかなる形でも変更してはいけません。
 
-    ## You Do Not Dispatch Subagents
+    ## Subagent をディスパッチしない
 
-    Do all of this review yourself. Never spawn a subagent to review part
-    of the diff, and never spawn another reviewer for a second opinion.
-    This process already provides every review seat the work gets; a
-    reviewer you spawn duplicates one of them at full cost, and its
-    verdict counts for nothing. If the diff feels too large for one
-    pass, review it in passes yourself and say so in your report.
+    このレビューはすべて自分で行ってください。diff の一部をレビューさせるために subagent を
+    起動してはいけません。セカンドオピニオンのために別のレビュアーを起動してもいけません。
+    このプロセスはすでに、作業が受けるすべてのレビューの席を提供しています。あなたが起動した
+    レビュアーは、そのうちの 1 つをフルコストで重複させるだけで、その判定はまったく意味を
+    持ちません。diff が 1 パスで見るには大きすぎると感じるなら、自分で何回かに分けてレビューし、
+    レポートにそう書いてください。
 
-    ## Scope
+    ## スコープ
 
-    Your scope is the findings list and the fix diff. Verdict every finding.
-    Inspect the fix diff for new problems the fix itself introduced. Do NOT
-    re-review code the fix did not touch: if you notice an issue entirely
-    outside the fix diff, report it under Out-of-Scope Observations — it
-    does not block this task and does not extend the loop. A broad
-    whole-branch review happens after all tasks are complete.
+    あなたのスコープは、指摘リストと修正 diff です。すべての指摘に判定を下してください。
+    修正自体が持ち込んだ新たな問題がないか、修正 diff を調べてください。修正が触れていない
+    コードを再レビューしてはいけません: 修正 diff の完全に外にある問題に気づいたら、
+    Out-of-Scope Observations の下に報告してください — それはこのタスクをブロックせず、
+    ループを延ばしません。広範な whole-branch レビューは、すべてのタスクが完了した後に行われます。
 
-    ## Tests
+    ## テスト
 
-    The implementer re-ran the tests covering the amended code and appended
-    the results to the report file. Treat the report as unverified claims:
-    confirm the fix report names the covering tests and shows their output,
-    and verify the claims against the diff. Do not re-run the suite to
-    confirm their report. Run a test only when reading the code raises a
-    specific doubt that no existing run answers — and then a focused test,
-    never a package-wide suite.
+    実装者は、修正した部分をカバーするテストを再実行し、その結果をレポートファイルに追記
+    しました。レポートは未検証の主張として扱ってください: 修正レポートがカバーするテストを
+    名指しし、その出力を示していることを確認し、主張を diff と照らして検証してください。
+    報告を確認するためにスイートを再実行してはいけません。テストを実行するのは、
+    コードを読んで、既存の実行では答えが出ない具体的な疑問が生じたときだけにしてください — そして
+    その場合も、焦点を絞ったテストにとどめ、パッケージ全体のスイートは決して実行しないでください。
 
-    ## Output Format
+    ## 出力形式
 
-    Your final message is the report itself: begin directly with the first
-    finding's verdict. Every line is a verdict, a finding with file:line,
-    or a check you ran — no preamble, no process narration.
+    あなたの最終メッセージがレポートそのものです。最初の指摘の判定からそのまま始めてください。
+    すべての行は、判定、file:line つきの指摘、あるいは実行した確認のいずれかです — 前置き、
+    プロセスの語りは書かないでください。
 
     ### Finding Verdicts
 
-    For each finding in The Findings Under Verification, in order:
-    - **[finding one-liner]** — ADDRESSED | NOT ADDRESSED, with file:line
-      evidence. "Attempted" is not addressed: the specific defect must no
-      longer exist.
+    The Findings Under Verification の各指摘について、順番に:
+    - **[指摘の 1 行要約]** — ADDRESSED | NOT ADDRESSED、file:line の証拠つき。
+      「試みた」は対処済みではありません: その具体的な欠陥がもう存在しないことが必要です。
 
     ### New Breakage in the Fix Diff
 
-    Anything the fix itself broke or introduced, with severity
-    (Critical/Important/Minor) and file:line. "None" if clean.
+    修正自体が壊した、または持ち込んだもの。重大度（Critical/Important/Minor）と file:line つき。
+    クリーンなら "None"。
 
     ### Out-of-Scope Observations
 
-    Issues you noticed entirely outside the fix diff. Non-blocking; the
-    controller ledgers these for the final review. "None" if none.
+    修正 diff の完全に外で気づいた問題。ブロックしません。コントローラーが最終レビューのために
+    ledger に記録します。なければ "None"。
 
     ### Verdict
 
     **Fix round:** [All findings addressed, no new Critical/Important
-    breakage | Findings remain open] — list the open ones.
+    breakage | Findings remain open] — 未解決のものを列挙してください。
 ```
 
-**Placeholders:**
-- `[MODEL]` — REQUIRED: reviewer model per SKILL.md Model Selection; scoped
-  re-reviews of small fix diffs take a cheap-to-mid tier
-- `[BRIEF_FILE]` — the task brief file (same file the implementer worked from)
-- `[FINDINGS]` — the Critical/Important findings and spec gaps from the
-  previous review, copied verbatim, one per bullet
-- `[REPORT_FILE]` — the implementer's report file (fix reports appended)
-- `[FIX_BASE_SHA]` — the head the previous review saw
-- `[HEAD_SHA]` — current commit
-- `[DIFF_FILE]` — the path `bash scripts/review-package PLAN_FILE FIX_BASE HEAD` printed
-  (run by its absolute path, from the working tree you're executing in)
+**プレースホルダ:**
+- `[MODEL]` — 必須: SKILL.md のモデル選択に従ったレビュアーのモデル。小さな修正 diff の
+  スコープ付き再レビューには、安価〜中位のティアを使います
+- `[BRIEF_FILE]` — タスクブリーフファイル（実装者が作業に使ったものと同じファイル）
+- `[FINDINGS]` — 前回のレビューの Critical/Important の指摘と仕様の不足を、逐語的に、
+  1 つの箇条書きにつき 1 件でコピーしたもの
+- `[REPORT_FILE]` — 実装者のレポートファイル（修正レポートが追記されたもの）
+- `[FIX_BASE_SHA]` — 前回のレビューが見たヘッド
+- `[HEAD_SHA]` — 現在のコミット
+- `[DIFF_FILE]` — `bash scripts/review-package PLAN_FILE FIX_BASE HEAD` が出力したパス
+  （絶対パスで、実行中の作業ツリーから実行します）
 
-**Re-reviewer returns:** per-finding verdicts (ADDRESSED / NOT ADDRESSED),
-new breakage in the fix diff, out-of-scope observations, and a round verdict.
+**再レビュアーが返すもの:** 各指摘の判定（ADDRESSED / NOT ADDRESSED）、修正 diff の新たな破綻、
+スコープ外の所見、ラウンドの判定。

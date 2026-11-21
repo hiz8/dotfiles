@@ -1,49 +1,40 @@
-# Final Review and Finish
+# 最終レビューと完了
 
-Part of superpowers:subagent-driven-development. Every task in the plan is
-complete.
+superpowers:subagent-driven-development の一部です。計画書のすべてのタスクが完了しています。
 
-The final whole-branch review gets a package too: run
-`bash scripts/review-package PLAN_FILE MERGE_BASE HEAD` by its absolute path,
-from the working tree you're executing in (MERGE_BASE = the commit the
-branch started from, e.g. `git merge-base main HEAD`) and include the
-printed path in the final review dispatch, so the final reviewer reads
-one file instead of re-deriving the branch diff with git commands. Dispatch
-on the most capable available model (see SKILL.md's Model Selection), using
-superpowers:requesting-code-review's
-[code-reviewer.md](../../requesting-code-review/code-reviewer.md). Point it at
-the ledger's deferred-minor and parked lines so it can triage which must be
-fixed before merge.
+最終の whole-branch レビューにもパッケージを用意します。
+`bash scripts/review-package PLAN_FILE MERGE_BASE HEAD` を絶対パスで、実行中の作業ツリーから
+実行し（MERGE_BASE = ブランチの分岐元のコミット。例: `git merge-base main HEAD`）、出力された
+パスを最終レビューのディスパッチに含めてください。そうすれば最終レビュアーは、git コマンドで
+ブランチの diff を再導出する代わりに、1 つのファイルを読むだけで済みます。利用可能な最も高性能な
+モデルで（SKILL.md のモデル選択を参照）、superpowers:requesting-code-review の
+[code-reviewer.md](../../requesting-code-review/code-reviewer.md) を使ってディスパッチしてください。
+マージ前に修正が必要なものを振り分けられるよう、ledger の先送りした Minor と保留の行を指し示してください。
 
-If the final whole-branch review returns findings, dispatch ONE fix subagent
-with the complete findings list — not one fixer per finding.
-Per-finding fixers each rebuild context and re-run suites; a real
-session's final-review fix wave cost more than all its tasks combined.
-Then run exactly one scoped re-review of the fix wave
-(`bash scripts/review-package PLAN_FILE FIX_BASE HEAD` by its absolute path,
-from the working tree you're executing in, over the fix range,
-[re-review-prompt.md](../re-review-prompt.md)).
-Adjudicate any residual findings as in the fix loop's breaker
-(references/fix-loop.md): park with rulings, or rule on the load-bearing
-ones and ledger what you decided. Only the four things that stop a running
-plan (top of SKILL.md) stop you here. There is no second fix wave —
-residual load-bearing findings surface to your human partner when
-finishing-a-development-branch presents the options.
+最終の whole-branch レビューが指摘を返したら、指摘 1 件ごとに修正担当を立てるのではなく、
+完全な指摘リストを渡した修正用 subagent を **1 つ**ディスパッチしてください。
+指摘ごとの修正担当は、それぞれが文脈を再構築してスイートを再実行します。実際のセッションでは、
+最終レビューの修正の波に、全タスクを合わせたより多くのコストがかかりました。
+その後、修正の波に対するスコープ付き再レビューをちょうど 1 回実行してください
+（修正範囲に対して `bash scripts/review-package PLAN_FILE FIX_BASE HEAD` を絶対パスで、
+実行中の作業ツリーから実行し、[re-review-prompt.md](../re-review-prompt.md) を使います）。
+残った指摘は、修正ループのブレーカー（references/fix-loop.md）と同じように裁定してください。
+裁定をつけて保留するか、重要なものについて裁定を下し、決めたことを ledger に記録します。
+ここであなたを止めるのは、実行中の計画を止める 4 つのこと（SKILL.md の冒頭）だけです。
+2 回目の修正の波はありません — 残った重要な指摘は、finishing-a-development-branch が選択肢を
+提示するときに、人間のパートナーに提示されます。
 
-### Finish
+### 完了
 
-Before you delete anything, collect every ledger line containing `Ruling:` —
-preflight rulings, parked findings, breaker adjudications, all of them — into
-your final message under "Rulings I made", in the order you made them, each
-with what it costs if wrong. The list is exhaustive: if the ledger holds a
-ruling, the list holds it. That list is the only place the decisions you
-took on your human partner's behalf reach them — they read it and rework
-whatever you got wrong. A ruling that dies with the workspace was a decision
-made in secret.
+何かを削除する前に、`Ruling:` を含む ledger の行をすべて — プリフライトの裁定、保留した指摘、
+ブレーカーでの裁定など、例外なく — 最終メッセージの「自分が下した裁定」の下に、下した順に、
+それぞれ間違っていた場合のコストを添えて集めてください。このリストは網羅的でなければなりません。
+ledger に裁定があるなら、リストにもあります。このリストは、あなたが人間のパートナーに代わって
+下した決定が彼らに届く唯一の場所です。彼らはそれを読み、あなたが誤ったものをやり直します。
+ワークスペースとともに消えた裁定は、秘密裏に下された決定です。
 
-When the final whole-branch review is clean and its fixes are merged,
-delete this plan's workspace (`rm -rf <workspace>`) — the git history is
-the record now. Sibling directories belong to other plans; leave them
-alone.
+最終の whole-branch レビューがクリーンで、その修正がマージされたら、この計画書のワークスペースを
+削除してください（`rm -rf <workspace>`）— これからは git 履歴が記録です。
+兄弟ディレクトリは他の計画書のものです。そのままにしてください。
 
-Use superpowers:finishing-a-development-branch.
+superpowers:finishing-a-development-branch を使ってください。

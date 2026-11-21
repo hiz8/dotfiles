@@ -1,12 +1,10 @@
-# Resuming From an Existing Ledger
+# 既存の ledger からの再開
 
-Part of superpowers:subagent-driven-development. This plan's workspace
-already has a ledger at `<workspace>/progress.md`.
+superpowers:subagent-driven-development の一部です。この計画書のワークスペースには、すでに
+`<workspace>/progress.md` に ledger があります。
 
-If the ledger's first line names your plan file, tasks with a `Task <N>:
-complete` line are DONE — do not re-dispatch them; resume at the first
-task without one. A task whose last line is a fix round is mid-loop:
-resume the loop at the next round. A ledger whose first line names a
-different plan file — or a stray ledger at the old flat path
-`.superpowers/sdd/progress.md` — is another plan's progress: leave it in
-place and start your own, fresh.
+ledger の 1 行目があなたの計画書ファイルを指しているなら、`Task <N>: complete` 行があるタスクは
+完了済み (DONE) です — 再ディスパッチしてはいけません。完了行のない最初のタスクから再開してください。
+最後の行が修正ラウンドのタスクは、ループの途中です。次のラウンドからループを再開してください。
+1 行目が別の計画書ファイルを指す ledger、または旧来のフラットなパス `.superpowers/sdd/progress.md`
+にある孤立した ledger は、別の計画書の進捗です。そのままにして、自分の ledger を新しく始めてください。
