@@ -30,7 +30,7 @@ claude plugin list                                           # hiz-dotfiles 版�
 実際に使われるのはキャッシュ（`~/.claude/plugins/cache/hiz-dotfiles/superpowers/<version>/`）
 へコピーされた版です。リポジトリを編集しただけでは反映されません。
 
-1. `.claude-plugin/plugin.json`（プラグイン直下）と、リポジトリ直下の
+1. `.claude-plugin/plugin.json` と `.devin-plugin/plugin.json`（プラグイン直下）、リポジトリ直下の
    `.claude-plugin/marketplace.json` の `version` を上げます（例: `7.0.2-ja.2`）
 2. 更新します
 
@@ -41,7 +41,7 @@ claude plugin list                                           # hiz-dotfiles 版�
 
 3. Claude Code を再起動します（`update` は再起動で適用されます）
 
-この更新手順は `--help` の出力から導いたもので、実機ではまだ実行していません。
+この手順は 2026-11-22 に `7.0.2-ja.1` から `7.0.2-ja.2` への更新で実行し、キャッシュがリポジトリと一致することを確認しました。
 
 ## GitHub Copilot CLI（未検証）
 
