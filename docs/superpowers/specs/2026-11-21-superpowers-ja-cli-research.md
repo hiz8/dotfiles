@@ -25,6 +25,8 @@ copilot plugin install hiz8/dotfiles:plugins/superpowers
 
 ### 確認できた事項
 
+- 旧形式プラグインのファイル配置表に `hooks.json` または `hooks/hooks.json` が
+  載っており、Copilot CLI が `hooks/hooks.json` を読むことは公式リファレンスで確認済み
 - `marketplace add` は `owner/repo`、`owner/repo#ref`、URL、ローカルパスを受け付ける。
   marketplace の名前は `marketplace.json` の `name` が登録キーになる
 - `marketplace.json` の探索順は `marketplace.json`、`.plugin/marketplace.json`、
@@ -39,10 +41,6 @@ copilot plugin install hiz8/dotfiles:plugins/superpowers
 
 ### 未確認
 
-- Copilot CLI がプラグインの `hooks/hooks.json` を読むこと自体を公式ドキュメントで
-  は確認していない。上流の `hooks/session-start` に `COPILOT_CLI` 分岐があり、
-  v7.0.2 のリリースノートに Copilot の PowerShell 向け `powershell` コマンド形式の
-  記載があるため、上流では動作している前提と見られる（二次情報）
 - 実機での `marketplace add hiz8/dotfiles` の動作（ユーザーが別環境で確認する）
 
 ### 出典
