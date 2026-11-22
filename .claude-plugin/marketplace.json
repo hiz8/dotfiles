@@ -8,7 +8,7 @@
     {
       "name": "superpowers",
       "description": "superpowers の日本語版スキルライブラリ（TDD、デバッグ、協働パターンなど）",
-      "version": "7.0.2-ja.3",
+      "version": "7.0.2-ja.4",
       "source": "./plugins/superpowers"
     }
   ]

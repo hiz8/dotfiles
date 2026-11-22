@@ -1,7 +1,7 @@
 {
   "name": "superpowers",
   "description": "Claude Code 向けのコアスキルライブラリです。TDD、デバッグ、協働のパターン、実証済みの手法を収録しています。",
-  "version": "7.0.2-ja.3",
+  "version": "7.0.2-ja.4",
   "author": {
     "name": "Jesse Vincent",
     "email": "jesse@fsck.com"
