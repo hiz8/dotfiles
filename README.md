@@ -61,6 +61,18 @@ stow --target="$HOME" --adopt bash
 git diff   # 取り込んだ内容が期待どおりか確認する
 ```
 
+## プラグイン
+
+Stow の対象外である `plugins/` 配下に、Claude Code プラグインを置いている。
+リポジトリ直下の `.claude-plugin/marketplace.json` が marketplace `hiz-dotfiles` を定義する。
+
+| プラグイン    | 内容                                 |
+| ------------- | ------------------------------------ |
+| `superpowers` | superpowers v7.0.2 の日本語訳版      |
+
+導入手順と更新手順は [plugins/superpowers/README.md](plugins/superpowers/README.md)
+を参照する。
+
 ## アンインストール
 
 ```sh

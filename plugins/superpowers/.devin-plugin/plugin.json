@@ -1,0 +1,22 @@
+{
+  "name": "superpowers",
+  "version": "7.0.2-ja.4",
+  "description": "実際に機能する、エージェント向けのスキルフレームワーク兼ソフトウェア開発手法です。計画、TDD、デバッグ、協働のワークフローを備えています。",
+  "author": {
+    "name": "Jesse Vincent",
+    "email": "jesse@fsck.com"
+  },
+  "homepage": "https://github.com/obra/superpowers",
+  "repository": "https://github.com/obra/superpowers",
+  "license": "MIT",
+  "keywords": [
+    "brainstorming",
+    "subagent-driven-development",
+    "skills",
+    "planning",
+    "tdd",
+    "debugging",
+    "code-review",
+    "workflow"
+  ]
+}

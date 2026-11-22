@@ -28,7 +28,8 @@
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": false,
+    "superpowers@hiz-dotfiles": true
   },
   "extraKnownMarketplaces": {
     "cloudflare": {
