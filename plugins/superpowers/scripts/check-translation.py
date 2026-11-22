@@ -32,6 +32,11 @@ BYTE_EXEMPT = {
     ".devin-plugin/plugin.json",
 }
 # 対象外のハーネス向けとして削除した 6 ファイル（upstream にはあるがプラグインには置かない）
+# 使用実績がなく他のスキルからも参照されないため削除したスキル
+REMOVED_SKILL_DIRS = (
+    "skills/diagnosing-superpowers/",
+    "skills/dispatching-parallel-agents/",
+)
 REMOVED = {
     f"skills/using-superpowers/references/{n}-tools.md"
     for n in ("codex", "gemini", "pi", "antigravity", "hermes", "muse")
@@ -127,7 +132,10 @@ def main():
         failures.append((check, path, msg))
 
     # 1. ファイル構成
-    expected = upstream_files(up) - REMOVED
+    expected = {
+        f for f in upstream_files(up) - REMOVED
+        if not f.startswith(REMOVED_SKILL_DIRS)
+    }
     actual = plugin_files()
     for f in sorted(expected - actual):
         fail("1 ファイル構成", f, "欠落")

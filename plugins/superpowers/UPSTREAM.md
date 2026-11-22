@@ -46,6 +46,9 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 
 ### upstream との意図的な差異
 
+- スキル `diagnosing-superpowers` と `dispatching-parallel-agents` を削除した。複数環境（Claude Code・Devin・Copilot CLI）の
+  利用記録で使用実績がなく、他のスキルからも参照されていないため。`check-translation.py` はこの 2 スキルを
+  ファイル構成の検査対象から外している
 - `using-superpowers/references/` の codex / gemini / pi / antigravity / hermes / muse 各 `*-tools.md` は削除した
   （このプラグインの対象は Claude Code・Copilot CLI・Devin CLI のため）。using-superpowers/SKILL.md の
   プラットフォーム一覧からも該当行を削り、writing-skills/SKILL.md の codex-tools.md / gemini-tools.md への
@@ -156,7 +159,6 @@ git -C "$UPSTREAM" rev-parse HEAD   # 22f0b463e7a5e579904dd6211a520321035526f7 �
 | rationalize / rationalization | 自己正当化する / 自己正当化 | 「合理化」は使わない。You cannot rationalize your way out of this → 自己正当化して逃れることはできません |
 | the letter / the spirit (of the rules) | （ルールの）文言 / 精神 | |
 | HARD-GATE | `<HARD-GATE>` タグはそのまま | タグの中身は訳し、強さを保つ |
-| bundle / scrub / redaction / analyst / dimension / provenance | バンドル / スクラブ / リダクション / analyst / 観点 / 出所（provenance） | diagnosing-superpowers。analyst は英語のまま（analyst subagent）。provenance のラベル値（historical evidence 等）は英語のまま |
 
 ### 訳語の統一（スキル間で表記を揺らさない）
 
