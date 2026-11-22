@@ -54,7 +54,7 @@ function calcTotal(order: Order): number {
 }
 ```
 
-入れ子になった `if (a) { if (b) { ... } }` を `if (a && b)` にまとめるのも、このパターンの一部として扱います。
+このパターンは、先頭で返すガードを置くことだけです。入れ子になった `if (a) { if (b) { ... } }` を `if (a && b)` にまとめたり、冗長な条件を消したりするのは、一覧の別の行（「Guard Clause（条件の統合）」と書きます）にして、別のコミットにします。内側の `if` に `else` がある場合、まとめると振る舞いが変わるので、まとめてはいけません。
 
 ## Dead Code の削除
 
@@ -114,8 +114,9 @@ export function totalFor(items: Item[], options: { member: boolean; coupon?: str
 
 **使う場面:** 関数の先頭で変数をまとめて宣言し、ずっと後で値を入れている。
 
-**手順:** 宣言を、最初に値を入れる場所まで下げ、宣言と初期化を 1 行にします。途中で
-その変数を読んでいる箇所がないことを確かめます。
+**手順:** 宣言を、最初に値を入れる場所の直前まで下げます。途中でその変数を読んでいる箇所が
+ないことを確かめます。宣言と初期化を 1 行にまとめるのは、代入が 1 回だけの変数に限ります。
+ループの書き方などは変えません。
 
 ```typescript
 // 前
@@ -123,9 +124,10 @@ let count = 0;
 // ... 10 行 ...
 for (const it of order.items) count += it.qty;
 
-// 後
+// 後: 宣言をループの直前に下げただけ。ループは変えない
 // ... 10 行 ...
-const count = order.items.reduce((n, it) => n + it.qty, 0);
+let count = 0;
+for (const it of order.items) count += it.qty;
 ```
 
 ## 説明用の変数・定数
