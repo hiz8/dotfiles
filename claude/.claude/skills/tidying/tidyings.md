@@ -163,12 +163,18 @@ if (order.member && total > MEMBER_DISCOUNT_THRESHOLD) total *= MEMBER_DISCOUNT_
 **使う場面:** 関数の一部に、名前を付けられるはっきりした目的がある（小計の計算など）。
 
 **手順:** その部分を関数に取り出し、元の場所から呼びます。引数と戻り値で受け渡しし、
-取り出した関数の中から外側の変数を書き換えないようにします。
+取り出した関数の中から外側の変数を書き換えないようにします。**取り出すコードは書き換えずに
+そのまま移します。** ループの形や変数の宣言を変えたくなったら、それは「対称性をそろえる」などの
+別のパターンなので、抽出の前か後の別のコミットにします。
 
 ```typescript
+// 元の calcTotal にあったループを、書き方を変えずにそのまま移す
 function subtotal(order: Order): number {
   let total = 0;
-  for (const it of order.items) total += it.price * it.qty;
+  for (let i = 0; i < order.items.length; i++) {
+    const it = order.items[i];
+    total = total + it.price * it.qty;
+  }
   return total;
 }
 ```
