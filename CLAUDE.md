@@ -40,7 +40,7 @@ rejects them when named explicitly.
 
 Claude Code keeps real runtime state and secrets in `~/.claude/`. This package
 deliberately tracks **only editable configuration** — `CLAUDE.md`,
-`settings.json`, `commands/`, `hooks/`, and `skills/` — and must leave
+`settings.json`, `statusline.sh`, `commands/`, `hooks/`, and `skills/` — and must leave
 runtime/secret files (`history.jsonl`, `projects/`, `sessions/`,
 `.credentials.json`, …) untouched. When adding files here, never pull in runtime
 state or credentials.
