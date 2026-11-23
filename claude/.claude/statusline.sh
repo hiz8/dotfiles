@@ -97,6 +97,10 @@ EOF
 		*) extra=1 ;;
 		esac
 	done
+	# --show-prefix は必ず相対パス。/ で始まれば、パスの改行で行がずれている
+	case "$prefix" in
+	/*) extra=1 ;;
+	esac
 	if [ -n "$extra" ]; then
 		printf '%s' "$(basename "$1")"
 		return
