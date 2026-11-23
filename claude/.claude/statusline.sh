@@ -14,10 +14,11 @@ input=$(cat)
 
 # 必要な値を jq 1 回でまとめて取り出し、シェル変数として読み込む。
 # ステータスラインは頻繁に更新されるので、jq の起動回数を抑える。
-# 値がない・null・配列などのときは空文字にする。JSON が壊れていれば全項目が空になる。
+# 文字列と数値だけを通し、値がない・null・真偽値・配列などのときは空文字にする。
+# 途中の階層の型が違っても f? でその項目だけを空にする。JSON が壊れていれば全項目が空になる。
 model="" cwd="" ctx="" five="" five_reset="" week=""
 eval "$(printf '%s' "$input" | jq -r '
-	def v(f): ([f | scalars | select(. != null) | tostring] | first) // "";
+	def v(f): ([f? | strings, numbers | tostring] | first) // "";
 	@sh "model=\(v(.model.display_name))",
 	@sh "cwd=\(v(.workspace.current_dir))",
 	@sh "ctx=\(v(.context_window.used_percentage))",
