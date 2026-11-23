@@ -3,8 +3,9 @@
 # Claude Code の statusLine 用スクリプト。
 # 標準入力で受け取るセッション情報（JSON）から、次の形式で 1 行出力する:
 #
-#   [{モデル名}] 📂 {フォルダ名} 🌿 {ブランチ名} | ctx: {n}% 現在: {n}% ({リセット時刻}) 今週: {n}%
+#   [{モデル名}] 📂 {リポジトリ名}[@{worktree 名}][/{パス}] 🌿 {ブランチ名} | ctx: {n}% 現在: {n}% ({リセット時刻}) 今週: {n}%
 #
+# - 📂 は git 管理下ならリポジトリ名からのパス、管理外なら今いるフォルダ名（folder_label 参照）。
 # - 「現在」は 5 時間枠、「今週」は週次枠の利用制限の使用率。
 #   rate_limits は claude.ai の Pro / Max / Ultra でのみ、最初の応答後に渡される。
 # - ctx / 現在 / 今週 は使用率で色分けする（50% 未満: 通常、50〜79%: 黄、80% 以上: 赤）。
@@ -45,10 +46,86 @@ clock() {
 	date -d "@$1" +%H:%M 2>/dev/null || date -r "$1" +%H:%M 2>/dev/null
 }
 
+# ルートからの相対パスが 3 階層以上なら、末尾の 2 階層だけを残して「…/」で省略する。
+#   claude/.claude          → claude/.claude
+#   claude/.claude/skills   → …/.claude/skills
+shorten_path() {
+	case "$1" in
+	*/*/*)
+		last=${1##*/}
+		rest=${1%/*}
+		printf '…/%s/%s' "${rest##*/}" "$last"
+		;;
+	*) printf '%s' "$1" ;;
+	esac
+}
+
+# 📂 に表示するフォルダ名を出力する。
+#   リポジトリのルート:             dotfiles
+#   サブフォルダ:                   dotfiles/src
+#   linked worktree のルート:       dotfiles@wt-feature
+#   linked worktree のサブフォルダ: dotfiles@wt-feature/src
+# git 管理外や .git の中などでは、今いるフォルダ名だけを出力する。
+# リポジトリ名:
+#   本体の worktree: そのルートのフォルダ名
+#   linked worktree: 本体の .git があるフォルダ名。.git の置き場所が特殊なときは、
+#                    その置き場所のフォルダ名（bare: <名前>.git の <名前>）
+# git 2.31 未満は --path-format を知らず、エラーにせずそのまま出力するため、
+# 読んだ値が 1 行ずつずれる。ずれると絶対パスでない値や余分な行が混ざるので、
+# それを検出したときもフォルダ名だけを出力する。パスに改行を含む場合も同じ。
+folder_label() {
+	parsed=$(git --no-optional-locks -C "$1" rev-parse --path-format=absolute \
+		--show-toplevel --git-dir --git-common-dir --show-prefix 2>/dev/null) || {
+		printf '%s' "$(basename "$1")"
+		return
+	}
+	# rev-parse は 1 行に 1 つずつ値を出す。--show-prefix はルートでは空行になる。
+	# IFS= で前後の空白を残す。5 行目があれば行がずれている。
+	extra=""
+	{
+		IFS= read -r top
+		IFS= read -r git_dir
+		IFS= read -r common_dir
+		IFS= read -r prefix
+		IFS= read -r extra
+	} <<EOF
+$parsed
+EOF
+	for p in "$top" "$git_dir" "$common_dir"; do
+		case "$p" in
+		/*) ;;
+		*) extra=1 ;;
+		esac
+	done
+	# --show-prefix は必ず相対パス。/ で始まれば、パスの改行で行がずれている
+	case "$prefix" in
+	/*) extra=1 ;;
+	esac
+	if [ -n "$extra" ]; then
+		printf '%s' "$(basename "$1")"
+		return
+	fi
+	prefix=${prefix%/}
+
+	# git-dir と git-common-dir が違えば linked worktree の中にいる
+	if [ "$git_dir" != "$common_dir" ]; then
+		case "$common_dir" in
+		*/.git) repo=$(basename "$(dirname "$common_dir")") ;;
+		*) repo=$(basename "$common_dir" .git) ;;
+		esac
+		label="$repo@$(basename "$top")"
+	else
+		label=$(basename "$top")
+	fi
+	[ -n "$prefix" ] && label="$label/$(shorten_path "$prefix")"
+	printf '%s' "$label"
+}
+
 dir=""
 branch=""
 if [ -n "$cwd" ]; then
-	dir=$(basename "$cwd")
+	# フォルダ名に改行があってもステータスラインが 2 行にならないよう、空白に置き換える
+	dir=$(folder_label "$cwd" | tr '\n' ' ')
 	branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --short -q HEAD 2>/dev/null ||
 		git --no-optional-locks -C "$cwd" rev-parse --short HEAD 2>/dev/null)
 fi
