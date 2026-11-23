@@ -3,8 +3,9 @@
 # Claude Code の statusLine 用スクリプト。
 # 標準入力で受け取るセッション情報（JSON）から、次の形式で 1 行出力する:
 #
-#   [{モデル名}] 📂 {フォルダ名} 🌿 {ブランチ名} | ctx: {n}% 現在: {n}% ({リセット時刻}) 今週: {n}%
+#   [{モデル名}] 📂 {リポジトリ名}[@{worktree 名}][/{パス}] 🌿 {ブランチ名} | ctx: {n}% 現在: {n}% ({リセット時刻}) 今週: {n}%
 #
+# - 📂 は git 管理下ならリポジトリ名からのパス、管理外なら今いるフォルダ名（folder_label 参照）。
 # - 「現在」は 5 時間枠、「今週」は週次枠の利用制限の使用率。
 #   rate_limits は claude.ai の Pro / Max / Ultra でのみ、最初の応答後に渡される。
 # - ctx / 現在 / 今週 は使用率で色分けする（50% 未満: 通常、50〜79%: 黄、80% 以上: 赤）。
@@ -45,10 +46,64 @@ clock() {
 	date -d "@$1" +%H:%M 2>/dev/null || date -r "$1" +%H:%M 2>/dev/null
 }
 
+# ルートからの相対パスが 3 階層以上なら、末尾の 2 階層だけを残して「…/」で省略する。
+#   claude/.claude          → claude/.claude
+#   claude/.claude/skills   → …/.claude/skills
+shorten_path() {
+	case "$1" in
+	*/*/*)
+		last=${1##*/}
+		rest=${1%/*}
+		printf '…/%s/%s' "${rest##*/}" "$last"
+		;;
+	*) printf '%s' "$1" ;;
+	esac
+}
+
+# 📂 に表示するフォルダ名を出力する。
+#   リポジトリのルート:             dotfiles
+#   サブフォルダ:                   dotfiles/src
+#   linked worktree のルート:       dotfiles@wt-feature
+#   linked worktree のサブフォルダ: dotfiles@wt-feature/src
+# git 管理外や .git の中などでは、今いるフォルダ名だけを出力する。
+# リポジトリ名は本体の .git があるフォルダ名から取る。.git の置き場所が特殊なときは、
+# その置き場所のフォルダ名を使う（サブモジュール: .git/modules/<名前>、bare: <名前>.git）。
+# --path-format は git 2.31 以降が必要で、それより古ければフォルダ名だけになる。
+folder_label() {
+	parsed=$(git --no-optional-locks -C "$1" rev-parse --path-format=absolute \
+		--show-toplevel --git-dir --git-common-dir --show-prefix 2>/dev/null) || {
+		basename "$1"
+		return
+	}
+	# rev-parse は 1 行に 1 つずつ値を出す。--show-prefix はルートでは空行になる。
+	{
+		read -r top
+		read -r git_dir
+		read -r common_dir
+		read -r prefix
+	} <<EOF
+$parsed
+EOF
+	prefix=${prefix%/}
+
+	case "$common_dir" in
+	*/.git) repo=$(basename "$(dirname "$common_dir")") ;;
+	*) repo=$(basename "$common_dir" .git) ;;
+	esac
+
+	label=$repo
+	# git-dir と git-common-dir が違えば linked worktree の中にいる
+	if [ "$git_dir" != "$common_dir" ]; then
+		label="$label@$(basename "$top")"
+	fi
+	[ -n "$prefix" ] && label="$label/$(shorten_path "$prefix")"
+	printf '%s' "$label"
+}
+
 dir=""
 branch=""
 if [ -n "$cwd" ]; then
-	dir=$(basename "$cwd")
+	dir=$(folder_label "$cwd")
 	branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --short -q HEAD 2>/dev/null ||
 		git --no-optional-locks -C "$cwd" rev-parse --short HEAD 2>/dev/null)
 fi
