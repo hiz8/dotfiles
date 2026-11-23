@@ -66,35 +66,52 @@ shorten_path() {
 #   linked worktree のルート:       dotfiles@wt-feature
 #   linked worktree のサブフォルダ: dotfiles@wt-feature/src
 # git 管理外や .git の中などでは、今いるフォルダ名だけを出力する。
-# リポジトリ名は本体の .git があるフォルダ名から取る。.git の置き場所が特殊なときは、
-# その置き場所のフォルダ名を使う（サブモジュール: .git/modules/<名前>、bare: <名前>.git）。
-# --path-format は git 2.31 以降が必要で、それより古ければフォルダ名だけになる。
+# リポジトリ名:
+#   本体の worktree: そのルートのフォルダ名
+#   linked worktree: 本体の .git があるフォルダ名。.git の置き場所が特殊なときは、
+#                    その置き場所のフォルダ名（bare: <名前>.git の <名前>）
+# git 2.31 未満は --path-format を知らず、エラーにせずそのまま出力するため、
+# 読んだ値が 1 行ずつずれる。ずれると絶対パスでない値や余分な行が混ざるので、
+# それを検出したときもフォルダ名だけを出力する。パスに改行を含む場合も同じ。
 folder_label() {
 	parsed=$(git --no-optional-locks -C "$1" rev-parse --path-format=absolute \
 		--show-toplevel --git-dir --git-common-dir --show-prefix 2>/dev/null) || {
-		basename "$1"
+		printf '%s' "$(basename "$1")"
 		return
 	}
 	# rev-parse は 1 行に 1 つずつ値を出す。--show-prefix はルートでは空行になる。
+	# IFS= で前後の空白を残す。5 行目があれば行がずれている。
+	extra=""
 	{
-		read -r top
-		read -r git_dir
-		read -r common_dir
-		read -r prefix
+		IFS= read -r top
+		IFS= read -r git_dir
+		IFS= read -r common_dir
+		IFS= read -r prefix
+		IFS= read -r extra
 	} <<EOF
 $parsed
 EOF
+	for p in "$top" "$git_dir" "$common_dir"; do
+		case "$p" in
+		/*) ;;
+		*) extra=1 ;;
+		esac
+	done
+	if [ -n "$extra" ]; then
+		printf '%s' "$(basename "$1")"
+		return
+	fi
 	prefix=${prefix%/}
 
-	case "$common_dir" in
-	*/.git) repo=$(basename "$(dirname "$common_dir")") ;;
-	*) repo=$(basename "$common_dir" .git) ;;
-	esac
-
-	label=$repo
 	# git-dir と git-common-dir が違えば linked worktree の中にいる
 	if [ "$git_dir" != "$common_dir" ]; then
-		label="$label@$(basename "$top")"
+		case "$common_dir" in
+		*/.git) repo=$(basename "$(dirname "$common_dir")") ;;
+		*) repo=$(basename "$common_dir" .git) ;;
+		esac
+		label="$repo@$(basename "$top")"
+	else
+		label=$(basename "$top")
 	fi
 	[ -n "$prefix" ] && label="$label/$(shorten_path "$prefix")"
 	printf '%s' "$label"
@@ -103,7 +120,8 @@ EOF
 dir=""
 branch=""
 if [ -n "$cwd" ]; then
-	dir=$(folder_label "$cwd")
+	# フォルダ名に改行があってもステータスラインが 2 行にならないよう、空白に置き換える
+	dir=$(folder_label "$cwd" | tr '\n' ' ')
 	branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --short -q HEAD 2>/dev/null ||
 		git --no-optional-locks -C "$cwd" rev-parse --short HEAD 2>/dev/null)
 fi
