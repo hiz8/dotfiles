@@ -57,6 +57,13 @@ The same `--adopt` trick resolves any "existing real file in `$HOME`" conflict
 for other packages too — it moves the existing file into the package and
 replaces it with a symlink, so always review `git diff` afterward.
 
+`claude/.claude/settings.json` registers this repo as the `hiz-dotfiles` plugin
+marketplace via an **absolute path** (`/home/hiz/work/dotfiles`), because
+Claude Code reads no user-level `settings.local.json` to hold a host-specific
+value. Stow itself works from any location, but if the repo is cloned anywhere
+else, the marketplace is not found and `superpowers@hiz-dotfiles` does not
+load — update `extraKnownMarketplaces.hiz-dotfiles.source.path` to match.
+
 ## Conventions
 
 - Machine-local overrides go in `*.local` files (gitignored) — keep them out of
