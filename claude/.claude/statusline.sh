@@ -12,11 +12,22 @@
 
 input=$(cat)
 
-field() {
-	printf '%s' "$input" | jq -r "$1 // empty"
-}
+# 必要な値を jq 1 回でまとめて取り出し、シェル変数として読み込む。
+# ステータスラインは頻繁に更新されるので、jq の起動回数を抑える。
+# 値がない・null・配列などのときは空文字にする。JSON が壊れていれば全項目が空になる。
+model="" cwd="" ctx="" five="" five_reset="" week=""
+eval "$(printf '%s' "$input" | jq -r '
+	def v(f): ([f | scalars | select(. != null) | tostring] | first) // "";
+	@sh "model=\(v(.model.display_name))",
+	@sh "cwd=\(v(.workspace.current_dir))",
+	@sh "ctx=\(v(.context_window.used_percentage))",
+	@sh "five=\(v(.rate_limits.five_hour.used_percentage))",
+	@sh "five_reset=\(v(.rate_limits.five_hour.resets_at))",
+	@sh "week=\(v(.rate_limits.seven_day.used_percentage))"
+' 2>/dev/null)"
 
-# 使用率（小数可）を四捨五入し、閾値に応じた色で "{n}%" を出力する。
+# 使用率（小数可）を整数に丸め、閾値に応じた色で "{n}%" を出力する。
+# 丸めは printf '%.0f' による偶数丸め（例: 80.5 → 80）。色は丸めた後の値で決まる。
 colored_pct() {
 	n=$(printf '%.0f' "$1")
 	if [ "$n" -ge 80 ]; then
@@ -32,13 +43,6 @@ colored_pct() {
 clock() {
 	date -d "@$1" +%H:%M 2>/dev/null || date -r "$1" +%H:%M 2>/dev/null
 }
-
-model=$(field '.model.display_name')
-cwd=$(field '.workspace.current_dir')
-ctx=$(field '.context_window.used_percentage')
-five=$(field '.rate_limits.five_hour.used_percentage')
-five_reset=$(field '.rate_limits.five_hour.resets_at')
-week=$(field '.rate_limits.seven_day.used_percentage')
 
 dir=""
 branch=""
