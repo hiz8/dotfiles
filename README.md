@@ -57,11 +57,19 @@ cd /path/to/dotfiles
 汎用的なパターンだけをここに置く。特定のリポジトリだけで使うパターンは、そのリポジトリの
 `.git/info/exclude` に書く。
 
+`git/.gitconfig` は Git 2.56 以降を前提とする（`includeIf "worktree:"`、
+`blame.ignoreRevsFile` の `:(optional)` などを使っている）。古い git では
+`git blame` がエラーになるなど、一部の設定が期待どおりに動かない。
+
 作業ツリーが `~/work/` 配下にあるリポジトリでは、`includeIf "worktree:"` で
 `~/.config/git/fsmonitor` を読み込み、組み込みの fsmonitor（`core.fsmonitor`）と
 `core.untrackedCache` を有効にする。デーモンがリポジトリごとに常駐するため、
 グローバルには有効にしない。`/mnt/c` など Windows 側のドライブにあるリポジトリは
 `~/work/` の外に置く。デーモンの状態は `git fsmonitor--daemon status` で確認できる。
+
+整形だけのコミットなどを `git blame` で無視したい場合は、リポジトリのルートに
+`.git-blame-ignore-revs` を置き、無視したいコミットの完全なハッシュを 1 行に 1 つずつ書く。
+ファイルがないリポジトリでは何も起きない。
 
 > **既存の `~/.claude` を移行する場合:** Claude Code は既にそこに実ファイルを
 > 保持しているため、単純な `./install.sh claude` は競合する。そのため代わりに既存の

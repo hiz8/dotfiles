@@ -1,5 +1,5 @@
 [alias]
-	tree = log --graph --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by %C(cyan ul)%an%Creset %x09%C(auto)%s %d'
+	tree = log --graph --graph-lane-limit=10 --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by %C(cyan ul)%an%Creset %x09%C(auto)%s %d'
 	cleanup = !git branch --merged | grep -vE \"^[*+]|^\\s*(main|master|develop)$\" | xargs -r -n 1 git branch -d
 	pushf = push --force-with-lease --force-if-includes
 	desc = "!f(){ b=$(git branch --show-current); [ -n \"$b\" ] || { echo 'git desc: not on a branch (detached HEAD)' >&2; return 1; }; git config \"branch.$b.description\"; }; f"
@@ -10,10 +10,15 @@
 	useConfigOnly = true
 [core]
 	editor = vim
+[init]
+	# Git 3.0 で既定値になる main を先取りする。
+	defaultBranch = main
 [push]
 	autoSetupRemote = true
 [fetch]
 	prune = true
+	# リモートの既定ブランチ（origin/HEAD）が変わったら知らせる。
+	followRemoteHEAD = warn
 [credential "https://github.com"]
 	helper =
 	helper = !gh auth git-credential
@@ -22,6 +27,12 @@
 	helper = !gh auth git-credential
 [pull]
 	rebase = true
+	# 未コミットの変更があっても、一時的に stash して pull する。
+	autoStash = true
+[blame]
+	# リポジトリにファイルがあれば、記載したコミット（整形など）を blame で無視する。
+	# :(optional) を付けているので、ファイルがないリポジトリではエラーにならない（Git 2.52 以降）。
+	ignoreRevsFile = :(optional).git-blame-ignore-revs
 
 # 作業ツリーが ~/work/ 配下にあるときだけ、組み込みの fsmonitor を有効にする。
 # 常駐デーモンがリポジトリごとに起動するため、グローバルには有効にしない。
