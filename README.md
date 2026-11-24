@@ -23,17 +23,39 @@ cd /path/to/dotfiles
 
 ## パッケージ
 
-| パッケージ | リンク先                             |
-| ---------- | ------------------------------------ |
-| `bash`     | `~/.bashrc`, `~/.profile`            |
-| `git`      | `~/.gitconfig`                       |
-| `vim`      | `~/.vimrc`                           |
-| `claude`   | `~/.claude/` 配下の Claude Code 設定 |
+| パッケージ | リンク先                               |
+| ---------- | -------------------------------------- |
+| `bash`     | `~/.bashrc`, `~/.profile`              |
+| `git`      | `~/.gitconfig`, `~/.config/git/ignore` |
+| `vim`      | `~/.vimrc`                             |
+| `claude`   | `~/.claude/` 配下の Claude Code 設定   |
 
 `claude` パッケージが追跡するのは編集可能な設定 (`CLAUDE.md`、`settings.json`、
 `commands/`、`hooks/`、`skills/`) のみであり、ランタイム状態や秘密情報（`history.jsonl`、
 `projects/`、`sessions/`、`.credentials.json` など）は管理の対象外とし、
 `~/.claude/` 内に残す。
+
+### `git` パッケージのマシン固有設定
+
+`git/.gitconfig` には `user.name` / `user.email` を含めない。`user.useConfigOnly = true`
+にしているので、未設定のままではコミットできない。マシンごとに `~/.gitconfig.local`
+（管理対象外）を作成し、末尾の `[include]` から読み込ませる。
+
+```ini
+# ~/.gitconfig.local
+[user]
+	name = your-name
+	email = you@example.com
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+```
+
+ディレクトリによってアカウントを切り替えたい場合は、`~/.gitconfig.local` の中で
+`[includeIf "gitdir:~/path/"]` を使う。
+
+グローバルな ignore ファイル（`~/.config/git/ignore`）は 1 つしか読まれないため、
+汎用的なパターンだけをここに置く。特定のリポジトリだけで使うパターンは、そのリポジトリの
+`.git/info/exclude` に書く。
 
 > **既存の `~/.claude` を移行する場合:** Claude Code は既にそこに実ファイルを
 > 保持しているため、単純な `./install.sh claude` は競合する。そのため代わりに既存の

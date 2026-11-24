@@ -1,10 +1,13 @@
 [alias]
-	tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	cleanup = !git branch --merged | grep -vE \"^[*+]|main|master|develop\" | xargs -r -n 1 git branch -d
-	pushf = push --force-with-lease
+	tree = log --graph --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by %C(cyan ul)%an%Creset %x09%C(auto)%s %d'
+	cleanup = !git branch --merged | grep -vE \"^[*+]|^\\s*(main|master|develop)$\" | xargs -r -n 1 git branch -d
+	pushf = push --force-with-lease --force-if-includes
+	desc = "!f(){ b=$(git branch --show-current); [ -n \"$b\" ] || { echo 'git desc: not on a branch (detached HEAD)' >&2; return 1; }; git config \"branch.$b.description\"; }; f"
+	delbranches = "!f(){ git branch --list --format='%(refname:short)' \"$1\" | xargs -r git branch -D; }; f"
 [user]
-	name = hiz8
-	email = 7459529+hiz8@users.noreply.github.com
+	# name / email はマシンごとに ~/.gitconfig.local で設定する。
+	# 未設定のときは推測値を使わず、コミットを止める。
+	useConfigOnly = true
 [core]
 	editor = vim
 [push]
@@ -13,6 +16,14 @@
 	prune = true
 [credential "https://github.com"]
 	helper =
-	helper = !/usr/bin/gh auth git-credential
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
 [pull]
 	rebase = true
+
+# マシン固有の設定（user、url.insteadOf など）。後に読む値が優先されるため末尾に置く。
+# ファイルがなければ無視される。
+[include]
+	path = ~/.gitconfig.local
