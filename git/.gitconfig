@@ -2,8 +2,8 @@
 	tree = log --graph --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by %C(cyan ul)%an%Creset %x09%C(auto)%s %d'
 	cleanup = !git branch --merged | grep -vE \"^[*+]|^\\s*(main|master|develop)$\" | xargs -r -n 1 git branch -d
 	pushf = push --force-with-lease --force-if-includes
-	desc = !git config branch.$(git rev-parse --abbrev-ref HEAD).description
-	delbranches = "!f(){ git branch --list \"$1\" | xargs -r git branch -D; }; f"
+	desc = "!f(){ b=$(git branch --show-current); [ -n \"$b\" ] || { echo 'git desc: not on a branch (detached HEAD)' >&2; return 1; }; git config \"branch.$b.description\"; }; f"
+	delbranches = "!f(){ git branch --list --format='%(refname:short)' \"$1\" | xargs -r git branch -D; }; f"
 [user]
 	# name / email はマシンごとに ~/.gitconfig.local で設定する。
 	# 未設定のときは推測値を使わず、コミットを止める。
@@ -16,10 +16,10 @@
 	prune = true
 [credential "https://github.com"]
 	helper =
-	helper = !/usr/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !/usr/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [pull]
 	rebase = true
 
