@@ -3,8 +3,9 @@
 	cleanup = !git branch --merged | grep -vE \"^[*+]|main|master|develop\" | xargs -r -n 1 git branch -d
 	pushf = push --force-with-lease
 [user]
-	name = hiz8
-	email = 7459529+hiz8@users.noreply.github.com
+	# name / email はマシンごとに ~/.gitconfig.local で設定する。
+	# 未設定のときは推測値を使わず、コミットを止める。
+	useConfigOnly = true
 [core]
 	editor = vim
 [push]
@@ -16,3 +17,8 @@
 	helper = !/usr/bin/gh auth git-credential
 [pull]
 	rebase = true
+
+# マシン固有の設定（user、url.insteadOf など）。後に読む値が優先されるため末尾に置く。
+# ファイルがなければ無視される。
+[include]
+	path = ~/.gitconfig.local
