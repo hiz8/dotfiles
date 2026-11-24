@@ -23,12 +23,12 @@ cd /path/to/dotfiles
 
 ## パッケージ
 
-| パッケージ | リンク先                             |
-| ---------- | ------------------------------------ |
-| `bash`     | `~/.bashrc`, `~/.profile`            |
+| パッケージ | リンク先                               |
+| ---------- | -------------------------------------- |
+| `bash`     | `~/.bashrc`, `~/.profile`              |
 | `git`      | `~/.gitconfig`, `~/.config/git/ignore` |
-| `vim`      | `~/.vimrc`                           |
-| `claude`   | `~/.claude/` 配下の Claude Code 設定 |
+| `vim`      | `~/.vimrc`                             |
+| `claude`   | `~/.claude/` 配下の Claude Code 設定   |
 
 `claude` パッケージが追跡するのは編集可能な設定 (`CLAUDE.md`、`settings.json`、
 `commands/`、`hooks/`、`skills/`) のみであり、ランタイム状態や秘密情報（`history.jsonl`、
