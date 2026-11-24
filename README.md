@@ -57,9 +57,9 @@ cd /path/to/dotfiles
 汎用的なパターンだけをここに置く。特定のリポジトリだけで使うパターンは、そのリポジトリの
 `.git/info/exclude` に書く。
 
-`~/work/` 配下のリポジトリでは、`includeIf` で `~/.config/git/fsmonitor` を読み込み、
-組み込みの fsmonitor（`core.fsmonitor`）と `core.untrackedCache` を有効にする。
-Linux の組み込み fsmonitor には Git 2.55 以降が必要である。デーモンがリポジトリごとに常駐するため、
+作業ツリーが `~/work/` 配下にあるリポジトリでは、`includeIf "worktree:"` で
+`~/.config/git/fsmonitor` を読み込み、組み込みの fsmonitor（`core.fsmonitor`）と
+`core.untrackedCache` を有効にする。デーモンがリポジトリごとに常駐するため、
 グローバルには有効にしない。`/mnt/c` など Windows 側のドライブにあるリポジトリは
 `~/work/` の外に置く。デーモンの状態は `git fsmonitor--daemon status` で確認できる。
 

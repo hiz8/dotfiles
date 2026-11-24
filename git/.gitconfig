@@ -23,9 +23,11 @@
 [pull]
 	rebase = true
 
-# ~/work/ 配下のリポジトリだけで組み込みの fsmonitor を有効にする。
+# 作業ツリーが ~/work/ 配下にあるときだけ、組み込みの fsmonitor を有効にする。
 # 常駐デーモンがリポジトリごとに起動するため、グローバルには有効にしない。
-[includeIf "gitdir:~/work/"]
+# gitdir: ではなく worktree:（Git 2.56 以降）で判定し、~/work/ の外に作った
+# worktree（/mnt/c 上など）では読み込まない。
+[includeIf "worktree:~/work/"]
 	path = ~/.config/git/fsmonitor
 
 # マシン固有の設定（user、url.insteadOf など）。後に読む値が優先されるため末尾に置く。
