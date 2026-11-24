@@ -1,0 +1,6 @@
+# ~/work/ 配下のリポジトリだけで読み込む（~/.gitconfig の includeIf を参照）。
+# ext4 上のリポジトリで git status などを速くする。Linux では Git 2.55 以降が必要。
+# /mnt/c など Windows 側のドライブにあるリポジトリには使わない。
+[core]
+	fsmonitor = true
+	untrackedCache = true

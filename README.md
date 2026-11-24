@@ -23,12 +23,12 @@ cd /path/to/dotfiles
 
 ## パッケージ
 
-| パッケージ | リンク先                               |
-| ---------- | -------------------------------------- |
-| `bash`     | `~/.bashrc`, `~/.profile`              |
-| `git`      | `~/.gitconfig`, `~/.config/git/ignore` |
-| `vim`      | `~/.vimrc`                             |
-| `claude`   | `~/.claude/` 配下の Claude Code 設定   |
+| パッケージ | リンク先                                           |
+| ---------- | -------------------------------------------------- |
+| `bash`     | `~/.bashrc`, `~/.profile`                          |
+| `git`      | `~/.gitconfig`, `~/.config/git/{ignore,fsmonitor}` |
+| `vim`      | `~/.vimrc`                                         |
+| `claude`   | `~/.claude/` 配下の Claude Code 設定               |
 
 `claude` パッケージが追跡するのは編集可能な設定 (`CLAUDE.md`、`settings.json`、
 `commands/`、`hooks/`、`skills/`) のみであり、ランタイム状態や秘密情報（`history.jsonl`、
@@ -56,6 +56,12 @@ cd /path/to/dotfiles
 グローバルな ignore ファイル（`~/.config/git/ignore`）は 1 つしか読まれないため、
 汎用的なパターンだけをここに置く。特定のリポジトリだけで使うパターンは、そのリポジトリの
 `.git/info/exclude` に書く。
+
+`~/work/` 配下のリポジトリでは、`includeIf` で `~/.config/git/fsmonitor` を読み込み、
+組み込みの fsmonitor（`core.fsmonitor`）と `core.untrackedCache` を有効にする。
+Linux の組み込み fsmonitor には Git 2.55 以降が必要である。デーモンがリポジトリごとに常駐するため、
+グローバルには有効にしない。`/mnt/c` など Windows 側のドライブにあるリポジトリは
+`~/work/` の外に置く。デーモンの状態は `git fsmonitor--daemon status` で確認できる。
 
 > **既存の `~/.claude` を移行する場合:** Claude Code は既にそこに実ファイルを
 > 保持しているため、単純な `./install.sh claude` は競合する。そのため代わりに既存の
