@@ -1,9 +1,8 @@
-// commit スキル共有ロジック: コミットメッセージの表示幅・折り返し・構造判定。
+// commit スキルの検証ロジック: コミットメッセージの表示幅・折り返し・構造判定。
 //
-// commitlint のローカル日本語プラグイン (commitlint-plugin-ja.mjs) と、
-// 補助デバッグツール (check-commit-message.mjs) から参照される。
-// 旧 check-commit-message.mjs の判定ロジックを意味を変えずに切り出したもので、
-// 表示幅・折り返し・タイトル長の判定結果は旧実装と一致 (パリティ) させる。
+// checkMessage が規約 (references/commit-rules.md の [機械] ルール) をすべて判定する。
+// CLI (scripts/check-commit-message.mjs) は入力の読み込み・出力・終了コードだけを持ち、
+// 判定はこのモジュールに任せる。Node 標準ライブラリ以外に依存しない。
 
 export const MAX_WIDTH = 80 // 1行の表示幅の上限
 export const MIN_WIDTH = 70 // 折り返し継続行で下回ってはいけない目安幅
@@ -64,12 +63,12 @@ export function firstMovableUnit(nextText) {
   return { width: displayWidth(word), needsSpace: true }
 }
 
-// 生メッセージを行構造へ分解する。旧 check-commit-message.mjs と同じ規則:
+// 生メッセージを行構造へ分解する:
 //   - CRLF を LF へ正規化し、元の物理行番号 (1 始まり) を保持する。
 //   - 行頭 `#` の git コメント行は除外する (active)。
 //   - subject は active の先頭行。subject の直後に空行があれば body はその次以降。
-// 戻り値の hadLeadingBlank は subject 直後の空行の有無 (空行検証は commitlint の
-// body-leading-blank が担うため、ここでは body 抽出のためだけに用いる)。
+// 戻り値の hadLeadingBlank は subject 直後の空行の有無。空行がない場合も、
+// 幅の検証のため subject 以降をすべて body として返す。
 export function parseStructure(raw) {
   const physical = String(raw ?? "").replace(/\r\n?/g, "\n").split("\n")
   const lines = physical.map((text, i) => ({ n: i + 1, text }))
@@ -92,4 +91,85 @@ export function parseStructure(raw) {
   }
 
   return { lines, active, subject, body, hadLeadingBlank }
+}
+
+// コミットメッセージを規約の [機械] ルールで判定する。
+// 戻り値:
+//   - empty: subject (コメント行を除いた先頭行) が空なら true。このとき errors は空
+//   - errors: { n: 物理行番号, width: 表示幅, msg } の配列 (n の昇順)
+//   - lines: CRLF を LF に正規化した全物理行 (コメント行を含む)
+export function checkMessage(raw) {
+  const { lines, active, subject, body, hadLeadingBlank } = parseStructure(raw)
+  if (!subject || subject.text.trim() === "") {
+    return { empty: true, errors: [], lines }
+  }
+
+  const errors = []
+  const add = (line, msg) =>
+    errors.push({ n: line.n, width: displayWidth(line.text), msg })
+
+  // --- subject ---
+  if (!TYPE_PREFIX_RE.test(subject.text)) {
+    add(
+      subject,
+      `コミット種別プレフィックスがありません (${COMMIT_TYPES.join("/")} のいずれか + ": ")`,
+    )
+  }
+  const title = subject.text
+    .replace(TYPE_PREFIX_RE, "")
+    .replace(ISSUE_SUFFIX_RE, "")
+  const titleChars = [...title].length
+  if (title.trim() === "") {
+    add(subject, "タイトルが空です")
+  } else if (titleChars > MAX_TITLE_CHARS) {
+    add(subject, `タイトルが ${MAX_TITLE_CHARS} 文字を超えています (${titleChars} 文字)`)
+  }
+  if (DECORATION_RE.test(subject.text)) {
+    add(subject, "禁止された装飾 (**, 【, 】) を含みます")
+  }
+  if (!hadLeadingBlank) {
+    add(subject, "subject の直後には空行が必要です (subject と本文の間)")
+  }
+
+  // --- body ---
+  for (let i = 0; i < body.length; i++) {
+    const line = body[i]
+    if (line.text.trim() === "") continue
+
+    const width = displayWidth(line.text)
+
+    if (DECORATION_RE.test(line.text)) {
+      add(line, "禁止された装飾 (**, 【, 】) を含みます")
+    }
+
+    if (width > MAX_WIDTH) {
+      add(line, `表示幅が ${MAX_WIDTH} 桁を超えています`)
+      continue // 超過行はまず幅を削るのが先なので早すぎる改行判定はしない
+    }
+
+    // 早すぎる改行: 次行が「折り返しの継続行」なのに 70 桁未満
+    const next = body[i + 1]
+    const isContinuation =
+      next && next.text.trim() !== "" && !LIST_MARKER_RE.test(next.text)
+    if (isContinuation && width < MIN_WIDTH && !SENTENCE_END_RE.test(line.text.trimEnd())) {
+      const unit = firstMovableUnit(next.text)
+      const projected = width + (unit.needsSpace ? 1 : 0) + unit.width
+      if (projected <= MAX_WIDTH) {
+        add(
+          line,
+          `早すぎる改行です。${MIN_WIDTH}〜${MAX_WIDTH} 桁を目安に次行の語を繰り上げて詰めてください`,
+        )
+      }
+    }
+  }
+
+  // Co-Authored-By トレーラーはモデルが自動付与することがあるため全行で禁止する。
+  for (const line of active) {
+    if (COAUTHOR_RE.test(line.text)) {
+      add(line, "Co-Authored-By トレーラーは禁止です。この行を削除してください")
+    }
+  }
+
+  errors.sort((a, b) => a.n - b.n)
+  return { empty: false, errors, lines }
 }
