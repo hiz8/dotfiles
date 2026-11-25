@@ -11,7 +11,7 @@
 // コミットされてしまうため。Node 標準ライブラリ以外に依存しない。
 
 import { spawnSync } from "node:child_process"
-import { existsSync, readFileSync, statSync } from "node:fs"
+import { existsSync, lstatSync, readFileSync, statSync } from "node:fs"
 import { basename, dirname, join } from "node:path"
 
 export const EXTENSION_DIR = join(".claude", "commit")
@@ -43,7 +43,13 @@ function candidateRoots(cwd) {
 const isNonEmptyString = (v) => typeof v === "string" && v !== ""
 
 function loadExtension(dir) {
-  if (!statSync(dir).isDirectory()) {
+  let stat
+  try {
+    stat = statSync(dir)
+  } catch (err) {
+    throw new ExtensionError(`${dir} を参照できません: ${err.message}`)
+  }
+  if (!stat.isDirectory()) {
     throw new ExtensionError(`${dir} がディレクトリではありません`)
   }
   const configPath = join(dir, CONFIG_FILE)
@@ -81,10 +87,12 @@ function loadExtension(dir) {
 }
 
 // cwd から拡張を探して読み込む。見つからなければ null。
+// 存在の判定は lstat で行い、リンク先のないシンボリックリンクも「存在する」とみなす
+// (黙って次の候補や共通規約へ回り込まないため)。
 export function findExtension(cwd) {
   for (const root of candidateRoots(cwd)) {
     const dir = join(root, EXTENSION_DIR)
-    if (existsSync(dir)) return loadExtension(dir)
+    if (lstatSync(dir, { throwIfNoEntry: false })) return loadExtension(dir)
   }
   return null
 }

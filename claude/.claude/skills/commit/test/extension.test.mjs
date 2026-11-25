@@ -5,7 +5,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 
@@ -140,6 +140,13 @@ const broken = [
   { name: "guide not a string", setup: (root) => writeExt(root, { ...VALID, guide: 123 }) },
   { name: "invalid regex", setup: (root) => writeExt(root, { ...VALID, subjectPrefix: "([" }) },
   { name: "guide missing", setup: (root) => writeExt(root, VALID, { guide: false }) },
+  {
+    name: "extension path is a broken symlink",
+    setup: (root) => {
+      mkdirSync(join(root, ".claude"), { recursive: true })
+      symlinkSync(join(root, "missing"), join(root, ".claude", "commit"))
+    },
+  },
   {
     name: "extension path is a file",
     setup: (root) => {
