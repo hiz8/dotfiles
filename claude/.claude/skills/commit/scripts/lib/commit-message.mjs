@@ -6,7 +6,8 @@
 
 export const MAX_WIDTH = 80 // 1行の表示幅の上限
 export const MIN_WIDTH = 70 // 折り返し継続行で下回ってはいけない目安幅
-export const MAX_TITLE_CHARS = 50 // コミットタイトルの最大文字数 (コードポイント数)
+export const TITLE_GUIDE_CHARS = 50 // タイトルの目安の文字数 (超えると注意。コードポイント数)
+export const MAX_SUBJECT_CHARS = 72 // subject の 1 行全体の上限 (コードポイント数)
 
 export const COMMIT_TYPES = ["feat", "fix", "docs", "refactor", "test", "chore"]
 export const TYPE_PREFIX_RE = new RegExp(`^(${COMMIT_TYPES.join("|")}):\\s`)
@@ -97,6 +98,7 @@ export function parseStructure(raw) {
 // 戻り値:
 //   - empty: subject (コメント行を除いた先頭行) が空なら true。このとき errors は空
 //   - errors: { n: 物理行番号, width: 表示幅, msg } の配列 (n の昇順)
+//   - warnings: errors と同じ形の注意 (合否に影響しない。タイトルが目安を超えた場合)
 //   - lines: CRLF を LF に正規化した全物理行 (コメント行を含む)
 //
 // options.prefix ({ re, error, example }) を渡すと、種別プレフィックスの代わりに
@@ -105,12 +107,13 @@ export function parseStructure(raw) {
 export function checkMessage(raw, options = {}) {
   const { lines, active, subject, body, hadLeadingBlank } = parseStructure(raw)
   if (!subject || subject.text.trim() === "") {
-    return { empty: true, errors: [], lines }
+    return { empty: true, errors: [], warnings: [], lines }
   }
 
   const errors = []
-  const add = (line, msg) =>
-    errors.push({ n: line.n, width: displayWidth(line.text), msg })
+  const warnings = []
+  const entry = (line, msg) => ({ n: line.n, width: displayWidth(line.text), msg })
+  const add = (line, msg) => errors.push(entry(line, msg))
 
   // --- subject ---
   const { prefix } = options
@@ -136,8 +139,18 @@ export function checkMessage(raw, options = {}) {
   const titleChars = [...title].length
   if (title.trim() === "") {
     add(subject, "タイトルが空です")
-  } else if (titleChars > MAX_TITLE_CHARS) {
-    add(subject, `タイトルが ${MAX_TITLE_CHARS} 文字を超えています (${titleChars} 文字)`)
+  } else if (titleChars > TITLE_GUIDE_CHARS) {
+    warnings.push(
+      entry(
+        subject,
+        `タイトルが目安の ${TITLE_GUIDE_CHARS} 文字を超えています (${titleChars} 文字)。` +
+          "意味を損なわずに短くできるなら短くしてください",
+      ),
+    )
+  }
+  const subjectChars = [...subject.text].length
+  if (subjectChars > MAX_SUBJECT_CHARS) {
+    add(subject, `subject が ${MAX_SUBJECT_CHARS} 文字を超えています (${subjectChars} 文字)`)
   }
   if (DECORATION_RE.test(subject.text)) {
     add(subject, "禁止された装飾 (**, 【, 】) を含みます")
@@ -186,5 +199,5 @@ export function checkMessage(raw, options = {}) {
   }
 
   errors.sort((a, b) => a.n - b.n)
-  return { empty: false, errors, lines }
+  return { empty: false, errors, warnings, lines }
 }

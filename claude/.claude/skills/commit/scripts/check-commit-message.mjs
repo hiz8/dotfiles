@@ -17,6 +17,7 @@
 //
 // 終了コード: 0 = 合格、1 = 違反あり (空メッセージを含む)、
 // 2 = 入力または拡張の設定を読めない。
+// 注意 (タイトルが目安の文字数を超えた場合など) は終了コードに影響せず stderr に出す。
 // 機械判定できないルール (Why→What の順序、です・ます調禁止など) は
 // references/commit-rules.md を参照し、エージェントが自己チェックする。
 
@@ -55,12 +56,20 @@ function showRules(extension) {
   process.exit(0)
 }
 
+function printWarnings(warnings) {
+  if (warnings.length === 0) return
+  console.error(`注意が ${warnings.length} 件あります:`)
+  for (const w of warnings) {
+    console.error(`  行${w.n}: ${w.msg}`)
+  }
+}
+
 function main() {
   const extension = loadExtension()
   if (process.argv.includes("--show-rules")) showRules(extension)
 
   const verbose = process.argv.includes("--verbose")
-  const { empty, errors, lines } = checkMessage(readInput(), { prefix: extension?.prefix })
+  const { empty, errors, warnings, lines } = checkMessage(readInput(), { prefix: extension?.prefix })
 
   if (verbose) {
     console.error("--- 表示幅一覧 ---")
@@ -77,6 +86,7 @@ function main() {
 
   if (errors.length === 0) {
     console.log("OK: コミットメッセージは規約に適合しています。")
+    printWarnings(warnings)
     process.exit(0)
   }
 
@@ -84,6 +94,7 @@ function main() {
   for (const e of errors) {
     console.error(`  行${e.n} (幅=${e.width}): ${e.msg}`)
   }
+  printWarnings(warnings)
   process.exit(1)
 }
 
