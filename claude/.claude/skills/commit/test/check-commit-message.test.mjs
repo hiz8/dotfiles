@@ -50,11 +50,6 @@ const violations = [
     part: "コミット種別プレフィックスがありません",
   },
   {
-    name: "title over 50 code points",
-    raw: msg("feat: " + "あ".repeat(51) + " #123", "", "- 変更内容の説明"),
-    part: "タイトルが 50 文字を超えています",
-  },
-  {
     name: "no blank line after subject",
     raw: msg("feat: 認証トークンの検証を追加", "- 認証トークンの正当性を検証する処理を追加"),
     part: "subject の直後には空行が必要です",
@@ -166,6 +161,38 @@ test("empty message", () => {
   }
 })
 
+// --- タイトル長の目安と subject の上限 ---
+
+test("title over guide warns but passes", () => {
+  const r = checkMessage("feat: " + "あ".repeat(51) + "\n")
+  assert.deepEqual(r.errors, [])
+  assert.equal(r.warnings.length, 1)
+  assert.ok(r.warnings[0].msg.includes("目安の 50 文字"), r.warnings[0].msg)
+  assert.ok(r.warnings[0].msg.includes("51 文字"), r.warnings[0].msg)
+})
+
+test("title within guide has no warning", () => {
+  const r = checkMessage("feat: " + "あ".repeat(50))
+  assert.deepEqual(r.warnings, [])
+})
+
+test("subject at 72 passes, 73 fails", () => {
+  const ok = checkMessage("feat: " + "あ".repeat(66))
+  assert.deepEqual(ok.errors, [])
+  const ng = checkMessage("feat: " + "あ".repeat(67))
+  assert.ok(hasMsg(ng, "subject が 72 文字を超えています (73 文字)"), JSON.stringify(ng.errors))
+})
+
+test("issue number counts toward subject limit", () => {
+  const r = checkMessage("feat: " + "あ".repeat(61) + " #1234")
+  assert.ok(hasMsg(r, "subject が 72 文字を超えています (73 文字)"), JSON.stringify(r.errors))
+  assert.equal(r.warnings.length, 1)
+})
+
+test("empty message has no warnings", () => {
+  assert.deepEqual(checkMessage("").warnings, [])
+})
+
 // --- 拡張の接頭辞 (options.prefix) ---
 
 const PREFIX = {
@@ -189,8 +216,11 @@ test("prefix: rejects a typed subject", () => {
 })
 
 test("prefix: title length excludes prefix", () => {
-  assert.ok(!hasMsg(withPrefix("[設定画面] " + "あ".repeat(50)), "文字を超えています"))
-  assert.ok(hasMsg(withPrefix("[設定画面] " + "あ".repeat(51)), "51 文字"))
+  const warn = withPrefix("[設定画面] " + "あ".repeat(51))
+  assert.deepEqual(warn.errors, [])
+  assert.equal(warn.warnings.length, 1)
+  const ng = withPrefix("[設定画面] " + "あ".repeat(66))
+  assert.ok(hasMsg(ng, "subject が 72 文字を超えています (73 文字)"), JSON.stringify(ng.errors))
 })
 
 test("prefix: empty title after prefix", () => {
@@ -285,6 +315,21 @@ test("cli: verbose", () => {
   const r = run(["--verbose", file("ok-verbose.txt", VALID)])
   assert.equal(r.status, 0, r.stderr)
   assert.ok(r.stderr.includes("--- 表示幅一覧 ---"), r.stderr)
+})
+
+test("cli: warning only exits 0", () => {
+  const r = run([file("warn.txt", "feat: " + "あ".repeat(51) + "\n\n- 本文\n")])
+  assert.equal(r.status, 0, r.stderr)
+  assert.match(r.stdout, /^OK: /)
+  assert.ok(r.stderr.includes("注意が 1 件あります:"), r.stderr)
+})
+
+test("cli: errors and warnings", () => {
+  const r = run([file("err-warn.txt", "feat: " + "あ".repeat(51) + "\n- 本文\n")])
+  assert.equal(r.status, 1)
+  const errAt = r.stderr.indexOf("規約違反が")
+  const warnAt = r.stderr.indexOf("注意が 1 件あります:")
+  assert.ok(errAt >= 0 && warnAt > errAt, r.stderr)
 })
 
 test("cli: show-rules without extension", () => {
