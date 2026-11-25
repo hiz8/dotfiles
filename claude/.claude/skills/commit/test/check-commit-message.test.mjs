@@ -143,8 +143,14 @@ test("subject only passes", () => {
   assert.equal(r.empty, false)
 })
 
+test("subject only without trailing newline passes", () => {
+  const r = checkMessage("feat: 追加")
+  assert.deepEqual(r.errors, [])
+  assert.equal(r.empty, false)
+})
+
 test("crlf", () => {
-  const r = checkMessage(["feat: 追加", "", "- " + "あ".repeat(39)].join("\r\n"))
+  const r = checkMessage(["feat: 追加", "", "- " + "あ".repeat(39)].join("\r\n") + "\r\n")
   assert.deepEqual(r.errors, [])
 })
 
