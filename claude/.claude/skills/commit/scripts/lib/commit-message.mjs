@@ -98,7 +98,11 @@ export function parseStructure(raw) {
 //   - empty: subject (コメント行を除いた先頭行) が空なら true。このとき errors は空
 //   - errors: { n: 物理行番号, width: 表示幅, msg } の配列 (n の昇順)
 //   - lines: CRLF を LF に正規化した全物理行 (コメント行を含む)
-export function checkMessage(raw) {
+//
+// options.prefix ({ re, error, example }) を渡すと、種別プレフィックスの代わりに
+// その正規表現で subject の接頭辞を判定する (リポジトリ別拡張。re は先頭一致)。
+// 一致が空文字列の場合は接頭辞なしとみなす。タイトル長は接頭辞を除いて数える。
+export function checkMessage(raw, options = {}) {
   const { lines, active, subject, body, hadLeadingBlank } = parseStructure(raw)
   if (!subject || subject.text.trim() === "") {
     return { empty: true, errors: [], lines }
@@ -109,15 +113,26 @@ export function checkMessage(raw) {
     errors.push({ n: line.n, width: displayWidth(line.text), msg })
 
   // --- subject ---
-  if (!TYPE_PREFIX_RE.test(subject.text)) {
-    add(
-      subject,
-      `コミット種別プレフィックスがありません (${COMMIT_TYPES.join("/")} のいずれか + ": ")`,
-    )
+  const { prefix } = options
+  let rest
+  if (prefix) {
+    const m = prefix.re.exec(subject.text)
+    if (!m || m[0] === "") {
+      add(subject, `${prefix.error} (例: ${prefix.example})`)
+      rest = subject.text
+    } else {
+      rest = subject.text.slice(m[0].length)
+    }
+  } else {
+    if (!TYPE_PREFIX_RE.test(subject.text)) {
+      add(
+        subject,
+        `コミット種別プレフィックスがありません (${COMMIT_TYPES.join("/")} のいずれか + ": ")`,
+      )
+    }
+    rest = subject.text.replace(TYPE_PREFIX_RE, "")
   }
-  const title = subject.text
-    .replace(TYPE_PREFIX_RE, "")
-    .replace(ISSUE_SUFFIX_RE, "")
+  const title = rest.replace(ISSUE_SUFFIX_RE, "")
   const titleChars = [...title].length
   if (title.trim() === "") {
     add(subject, "タイトルが空です")

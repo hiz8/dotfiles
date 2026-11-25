@@ -162,6 +162,52 @@ test("empty message", () => {
   }
 })
 
+// --- 拡張の接頭辞 (options.prefix) ---
+
+const PREFIX = {
+  re: /^(?:(\[[^\[\]]+\])+ )/u,
+  error: "接頭辞 [ラベル] がありません",
+  example: "[設定画面] 保存ボタンを修正",
+}
+const withPrefix = (raw, prefix = PREFIX) => checkMessage(raw, { prefix })
+
+test("prefix: passes a labeled subject", () => {
+  const r = withPrefix("[設定画面][モバイル] 保存ボタンを修正 #12\n\n- 本文")
+  assert.deepEqual(r.errors, [])
+})
+
+test("prefix: rejects a typed subject", () => {
+  const r = withPrefix("feat: 追加\n\n- 本文")
+  assert.ok(r.errors.length >= 1)
+  assert.ok(hasMsg(r, PREFIX.error), JSON.stringify(r.errors))
+  assert.ok(hasMsg(r, "(例: [設定画面] 保存ボタンを修正)"), JSON.stringify(r.errors))
+  assert.ok(!hasMsg(r, "コミット種別プレフィックス"), JSON.stringify(r.errors))
+})
+
+test("prefix: title length excludes prefix", () => {
+  assert.ok(!hasMsg(withPrefix("[設定画面] " + "あ".repeat(50)), "文字を超えています"))
+  assert.ok(hasMsg(withPrefix("[設定画面] " + "あ".repeat(51)), "51 文字"))
+})
+
+test("prefix: empty title after prefix", () => {
+  assert.ok(hasMsg(withPrefix("[設定画面] "), "タイトルが空です"))
+})
+
+test("prefix: empty match is treated as missing", () => {
+  const r = withPrefix("修正", { ...PREFIX, re: /^(?:(\[[^\]]+\])*)/u })
+  assert.ok(hasMsg(r, PREFIX.error), JSON.stringify(r.errors))
+})
+
+test("prefix: leading space is rejected", () => {
+  assert.ok(hasMsg(withPrefix(" [設定画面] 修正"), PREFIX.error))
+})
+
+test("prefix: body rules stay common", () => {
+  const r = withPrefix(msg("[設定画面] 修正", "", "- " + "あ".repeat(39) + "a"))
+  assert.equal(r.errors.length, 1, JSON.stringify(r.errors))
+  assert.ok(r.errors[0].msg.includes("表示幅が 80 桁を超えています"))
+})
+
 // --- CLI ---
 
 const tmp = mkdtempSync(join(tmpdir(), "commit-check-"))
