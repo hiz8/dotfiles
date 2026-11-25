@@ -5,12 +5,16 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
-import { mkdtempSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
 import { checkMessage } from "../scripts/lib/commit-message.mjs"
+
+// git hook 経由で実行されても、呼び出し元の repo を見ないようにする。
+for (const key of ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"]) delete process.env[key]
+const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1" }
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const CLI = join(HERE, "..", "scripts", "check-commit-message.mjs")
@@ -162,16 +166,89 @@ test("empty message", () => {
   }
 })
 
+// --- 拡張の接頭辞 (options.prefix) ---
+
+const PREFIX = {
+  re: /^(?:(\[[^\[\]]+\])+ )/u,
+  error: "接頭辞 [ラベル] がありません",
+  example: "[設定画面] 保存ボタンを修正",
+}
+const withPrefix = (raw, prefix = PREFIX) => checkMessage(raw, { prefix })
+
+test("prefix: passes a labeled subject", () => {
+  const r = withPrefix("[設定画面][モバイル] 保存ボタンを修正 #12\n\n- 本文")
+  assert.deepEqual(r.errors, [])
+})
+
+test("prefix: rejects a typed subject", () => {
+  const r = withPrefix("feat: 追加\n\n- 本文")
+  assert.ok(r.errors.length >= 1)
+  assert.ok(hasMsg(r, PREFIX.error), JSON.stringify(r.errors))
+  assert.ok(hasMsg(r, "(例: [設定画面] 保存ボタンを修正)"), JSON.stringify(r.errors))
+  assert.ok(!hasMsg(r, "コミット種別プレフィックス"), JSON.stringify(r.errors))
+})
+
+test("prefix: title length excludes prefix", () => {
+  assert.ok(!hasMsg(withPrefix("[設定画面] " + "あ".repeat(50)), "文字を超えています"))
+  assert.ok(hasMsg(withPrefix("[設定画面] " + "あ".repeat(51)), "51 文字"))
+})
+
+test("prefix: empty title after prefix", () => {
+  assert.ok(hasMsg(withPrefix("[設定画面] "), "タイトルが空です"))
+})
+
+test("prefix: empty match is treated as missing", () => {
+  const r = withPrefix("修正", { ...PREFIX, re: /^(?:(\[[^\]]+\])*)/u })
+  assert.ok(hasMsg(r, PREFIX.error), JSON.stringify(r.errors))
+})
+
+test("prefix: leading space is rejected", () => {
+  assert.ok(hasMsg(withPrefix(" [設定画面] 修正"), PREFIX.error))
+})
+
+test("prefix: body rules stay common", () => {
+  const r = withPrefix(msg("[設定画面] 修正", "", "- " + "あ".repeat(39) + "a"))
+  assert.equal(r.errors.length, 1, JSON.stringify(r.errors))
+  assert.ok(r.errors[0].msg.includes("表示幅が 80 桁を超えています"))
+})
+
 // --- CLI ---
 
 const tmp = mkdtempSync(join(tmpdir(), "commit-check-"))
+const noRepo = join(tmp, "no-repo")
+mkdirSync(noRepo)
 const file = (name, content) => {
   const p = join(tmp, name)
   writeFileSync(p, content)
   return p
 }
-const run = (args, input) =>
-  spawnSync(process.execPath, [CLI, ...args], { input, encoding: "utf8" })
+// 既存の CLI テストがこのリポジトリの状態に左右されないよう、既定は git 外で実行する。
+const run = (args, input, cwd = noRepo) =>
+  spawnSync(process.execPath, [CLI, ...args], { input, cwd, env: GIT_ENV, encoding: "utf8" })
+
+const makeRepo = (t) => {
+  const repo = mkdtempSync(join(tmpdir(), "commit-cli-"))
+  t.after(() => rmSync(repo, { recursive: true, force: true }))
+  const r = spawnSync("git", ["-C", repo, "init", "-q"], { env: GIT_ENV, encoding: "utf8" })
+  assert.equal(r.status, 0, r.stderr)
+  return repo
+}
+
+const EXT_CONFIG = {
+  subjectPrefix: "^(\\[[^\\[\\]]+\\])+ ",
+  prefixError: "接頭辞 [ラベル] がありません",
+  example: "[設定画面] 保存ボタンを修正",
+}
+
+const writeExt = (root, { config = true } = {}) => {
+  const dir = join(root, ".claude", "commit")
+  mkdirSync(dir, { recursive: true })
+  if (config) {
+    writeFileSync(join(dir, "config.json"), JSON.stringify(EXT_CONFIG))
+    writeFileSync(join(dir, "prefix-guide.md"), "# 接頭辞ガイド\n")
+  }
+  return dir
+}
 
 const VALID = "feat: 追加\n\n- 変更内容の説明\n"
 const INVALID = "認証トークンの検証を追加\n"
@@ -208,4 +285,40 @@ test("cli: verbose", () => {
   const r = run(["--verbose", file("ok-verbose.txt", VALID)])
   assert.equal(r.status, 0, r.stderr)
   assert.ok(r.stderr.includes("--- 表示幅一覧 ---"), r.stderr)
+})
+
+test("cli: show-rules without extension", () => {
+  const r = run(["--show-rules"])
+  assert.equal(r.status, 0, r.stderr)
+  assert.equal(r.stdout, "規約: 共通規約\n")
+})
+
+test("cli: show-rules with extension", (t) => {
+  const repo = makeRepo(t)
+  writeExt(repo)
+  const r = run(["--show-rules"], undefined, repo)
+  assert.equal(r.status, 0, r.stderr)
+  assert.ok(r.stdout.includes("規約: 拡張 "), r.stdout)
+  assert.ok(r.stdout.includes("接頭辞ガイド: "), r.stdout)
+  assert.ok(r.stdout.includes("prefix-guide.md"), r.stdout)
+})
+
+test("cli: uses extension prefix", (t) => {
+  const repo = makeRepo(t)
+  writeExt(repo)
+  const ng = run([], "feat: 追加\n\n- 本文\n", repo)
+  assert.equal(ng.status, 1)
+  assert.ok(ng.stderr.includes(EXT_CONFIG.prefixError), ng.stderr)
+  const ok = run([], "[設定画面] 保存ボタンを修正\n\n- 本文\n", repo)
+  assert.equal(ok.status, 0, ok.stderr)
+})
+
+test("cli: broken extension exits 2", (t) => {
+  const repo = makeRepo(t)
+  writeExt(repo, { config: false })
+  for (const args of [["--show-rules"], []]) {
+    const r = run(args, "[設定画面] 修正\n", repo)
+    assert.equal(r.status, 2, r.stderr)
+    assert.ok(r.stderr.includes("拡張の設定を読み込めませんでした"), r.stderr)
+  }
 })

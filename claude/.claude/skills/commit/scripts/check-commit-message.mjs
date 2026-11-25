@@ -8,13 +8,21 @@
 //   node [SKILL_DIR]/scripts/check-commit-message.mjs [--verbose] <message-file>
 //   echo "$msg" | node [SKILL_DIR]/scripts/check-commit-message.mjs
 //   --verbose を付けると全行の表示幅一覧を stderr に出す
+//   node [SKILL_DIR]/scripts/check-commit-message.mjs --show-rules
+//   --show-rules は使う規約 (共通規約か拡張か) と接頭辞ガイドのパスを stdout に出す。
+//   メッセージの入力は読まず、--verbose は無視する
 //
-// 終了コード: 0 = 合格、1 = 違反あり (空メッセージを含む)、2 = 入力を読めない。
+// 作業ディレクトリから lib/extension.mjs の findExtension でリポジトリ別拡張を
+// 探し、見つかれば subject の接頭辞をその定義で判定する。
+//
+// 終了コード: 0 = 合格、1 = 違反あり (空メッセージを含む)、
+// 2 = 入力または拡張の設定を読めない。
 // 機械判定できないルール (Why→What の順序、です・ます調禁止など) は
 // references/commit-rules.md を参照し、エージェントが自己チェックする。
 
 import { readFileSync } from "node:fs"
 import { checkMessage, displayWidth } from "./lib/commit-message.mjs"
+import { ExtensionError, findExtension } from "./lib/extension.mjs"
 
 function readInput() {
   const fileArg = process.argv.slice(2).find((a) => !a.startsWith("--"))
@@ -27,9 +35,32 @@ function readInput() {
   }
 }
 
+function loadExtension() {
+  try {
+    return findExtension(process.cwd())
+  } catch (err) {
+    if (!(err instanceof ExtensionError)) throw err
+    console.error(`拡張の設定を読み込めませんでした: ${err.message}`)
+    process.exit(2)
+  }
+}
+
+function showRules(extension) {
+  if (!extension) {
+    console.log("規約: 共通規約")
+  } else {
+    console.log(`規約: 拡張 ${extension.dir}`)
+    console.log(`接頭辞ガイド: ${extension.guidePath}`)
+  }
+  process.exit(0)
+}
+
 function main() {
+  const extension = loadExtension()
+  if (process.argv.includes("--show-rules")) showRules(extension)
+
   const verbose = process.argv.includes("--verbose")
-  const { empty, errors, lines } = checkMessage(readInput())
+  const { empty, errors, lines } = checkMessage(readInput(), { prefix: extension?.prefix })
 
   if (verbose) {
     console.error("--- 表示幅一覧 ---")
