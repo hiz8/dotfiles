@@ -13,8 +13,11 @@ import { fileURLToPath } from "node:url"
 import { checkMessage } from "../scripts/lib/commit-message.mjs"
 
 // git hook 経由で実行されても、呼び出し元の repo を見ないようにする。
+// ユーザーのグローバル git 設定 (commit-skill.extensionDir を含む) にも左右されない。
 for (const key of ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"]) delete process.env[key]
-const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1" }
+process.env.GIT_CONFIG_GLOBAL = "/dev/null"
+process.env.GIT_CONFIG_NOSYSTEM = "1"
+const GIT_ENV = { ...process.env }
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const CLI = join(HERE, "..", "scripts", "check-commit-message.mjs")
@@ -270,8 +273,12 @@ const EXT_CONFIG = {
   example: "[設定画面] 保存ボタンを修正",
 }
 
+// root/.claude/commit に拡張を書き、git config で指定する。
 const writeExt = (root, { config = true } = {}) => {
   const dir = join(root, ".claude", "commit")
+  const set = spawnSync("git", ["-C", root, "config", "--local", "commit-skill.extensionDir", ".claude/commit"],
+    { env: GIT_ENV, encoding: "utf8" })
+  assert.equal(set.status, 0, set.stderr)
   mkdirSync(dir, { recursive: true })
   if (config) {
     writeFileSync(join(dir, "config.json"), JSON.stringify(EXT_CONFIG))
